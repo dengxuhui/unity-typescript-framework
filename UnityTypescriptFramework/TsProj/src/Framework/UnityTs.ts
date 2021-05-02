@@ -1,4 +1,6 @@
 /* 全局类入口*/
+import Timer from "./Utils/Timer";
+
 class Utils {
     /*id*/
     static _gid: number = 1;
@@ -49,4 +51,16 @@ class Utils {
 export default class UnityTs {
     /* 工具类*/
     static Utils:typeof Utils = Utils;
+    static Timer:Timer;
+    static init(){
+        this.Timer = new Timer();
+        // @ts-ignore
+        global.__tgjsRegisterTickHandler(this._timerUpdate);
+        // @ts-ignore
+        delete global.__tgjsRegisterTickHandler
+    }
+    
+    private static _timerUpdate(){
+        UnityTs.Timer._update();
+    }
 }

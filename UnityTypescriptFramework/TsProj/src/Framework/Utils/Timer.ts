@@ -25,7 +25,7 @@ export default class Timer {
     private _count: number = 0;
 
     constructor(autoActive: boolean = true) {
-        // autoActive && Timer.gSysTimer && Timer.gSysTimer.constructor.
+        autoActive && Timer.gSysTimer && Timer.gSysTimer.frameLoop(1, this, this._update);
     }
 
     /* 获取两帧之间的时间间隔，单位毫秒*/

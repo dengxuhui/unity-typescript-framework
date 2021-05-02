@@ -141,7 +141,6 @@ namespace Puerts
             ExecuteFile("puerts/cjsload.js");
             ExecuteFile("puerts/modular.js");
             ExecuteFile("puerts/csharp.js");
-            ExecuteFile("puerts/timer.js");
             ExecuteFile("puerts/events.js");
             ExecuteFile("puerts/promises.js");
             ExecuteFile("puerts/polyfill.js");
