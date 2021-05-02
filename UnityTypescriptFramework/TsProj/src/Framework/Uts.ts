@@ -1,5 +1,6 @@
 /* 全局类入口*/
 import Timer from "./Utils/Timer";
+import UIManager from "./UI/UIManager";
 
 class Utils {
     /*id*/
@@ -33,8 +34,8 @@ class Utils {
      * @private
      * <p>连接数组。和array的concat相比，此方法不创建新对象</p>
      * <b>注意：</b>若 参数 a 不为空，则会改变参数 source 的值为连接后的数组。
-     * @param	source 待连接的数组目标对象。
-     * @param	array 待连接的数组对象。
+     * @param    source 待连接的数组目标对象。
+     * @param    array 待连接的数组对象。
      * @return 连接后的数组。
      */
     public static concatArray(source: any[], array: any[]): any[] {
@@ -48,19 +49,25 @@ class Utils {
     }
 }
 
-export default class UnityTs {
+export default class Uts {
     /* 工具类*/
-    static Utils:typeof Utils = Utils;
-    static Timer:Timer;
-    static init(){
-        this.Timer = new Timer();
+    static utils: typeof Utils = Utils;
+    /* 计时器*/
+    static timer: Timer;
+    /* ui管理器*/
+    static uiMgr:UIManager;
+
+    static init() {
+        this.timer = new Timer();
         // @ts-ignore
         global.__tgjsRegisterTickHandler(this._timerUpdate);
         // @ts-ignore
         delete global.__tgjsRegisterTickHandler
+        
+        this.uiMgr = UIManager.Instance(UIManager);
     }
-    
-    private static _timerUpdate(){
-        UnityTs.Timer._update();
+
+    private static _timerUpdate() {
+        Uts.timer._update();
     }
 }
