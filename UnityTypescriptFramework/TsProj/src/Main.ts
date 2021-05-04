@@ -1,15 +1,15 @@
 ﻿import {ExHandler} from "./Example/ExHandler";
-import Uts from "./Framework/Uts";
+import UnityTs from "./Framework/UnityTs";
 
 const CS = require("csharp");
 let Debug = CS.UnityEngine.Debug;
 
 class Main {
     constructor() {
-        Uts.init();
+        UnityTs.init();
         //
         ExHandler.Run();
-        Uts.timer.loop(2000, this, () => {
+        UnityTs.timer.loop(2000, this, () => {
             Debug.Log("timer call back")
         }, [1], true, false);
     }

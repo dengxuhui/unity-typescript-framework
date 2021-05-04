@@ -1,6 +1,7 @@
 /* 全局类入口*/
 import Timer from "./Utils/Timer";
 import UIManager from "./UI/UIManager";
+import {GameObjectPool} from "./Res/GameObjectPool";
 
 class Utils {
     /*id*/
@@ -49,13 +50,11 @@ class Utils {
     }
 }
 
-export default class Uts {
+export default class UnityTs {
     /* 工具类*/
     static utils: typeof Utils = Utils;
     /* 计时器*/
     static timer: Timer;
-    /* ui管理器*/
-    static uiMgr:UIManager;
 
     static init() {
         this.timer = new Timer();
@@ -63,11 +62,12 @@ export default class Uts {
         global.__tgjsRegisterTickHandler(this._timerUpdate);
         // @ts-ignore
         delete global.__tgjsRegisterTickHandler
-        
-        this.uiMgr = UIManager.Instance(UIManager);
+
+        GameObjectPool.Create(GameObjectPool);
+        UIManager.Create(UIManager);
     }
 
     private static _timerUpdate() {
-        Uts.timer._update();
+        UnityTs.timer._update();
     }
 }

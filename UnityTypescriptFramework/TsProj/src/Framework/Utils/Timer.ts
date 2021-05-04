@@ -2,7 +2,7 @@
 * 
 * 时钟管理器 使用Utf.timer访问
 * */
-import Uts from "../Uts";
+import UnityTs from "../UnityTs";
 
 export default class Timer {
     /*timer入口*/
@@ -136,7 +136,7 @@ export default class Timer {
 
     /*获取handler*/
     _getHandler(caller: any, method: any): TimerHandler {
-        let cid: number = caller ? caller.$_GID || (caller.$_GID = Uts.utils.getGID()) : 0;
+        let cid: number = caller ? caller.$_GID || (caller.$_GID = UnityTs.utils.getGID()) : 0;
         let mid: number = method.$_TID || (method.$_TID = (Timer._mid++) * 100000);
         return this._map[cid + mid];
     }
@@ -147,7 +147,7 @@ export default class Timer {
     _indexHandler(handler: TimerHandler) {
         let caller: any = handler.caller;
         let method: any = handler.method;
-        let cid: number = caller ? caller.$_GID || (caller.$_GID = Uts.utils.getGID()) : 0;
+        let cid: number = caller ? caller.$_GID || (caller.$_GID = UnityTs.utils.getGID()) : 0;
         let mid: number = method.$_TID || (method.$_TID = (Timer._mid++) * 100000);
         handler.key = cid + mid;
         this._map[handler.key] = handler;

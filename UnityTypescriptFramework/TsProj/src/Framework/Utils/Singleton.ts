@@ -10,10 +10,13 @@ export class Singleton<T> {
     /*
     * 获取实例
     * */
-    public static Instance<T>(classT: { new(): T }): T {
+    public static Create<T>(classT: { new(): T }){
         if (this._instance == null) {
             this._instance = new classT();
         }
+    }
+    
+    public static get Instance(){
         return this._instance;
     }
 }
