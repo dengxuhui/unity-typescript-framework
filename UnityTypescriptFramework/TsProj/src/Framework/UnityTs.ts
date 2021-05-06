@@ -61,10 +61,7 @@ export default class UnityTs {
         // @ts-ignore
         global.__tgjsRegisterTickHandler(this._timerUpdate);
         // @ts-ignore
-        delete global.__tgjsRegisterTickHandler
-
-        GameObjectPool.Create(GameObjectPool);
-        UIManager.Create(UIManager);
+        delete global.__tgjsRegisterTickHandler;
     }
 
     private static _timerUpdate() {

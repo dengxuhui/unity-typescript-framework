@@ -17,7 +17,7 @@ export default class EventDispatcher {
      * @param data    （可选）回调数据。<b>注意：</b>如果是需要传递多个参数 p1,p2,p3,...可以使用数组结构如：[p1,p2,p3,...] ；如果需要回调单个参数 p ，且 p 是一个数组，则需要使用结构如：[p]，其他的单个参数 p ，可以直接传入参数 p。
      * @return 此事件类型是否有侦听者，如果有侦听者则值为 true，否则值为 false。
      */
-    event(type: string, data: any = null): boolean {
+    public event(type: string, data: any = null): boolean {
         if (!this._events || !this._events[type]) return false;
 
         let listeners: any = this._events[type];
