@@ -1,4 +1,4 @@
-(function () {
+(function (csharp) {
     'use strict';
 
     var Handler = (function () {
@@ -71,14 +71,12 @@
         return Handler;
     }());
 
-    var CS = require("csharp");
     var ExHandler = (function () {
         function ExHandler() {
         }
         ExHandler.Run = function () {
-            var Debug = CS.UnityEngine.Debug;
             var handler = Handler.create(null, function (name) {
-                Debug.LogFormat("get name is=>{0}", name);
+                csharp.UnityEngine.Debug.LogFormat("get name is=>{0}", name);
             }, ["Aer"], true);
             handler.run();
         };
@@ -303,89 +301,6 @@
         return TimerHandler;
     }());
 
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
-
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
-
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
-    ***************************************************************************** */
-    /* global Reflect, Promise */
-
-    var extendStatics = function(d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-
-    function __extends(d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    }
-
-    var Singleton = (function () {
-        function Singleton() {
-        }
-        Singleton.Create = function (classT) {
-            if (this._instance == null) {
-                this._instance = new classT();
-            }
-        };
-        Object.defineProperty(Singleton, "Instance", {
-            get: function () {
-                return this._instance;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Singleton._instance = null;
-        return Singleton;
-    }());
-
-    var UIManager = (function (_super) {
-        __extends(UIManager, _super);
-        function UIManager() {
-            return _super.call(this) || this;
-        }
-        return UIManager;
-    }(Singleton));
-
-    var CS$1 = require("csharp");
-    var GameObjectPool = (function (_super) {
-        __extends(GameObjectPool, _super);
-        function GameObjectPool() {
-            var _this = _super.call(this) || this;
-            _this._cacheTransRoot = null;
-            _this._goPool = new Map();
-            _this._instCache = new Map();
-            var go = CS$1.UnityEngine.GameObject.Find("GameObjectCacheRoot");
-            if (go == undefined) {
-                go = new CS$1.UnityEngine.GameObject("GameObjectCacheRoot");
-                CS$1.UnityEngine.Object.DontDestroyOnLoad(go);
-            }
-            _this._cacheTransRoot = go.transform;
-            return _this;
-        }
-        GameObjectPool.prototype.checkHasCached = function (path) {
-            var cachedInst = this._instCache.get(path);
-            if (cachedInst && cachedInst.length > 0) {
-                return true;
-            }
-            var pooledGo = this._goPool.get(path);
-            return pooledGo != undefined;
-        };
-        return GameObjectPool;
-    }(Singleton));
-
     var Utils = (function () {
         function Utils() {
         }
@@ -422,8 +337,6 @@
             this.timer = new Timer();
             global.__tgjsRegisterTickHandler(this._timerUpdate);
             delete global.__tgjsRegisterTickHandler;
-            GameObjectPool.Create(GameObjectPool);
-            UIManager.Create(UIManager);
         };
         UnityTs._timerUpdate = function () {
             UnityTs.timer._update();
@@ -432,19 +345,18 @@
         return UnityTs;
     }());
 
-    var CS$2 = require("csharp");
-    var Debug = CS$2.UnityEngine.Debug;
     var Main = (function () {
         function Main() {
             UnityTs.init();
             ExHandler.Run();
             UnityTs.timer.loop(2000, this, function () {
-                Debug.Log("timer call back");
+                csharp.UnityEngine.Debug.Log("a ha");
             }, [1], true, false);
+            csharp.UnityEngine.Debug.Log("a ha a");
         }
         return Main;
     }());
     new Main();
 
-}());
+}(csharp));
 //# sourceMappingURL=bundle.js.map

@@ -1,4 +1,4 @@
-const CS = require("csharp");
+import { UnityEngine } from "csharp";
 
 /*
 * GameObject资源池
@@ -18,10 +18,10 @@ export class GameObjectPool {
     }
     
     private constructor() {
-        let go = CS.UnityEngine.GameObject.Find("GameObjectCacheRoot");
+        let go = UnityEngine.GameObject.Find("GameObjectCacheRoot");
         if (go == undefined) {
-            go = new CS.UnityEngine.GameObject("GameObjectCacheRoot");
-            CS.UnityEngine.Object.DontDestroyOnLoad(go);
+            go = new UnityEngine.GameObject("GameObjectCacheRoot");
+            UnityEngine.Object.DontDestroyOnLoad(go);
         }
         this._cacheTransRoot = go.transform;
     }

@@ -4,12 +4,12 @@ const glsl = require("rollup-plugin-glsl");
 
 function build(cb) {
     return rollup.rollup({
-        input: './src/Main.ts',
+        input: './src/Main.ts',        
         treeshake: true,//建议忽略
         plugins: [
             typescript({
                 check: false, //Set to false to avoid doing any diagnostic checks on the code
-                tsconfigOverride: {compilerOptions: {removeComments: true}}
+                tsconfigOverride: {compilerOptions: {removeComments: true}}                
             }),
             glsl({
                 // By default, everything gets included

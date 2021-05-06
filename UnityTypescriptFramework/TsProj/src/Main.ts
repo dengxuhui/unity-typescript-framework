@@ -1,9 +1,6 @@
-﻿import {ExHandler} from "./Example/ExHandler";
+﻿import { UnityEngine } from "csharp";
+import { ExHandler } from "./Example/ExHandler";
 import UnityTs from "./Framework/UnityTs";
-import UIManager from "./Framework/UI/UIManager";
-
-const CS = require("csharp");
-let Debug = CS.UnityEngine.Debug;
 
 class Main {
     constructor() {
@@ -12,8 +9,9 @@ class Main {
         //
         ExHandler.Run();
         UnityTs.timer.loop(2000, this, () => {
-            Debug.Log("timer call back")
+            UnityEngine.Debug.Log("a ha");
         }, [1], true, false);
+        UnityEngine.Debug.Log("a ha a");
     }
 }
 

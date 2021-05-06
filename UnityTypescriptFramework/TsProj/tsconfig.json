@@ -2,24 +2,20 @@
   "compilerOptions": {
     "module": "es6",
     "target": "es5",
-    "noEmitHelpers": true,
+    "jsx": "preserve",
+    "lib": [ "ES2018" ],
     "sourceMap": true,
-    "lib": [
-      "ES2018"
-    ],
+    "inlineSources": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "baseUrl": "./src/",
     "typeRoots": [
       "../Assets/Puerts/Typing",
       "../Assets/Gen/Typing",
-      "./bin/"
+      "./node_modules/@types"
     ],
-    "baseUrl": "./src/",
-    "inlineSources": true,
-    "moduleResolution": "node"
+
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src"
-  ]
+  "include": ["src","test"],
+  "exclude": ["node_modules", "dist"]
 }
