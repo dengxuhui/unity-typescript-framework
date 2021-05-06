@@ -5,11 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "name": "NodeJs",
+            "port": 8080,
             "request": "attach",
-            "name": "Launch",
-            "protocol": "inspector",
-            "port": 8080
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
         }
     ]
 }
