@@ -1,5 +1,5 @@
 import { UnityEngine } from "csharp";
-import Handler from "Framework/Utils/Handler";
+import Handler from "framework/utils/Handler";
 import { ResourceManager } from "./ResourceManager";
 /*
 * GameObject资源池

@@ -1,5 +1,5 @@
-﻿import UnityTs from "./Framework/UnityTs";
-import {ExHandler} from "./Example/ExHandler";
+import UnityTs from "./framework/UnityTs";
+import {ExHandler} from "./example/ExHandler";
 
 class Main {
     constructor() {

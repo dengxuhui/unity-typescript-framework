@@ -1,6 +1,6 @@
-﻿import { libx, UnityEngine } from "csharp";
+import { libx, UnityEngine } from "csharp";
 import { $typeof } from "puerts";
-import EventDispatcher from "../Utils/EventDispatcher";
+import EventDispatcher from "../utils/EventDispatcher";
 
 /**
  * 资源管理器

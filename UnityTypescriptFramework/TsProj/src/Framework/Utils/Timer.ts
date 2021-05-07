@@ -4,7 +4,7 @@
 * */
 import UnityTs from "../UnityTs";
 
-export default class Timer {
+class Timer {
     /*timer入口*/
     static gSysTimer: Timer = null;
 
@@ -295,5 +295,38 @@ class TimerHandler {
         withClear && this.clear();
         if (method == null) return;
         args ? method.apply(caller, args) : method.call(caller);
+    }
+}
+
+/*
+* 
+* timer管理器 如果需要新增timer，在这里新建实例，一般一个就够用了。
+* */
+export class TimerMgr {
+    private static _timer:Timer;
+    private static _inited:boolean = false;
+    //私有构造函数
+    private constructor() {
+    }
+    /*
+    * 获取timer唯一实例
+    * */
+    public static get timer(){
+        return this._timer;
+    }
+    
+    public static init() {
+        if(this._inited){
+            return;
+        }
+        this._inited = true;
+        this._timer = new Timer();
+        // @ts-ignore
+        global.__tgjsRegisterTickHandler(this._timerUpdate);
+        // @ts-ignore
+        delete global.__tgjsRegisterTickHandler;
+    }
+    private static _timerUpdate(){
+        this._timer._update();
     }
 }
