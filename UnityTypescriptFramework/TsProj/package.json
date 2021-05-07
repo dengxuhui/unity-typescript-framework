@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "bundle:dev": "webpack --config webpack.config.debug.js --watch",
-    "bundle:publish": "webpack --config webpack.config.release.js",
+    "dev": "webpack --config webpack.config.debug.js --watch",
+    "build": "webpack --config webpack.config.release.js",
     "test": "jest",
     "test-c": "jest --coverage"
   },

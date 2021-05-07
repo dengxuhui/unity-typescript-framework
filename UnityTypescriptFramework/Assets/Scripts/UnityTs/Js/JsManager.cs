@@ -22,7 +22,7 @@ namespace UnityTs.Js
         {
             //调试端口：8080
             jsEnv = new JsEnv(new JsLoader(), 8080);
-            // jsEnv.WaitDebugger();
+            jsEnv.WaitDebugger();
             jsEnv.ExecuteFile("puerts/flatbuffers.js");
             //声明Action： 值类型才需要这样添加
             jsEnv.UsingAction<float>();
