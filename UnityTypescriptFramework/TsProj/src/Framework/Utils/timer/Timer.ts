@@ -277,7 +277,7 @@ class Timer {
      * @param	method 定时器回调函数。
      * @param	args 回调参数。
      */
-    callLater(caller: any, method: Function, args: any[]): void {
+    callLater(caller: any, method: Function, args?: any[]): void {
         CallLater.I.callLater(caller, method, args);
     }
 
