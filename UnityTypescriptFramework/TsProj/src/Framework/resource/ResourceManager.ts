@@ -1,5 +1,3 @@
-import { libx, UnityEngine } from "csharp";
-import { $typeof } from "puerts";
 import EventDispatcher from "../utils/EventDispatcher";
 
 /**
