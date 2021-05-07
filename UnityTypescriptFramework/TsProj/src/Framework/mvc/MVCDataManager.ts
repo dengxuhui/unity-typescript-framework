@@ -26,13 +26,15 @@ export default class MVCDataManager implements IDestroyable {
      */
     public destroy(): void {
         this._main = null;
-        this._dataMap.forEach((key, value: MVCData) => {
-            if (value != null) {
-                value.destroy();
-            }
-        });
-        this._dataMap.clear();
-        this._dataMap = null;
+        if (this._dataMap != null) {
+            this._dataMap.forEach((key, value: MVCData) => {
+                if (value != null) {
+                    value.destroy();
+                }
+            });
+            this._dataMap.clear();
+            this._dataMap = null;
+        }
     }
 
     /**
