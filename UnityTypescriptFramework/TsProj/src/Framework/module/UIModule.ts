@@ -13,8 +13,7 @@ export default class UIModule extends Module {
     private _uiCenter: UICenter = null;
 
     constructor() {
-        super();
-
+        super();    
         //Do other something
         this._uiCenter = new UICenter();
     }

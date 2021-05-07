@@ -1,5 +1,5 @@
 import IObjectable from "framework/interface/IObjectable";
-import EventDispatcher from "Framework/utils/EventDispatcher";
+import EventDispatcher from "framework/utils/EventDispatcher";
 import MVCControl from "./MVCControl";
 import MVCControlManager from "./MVCControlManager";
 import MVCData from "./MVCData";

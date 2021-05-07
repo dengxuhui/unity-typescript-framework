@@ -1,4 +1,4 @@
-import { Logger } from "Framework/utils/Logger";
+import { Logger } from "framework/utils/Logger";
 import IDestroyable from "../interface/IDestroyable";
 import { TimerMgr } from "../utils/timer/Timer";
 import Module from "./Module";

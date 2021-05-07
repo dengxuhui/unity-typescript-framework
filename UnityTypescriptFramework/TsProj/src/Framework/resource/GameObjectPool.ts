@@ -1,5 +1,5 @@
 import { UnityEngine } from "csharp";
-import Handler from "Framework/utils/Handler";
+import Handler from "framework/utils/Handler";
 import { ResourceManager } from "./ResourceManager";
 import { ISingleton } from '../interface/ISingleton';
 /*

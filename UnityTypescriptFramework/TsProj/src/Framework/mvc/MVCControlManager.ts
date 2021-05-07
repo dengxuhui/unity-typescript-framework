@@ -1,5 +1,5 @@
 import IDestroyable from "framework/interface/IDestroyable";
-import EventDispatcher from "Framework/utils/EventDispatcher";
+import EventDispatcher from "framework/utils/EventDispatcher";
 import MVCControl from "./MVCControl";
 import MVCDataManager from "./MVCDataManager";
 import MVCViewManager from "./MVCViewManager";
