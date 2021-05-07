@@ -13,7 +13,7 @@ export default class UIManager extends EventDispatcher {
         this._windows = new Map<string, UIWindow>();
     }
 
-    public static GetInstance(): UIManager {
+    public static get instance(): UIManager {
         if (!this._instance) {
             this._instance = new UIManager();
         }
@@ -24,7 +24,7 @@ export default class UIManager extends EventDispatcher {
         return this._windows.get(uiName);
     }
 
-    public OpenWindow(uiName: string, args: []) {
+    public openWindow(uiName: string, args: []) {
         let window = this._getWindow(uiName);
         if(!window){
             window = new UIWindow();

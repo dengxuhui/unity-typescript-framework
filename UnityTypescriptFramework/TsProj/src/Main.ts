@@ -1,5 +1,4 @@
-﻿import {UnityEngine} from "csharp";
-import UnityTs from "./Framework/UnityTs";
+﻿import UnityTs from "./Framework/UnityTs";
 import {ExHandler} from "./Example/ExHandler";
 
 class Main {
