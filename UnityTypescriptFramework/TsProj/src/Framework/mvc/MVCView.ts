@@ -1,5 +1,5 @@
 import IDestroyable from "framework/interface/IDestroyable";
-import EventDispatcher from "framework/utils/EventDispatcher";
+import EventDispatcher from "Framework/utils/EventDispatcher";
 import MVCData from "./MVCData";
 import MVCDataManager from "./MVCDataManager";
 

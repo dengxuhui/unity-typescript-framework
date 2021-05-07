@@ -1,5 +1,5 @@
 import { UnityEngine } from "csharp";
-import Handler from "../framework/Utils/Handler";
+import Handler from "../Framework/utils/Handler";
 
 /*
 * Handler回调示例

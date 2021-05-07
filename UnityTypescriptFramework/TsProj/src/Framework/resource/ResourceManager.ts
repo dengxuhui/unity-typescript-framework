@@ -1,32 +1,35 @@
 import EventDispatcher from "../utils/EventDispatcher";
+import { ISingleton } from '../interface/ISingleton';
 
 /**
  * 资源管理器
  */
-export class ResourceManager extends EventDispatcher{
-    private static _instance:ResourceManager;
-    
-    public static get instance():ResourceManager{
-        if(this._instance == null){
-            this._instance = new ResourceManager()
-        }
-        return this._instance;
-    }
-    
+export class ResourceManager extends EventDispatcher implements ISingleton {
+    public static I: ResourceManager = new ResourceManager();
+    /**
+     * 密封构造函数
+     */
     private constructor() {
         super();
     }
-    
-    public async loadPrefabAsync(path:string){
+
+    /**
+     * 初始化
+     */
+    public initialize():void{
+
+    }
+
+    public async loadPrefabAsync(path: string) {
         //TODO 加载资源，在CS侧有一个中介加载器去管理引用
         // libx.Assets.LoadAssetAsync(path,$typeof(UnityEngine.GameObject));
     }
 
-    public async loadSpriteAsync(path:string){
+    public async loadSpriteAsync(path: string) {
         //TODO
     }
 
-    public async laodTextAssetAsync(path:string){
+    public async laodTextAssetAsync(path: string) {
         //TODO
     }
 }

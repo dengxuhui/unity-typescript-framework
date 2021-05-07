@@ -1,5 +1,5 @@
 import IObjectable from "framework/interface/IObjectable";
-import EventDispatcher from "framework/utils/EventDispatcher";
+import EventDispatcher from "Framework/utils/EventDispatcher";
 
 /**
  * MVC数据对象 

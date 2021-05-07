@@ -2,7 +2,8 @@
 * 
 * 时钟管理器 使用Utf.timer访问
 * */
-import UnityTs from "../UnityTs";
+import UnityTs from "../../UnityTs";
+import CallLater from './CallLater';
 
 class Timer {
     /*timer入口*/
@@ -267,6 +268,27 @@ class Timer {
     resume(): void {
         this.scale = 1;
     }
+
+    //-----------延迟执行
+
+    /**
+     * 延迟执行。
+     * @param	caller 执行域(this)。
+     * @param	method 定时器回调函数。
+     * @param	args 回调参数。
+     */
+    callLater(caller: any, method: Function, args: any[]): void {
+        CallLater.I.callLater(caller, method, args);
+    }
+
+    /**
+     * 立即执行 callLater 。
+     * @param	caller 执行域(this)。
+     * @param	method 定时器回调函数。
+     */
+    runCallLater(caller: any, method: Function): void {
+        CallLater.I.runCallLater(caller, method);
+    }
 }
 
 /* 私有timer函数类*/
@@ -303,20 +325,20 @@ class TimerHandler {
 * timer管理器 如果需要新增timer，在这里新建实例，一般一个就够用了。
 * */
 export class TimerMgr {
-    private static _timer:Timer;
-    private static _inited:boolean = false;
+    private static _timer: Timer;
+    private static _inited: boolean = false;
     //私有构造函数
     private constructor() {
     }
     /*
     * 获取timer唯一实例
     * */
-    public static get timer(){
+    public static get timer() {
         return this._timer;
     }
-    
+
     public static init() {
-        if(this._inited){
+        if (this._inited) {
             return;
         }
         this._inited = true;
@@ -326,7 +348,7 @@ export class TimerMgr {
         // @ts-ignore
         delete global.__tgjsRegisterTickHandler;
     }
-    private static _timerUpdate(){
+    private static _timerUpdate() {
         this._timer._update();
     }
 }

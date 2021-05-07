@@ -1,24 +1,26 @@
 import { UnityEngine } from "csharp";
-import Handler from "framework/utils/Handler";
+import Handler from "Framework/utils/Handler";
 import { ResourceManager } from "./ResourceManager";
+import { ISingleton } from '../interface/ISingleton';
 /*
 * GameObject资源池
 * */
-export class GameObjectPool {
-    private static _instance: GameObjectPool;
+export class GameObjectPool implements ISingleton {
+    public static I: GameObjectPool = new GameObjectPool();
 
-    private readonly _cacheTransRoot = null;
+    private _cacheTransRoot = null;
     private _goPool = new Map();
     private _instCache: Map<string, Array<any>> = new Map<string, Array<any>>();
-
-    public static get instance(): GameObjectPool {
-        if (!this._instance) {
-            this._instance = new GameObjectPool();
-        }
-        return this._instance;
+    /**
+     * 密封构造函数
+     */
+    private constructor() {
     }
 
-    private constructor() {
+    /**
+     * 初始化
+     */
+    public initialize(): void {
         let go = UnityEngine.GameObject.Find("GameObjectCacheRoot");
         if (go == (void 0)) {
             go = new UnityEngine.GameObject("GameObjectCacheRoot");
@@ -94,7 +96,7 @@ export class GameObjectPool {
             callback && callback.run();
             return;
         }
-        let go = await ResourceManager.instance.loadPrefabAsync(path);
+        let go = await ResourceManager.I.loadPrefabAsync(path);
         if (go != (void 0)) {
             this.cacheAndInstGameObject(path, go, inst_count);
         }

@@ -1,6 +1,8 @@
 /* 全局类入口*/
 
-import {TimerMgr} from "./utils/Timer";
+import { TimerMgr } from "./utils/timer/Timer";
+import { ResourceManager } from './resource/ResourceManager';
+import { GameObjectPool } from './resource/GameObjectPool';
 
 class Utils {
     /*id*/
@@ -54,5 +56,7 @@ export default class UnityTs {
     static utils: typeof Utils = Utils;
     static init() {
         TimerMgr.init();
+        ResourceManager.I.initialize();
+        GameObjectPool.I.initialize();
     }
 }
