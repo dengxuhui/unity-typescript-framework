@@ -45,12 +45,12 @@ export default class MVCView implements IDestroyable {
      * @param 数据对象类型
      * @returns 数据对象
      */
-    protected getData<T extends MVCData>(dataClass: { new(): T; }): T {
+    protected getData<T extends MVCData>(cls: { new(): T; }): T {
         if (null == this._dataMgr) {
             return null;
         }
 
-        return this._dataMgr.get<T>(dataClass);
+        return this._dataMgr.get<T>(cls);
     }
 
     /**

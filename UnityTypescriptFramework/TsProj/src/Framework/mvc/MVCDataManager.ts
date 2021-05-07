@@ -61,30 +61,30 @@ export default class MVCDataManager implements IDestroyable {
 
     /**
      * 获取MVCData实例
-     * @param T MVCData子类
+     * @param cls MVCData子类
      * @returns 
      */
-    public get<T extends MVCData>(T: { new(): T }): T {
+    public get<T extends MVCData>(cls: { new(): T }): T {
         if (null == this._dataMap) {
             return null;
         }
-        return this._dataMap.get(T);
+        return this._dataMap.get(cls);
     }
 
     /**
      * 添加数据对象
-     * @param T 
+     * @param cls 
      */
-    public add<T extends MVCData>(T: { new(): T }): T {
+    public add<T extends MVCData>(cls: { new(): T }): T {
         if (null == this._dataMap) {
             return null;
         }
-        if (this._dataMap.has(T)) {
-            return this._dataMap.get(T);
+        if (this._dataMap.has(cls)) {
+            return this._dataMap.get(cls);
         }
-        let data = new T();
+        let data = new cls();
         data.assemble(this._main);
-        this._dataMap.set(T, data);
+        this._dataMap.set(cls, data);
         return data;
     }
 }

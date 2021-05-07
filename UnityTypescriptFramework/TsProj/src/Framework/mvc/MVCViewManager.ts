@@ -69,29 +69,29 @@ export default class MVCViewManager implements IDestroyable {
 
     /**
      * 获取MVCView实例
-     * @param T 
+     * @param cls 
      */
-    public get<T extends MVCView>(T: { new(): T }): T {
+    public get<T extends MVCView>(cls: { new(): T }): T {
         if (null == this._viewMap) {
             return null;
         }
-        return this._viewMap.get(T);
+        return this._viewMap.get(cls);
     }
 
     /**
      * 添加MVCView，并实例化
-     * @param T 
+     * @param cls 
      */
-    public add<T extends MVCView>(T: { new(): T }): T {
+    public add<T extends MVCView>(cls: { new(): T }): T {
         if (null == this._viewMap) {
             return null;
         }
-        if (this._viewMap.has(T)) {
-            return this._viewMap.get(T);
+        if (this._viewMap.has(cls)) {
+            return this._viewMap.get(cls);
         }
-        let view = new T();
+        let view = new cls();
         view.assemble(this._main, this._dataMgr);
-        this._viewMap.set(T, view);
+        this._viewMap.set(cls, view);
         return view;
     }
 }
