@@ -1,5 +1,7 @@
-﻿export abstract class UIBaseModel {
+﻿/**
+ * 数据模型基类
+ */
+export abstract class UIBaseModel {
     protected constructor() {
-        
     }
 }
