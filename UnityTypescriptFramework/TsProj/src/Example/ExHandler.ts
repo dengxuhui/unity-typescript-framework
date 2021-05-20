@@ -9,7 +9,7 @@ export class ExHandler {
         
         let handler = Handler.create(null, (name) => {
             UnityEngine.Debug.LogFormat("get name is=>{0}", name);
-        }, ["Aer"], true);
+        }, ["AerTims"], true);
         handler.run()
     }
 }

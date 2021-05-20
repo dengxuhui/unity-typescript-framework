@@ -6,7 +6,7 @@ class Main {
         //初始化框架
         UnityTs.init();
 
-        ExHandler.Run();
+        // ExHandler.Run();
     }
 }
 

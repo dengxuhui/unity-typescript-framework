@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Puerts;
 using UnityEngine.SceneManagement;
+using UnityTs.Framework.Conf;
 using UnityTs.Utils;
 
 namespace UnityTs.Js
@@ -11,18 +12,38 @@ namespace UnityTs.Js
     /// </summary>
     public sealed class JsManager : MonoSingleton<JsManager>
     {
+        //js环境
         private JsEnv jsEnv = null;
+
+        #region unity
 
         private void Update()
         {
             jsEnv?.Tick();
         }
 
-        async Task InitJsEnv()
+        #endregion
+
+        #region private
+
+        //初始化js环境
+        private async Task InitJsEnv()
         {
-            //调试端口：8080
-            jsEnv = new JsEnv(new JsLoader(), 8080);
-            jsEnv.WaitDebugger();
+            if (Config.JsDebugger == JsDebugger.Block)
+            {
+                jsEnv = new JsEnv(new JsLoader(), 8080);
+                jsEnv.WaitDebugger();
+            }
+            else if (Config.JsDebugger == JsDebugger.Async)
+            {
+                jsEnv = new JsEnv(new JsLoader(), 8080);
+                await jsEnv.WaitDebuggerAsync();
+            }
+            else
+            {
+                jsEnv = new JsEnv(new JsLoader());
+            }
+
             jsEnv.ExecuteFile("puerts/flatbuffers.js");
             //声明Action： 值类型才需要这样添加
             jsEnv.UsingAction<float>();
@@ -31,43 +52,44 @@ namespace UnityTs.Js
             jsEnv.UsingAction<Scene, LoadSceneMode>();
         }
 
+        #endregion
+
+        #region public
+
+        /// <summary>
+        /// 启动
+        /// </summary>
+        /// <param name="debug"></param>
         public async void StartGame()
         {
             await InitJsEnv();
-
-            if (jsEnv != null)
-            {
-                try
-                {
-                    jsEnv.Eval(@"require('bundle')");
-                }
-                catch (Exception e)
-                {
-                    // Log.Error(LogGroups.Engine, e.ToString());
-                }
-            }
+            jsEnv?.Eval(@"require('bundle')");
         }
 
+        /// <summary>
+        /// 重启
+        /// </summary>
         public async void Restart()
         {
             Dispose();
-
             await InitJsEnv();
             StartGame();
         }
 
-        private void OnApplicationQuit()
-        {
-        }
-
+        /// <summary>
+        /// 释放
+        /// </summary>
         public override void Dispose()
         {
-            base.Dispose();
             if (jsEnv != null)
             {
                 jsEnv.Dispose();
                 jsEnv = null;
             }
+
+            base.Dispose();
         }
+
+        #endregion
     }
 }

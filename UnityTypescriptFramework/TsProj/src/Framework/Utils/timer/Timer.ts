@@ -2,6 +2,7 @@
 * 
 * 时钟管理器 使用Utf.timer访问
 * */
+import { UnityEngine } from "csharp";
 import UnityTs from "../../UnityTs";
 import CallLater from './CallLater';
 
@@ -325,7 +326,7 @@ class TimerHandler {
 * timer管理器 如果需要新增timer，在这里新建实例，一般一个就够用了。
 * */
 export class TimerMgr {
-    private static _timer: Timer;
+    static _timer: Timer;
     private static _inited: boolean = false;
     //私有构造函数
     private constructor() {
@@ -344,11 +345,13 @@ export class TimerMgr {
         this._inited = true;
         this._timer = new Timer();
         // @ts-ignore
-        global.__tgjsRegisterTickHandler(this._timerUpdate);
+        global.__tgjsRegisterTickHandler(uts_timerUpdate);
         // @ts-ignore
         delete global.__tgjsRegisterTickHandler;
     }
-    private static _timerUpdate() {
-        this._timer._update();
-    }
+}
+
+function uts_timerUpdate(){
+    UnityEngine.Debug.Log("Update xx");
+    TimerMgr._timer._update();
 }

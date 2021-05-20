@@ -8,7 +8,7 @@ const externals = {
 
 module.exports = {
 	entry: './src/Main.ts',
-	devtool: 'inline-source-map',
+	devtool: 'source-map',
 	mode: 'development',
 	module: {
 		rules: [
