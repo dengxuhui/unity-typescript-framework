@@ -28,17 +28,7 @@ namespace UnityTs.Js
         public string ReadFile(string filepath, out string debugpath)
         {
 #if UNITY_EDITOR
-            //这里bundle.js使用TsProj下的js文件
-            var dir = string.Empty;
-            if (filepath.Contains("bundle.js"))
-            {
-                dir = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "TsProj/libs/");
-            }
-            else
-            {
-                dir = Path.Combine(Application.dataPath, "AssetsPackage/Js");
-            }
-
+            var dir = Path.Combine(Application.dataPath, "AssetsPackage/Js");
             var jsPath = Path.Combine(dir, filepath);
             var txt = File.ReadAllText(jsPath);
             debugpath = jsPath.Replace("/", "\\");

@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "address": "192.168.0.246",
+            "localRoot": "${workspaceFolder}",
+            "name": "Attach to Remote",
+            "port": 8080,
+            "remoteRoot": "Absolute path to the remote directory containing the program",
+            "request": "attach",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
             "name": "NodeJs",
             "port": 8080,
             "request": "attach",
