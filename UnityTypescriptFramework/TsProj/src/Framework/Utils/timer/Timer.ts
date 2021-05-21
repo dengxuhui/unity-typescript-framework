@@ -352,6 +352,5 @@ export class TimerMgr {
 }
 
 function uts_timerUpdate(){
-    UnityEngine.Debug.Log("Update xx");
     TimerMgr._timer._update();
 }

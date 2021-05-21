@@ -132,7 +132,6 @@ var Main = /** @class */ (function () {
     function Main() {
         //初始化框架
         _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].init();
-        // ExHandler.Run();
     }
     return Main;
 }());
@@ -1032,15 +1031,8 @@ var LaterHandler = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimerMgr", function() { return TimerMgr; });
-/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
-/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _UnityTs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../UnityTs */ "./src/framework/UnityTs.ts");
-/* harmony import */ var _CallLater__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CallLater */ "./src/framework/utils/timer/CallLater.ts");
-/*
-*
-* 时钟管理器 使用Utf.timer访问
-* */
-
+/* harmony import */ var _UnityTs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../UnityTs */ "./src/framework/UnityTs.ts");
+/* harmony import */ var _CallLater__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CallLater */ "./src/framework/utils/timer/CallLater.ts");
 
 
 var Timer = /** @class */ (function () {
@@ -1169,7 +1161,7 @@ var Timer = /** @class */ (function () {
     };
     /*获取handler*/
     Timer.prototype._getHandler = function (caller, method) {
-        var cid = caller ? caller.$_GID || (caller.$_GID = _UnityTs__WEBPACK_IMPORTED_MODULE_1__["default"].utils.getGID()) : 0;
+        var cid = caller ? caller.$_GID || (caller.$_GID = _UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].utils.getGID()) : 0;
         var mid = method.$_TID || (method.$_TID = (Timer._mid++) * 100000);
         return this._map[cid + mid];
     };
@@ -1179,7 +1171,7 @@ var Timer = /** @class */ (function () {
     Timer.prototype._indexHandler = function (handler) {
         var caller = handler.caller;
         var method = handler.method;
-        var cid = caller ? caller.$_GID || (caller.$_GID = _UnityTs__WEBPACK_IMPORTED_MODULE_1__["default"].utils.getGID()) : 0;
+        var cid = caller ? caller.$_GID || (caller.$_GID = _UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].utils.getGID()) : 0;
         var mid = method.$_TID || (method.$_TID = (Timer._mid++) * 100000);
         handler.key = cid + mid;
         this._map[handler.key] = handler;
@@ -1307,7 +1299,7 @@ var Timer = /** @class */ (function () {
      * @param	args 回调参数。
      */
     Timer.prototype.callLater = function (caller, method, args) {
-        _CallLater__WEBPACK_IMPORTED_MODULE_2__["default"].I.callLater(caller, method, args);
+        _CallLater__WEBPACK_IMPORTED_MODULE_1__["default"].I.callLater(caller, method, args);
     };
     /**
      * 立即执行 callLater 。
@@ -1315,7 +1307,7 @@ var Timer = /** @class */ (function () {
      * @param	method 定时器回调函数。
      */
     Timer.prototype.runCallLater = function (caller, method) {
-        _CallLater__WEBPACK_IMPORTED_MODULE_2__["default"].I.runCallLater(caller, method);
+        _CallLater__WEBPACK_IMPORTED_MODULE_1__["default"].I.runCallLater(caller, method);
     };
     /*timer入口*/
     Timer.gSysTimer = null;
@@ -1380,7 +1372,6 @@ var TimerMgr = /** @class */ (function () {
 }());
 
 function uts_timerUpdate() {
-    csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].Debug.Log("Update xx");
     TimerMgr._timer._update();
 }
 
