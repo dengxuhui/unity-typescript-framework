@@ -1,4 +1,5 @@
 using System.IO;
+using AssetBundles;
 using Puerts;
 using UnityEngine;
 
@@ -9,40 +10,40 @@ namespace CS
     /// </summary>
     public sealed class JsLoader : ILoader
     {
-        private string root = "";
-
-        public JsLoader()
-        {
-        }
-
-        public JsLoader(string root)
-        {
-            this.root = root;
-        }
+        private static readonly string JavaScriptFolder = "AssetsPackage/JS";
 
         public bool FileExists(string filepath)
         {
             return true;
         }
 
-        public string ReadFile(string filepath, out string debugpath)
+        public string ReadFile(string fileName, out string debugPath)
         {
-// #if UNITY_EDITOR
-//             var dir = Path.Combine(Application.dataPath, "AssetsPackage/Js");
-//             var jsPath = Path.Combine(dir, filepath);
-//             var txt = File.ReadAllText(jsPath);
-//             debugpath = jsPath.Replace("/", "\\");
-//
-//             return txt;
-// #else
-//         //TODO 正式环境加载JS的方式
-// #endif
-            var dir = Path.Combine(Application.dataPath, "AssetsPackage/Js");
-            var jsPath = Path.Combine(dir, filepath);
-            var txt = File.ReadAllText(jsPath);
-            debugpath = jsPath.Replace("/", "\\");
+            var jsPath = string.Empty;
+#if UNITY_EDITOR
+            if (AssetBundleConfig.IsEditorMode)
+            {
+                var dir = Path.Combine(Application.dataPath, JavaScriptFolder);
+                jsPath = Path.Combine(dir, fileName);
+                debugPath = jsPath.Replace("/", "\\");
+                return GameUtility.SafeReadAllText(jsPath);
+            }
+#endif
+            debugPath = string.Empty;
+            jsPath = $"{JsManager.jsAssetbundleAssetName}/{fileName}";
+            string assetbundleName = null;
+            string assetName = null;
+            bool status = AssetBundleManager.Instance.MapAssetPath(jsPath, out assetbundleName, out assetName);
+            if (!status)
+            {
+                Logger.LogError("MapAssetPath failed : " + jsPath);
+                return string.Empty;
+            }
 
-            return txt;
+            var asset = AssetBundleManager.Instance.GetAssetCache(assetName) as TextAsset;
+            var content = asset.text;
+            AssetBundleManager.Instance.ClearAssetsCacheByName(assetName);
+            return content;
         }
     }
 }

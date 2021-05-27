@@ -14,8 +14,7 @@ namespace CS
         #region property
 
         //js ab包名
-        public static readonly string jsAssetbundleAssetName = "JS";
-        
+        public static readonly string jsAssetbundleAssetName = "js";
         //js环境
         private JsEnv jsEnv = null;
 

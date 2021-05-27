@@ -59,8 +59,7 @@ public class PuertsConfig
                 
                 typeof(JsManager),
                 typeof(GameLaunch),
-                typeof(Logger),
-
+                typeof(CS.Logger),
             };
 
             List<string> namespaces = new List<string>()
