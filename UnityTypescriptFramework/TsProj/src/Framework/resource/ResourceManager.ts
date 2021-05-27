@@ -1,5 +1,7 @@
 import EventDispatcher from "../utils/EventDispatcher";
 import { ISingleton } from '../interface/ISingleton';
+import Handler from "framework/utils/Handler";
+import { libx, System } from "csharp";
 
 /**
  * 资源管理器
@@ -16,7 +18,7 @@ export class ResourceManager extends EventDispatcher implements ISingleton {
     /**
      * 初始化
      */
-    public initialize():void{
+    public initialize(): void {
 
     }
 
@@ -31,5 +33,13 @@ export class ResourceManager extends EventDispatcher implements ISingleton {
 
     public async laodTextAssetAsync(path: string) {
         //TODO
+    }
+
+    /**
+     * 异步加载资源
+     * @param path 
+     */
+    public loadAssetAsync(path: string, type: System.Type, cb: Handler) {
+        // let request = libx.Assets.LoadAssetAsync(path, type);                
     }
 }

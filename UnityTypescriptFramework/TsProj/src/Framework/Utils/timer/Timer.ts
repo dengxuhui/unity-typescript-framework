@@ -2,7 +2,6 @@
 * 
 * 时钟管理器 使用Utf.timer访问
 * */
-import { UnityEngine } from "csharp";
 import UnityTs from "../../UnityTs";
 import CallLater from './CallLater';
 

@@ -537,6 +537,13 @@ var ResourceManager = /** @class */ (function (_super) {
             });
         });
     };
+    /**
+     * 异步加载资源
+     * @param path
+     */
+    ResourceManager.prototype.loadAssetAsync = function (path, type, cb) {
+        // let request = libx.Assets.LoadAssetAsync(path, type);                
+    };
     ResourceManager.I = new ResourceManager();
     return ResourceManager;
 }(_utils_EventDispatcher__WEBPACK_IMPORTED_MODULE_0__["default"]));
@@ -1033,6 +1040,10 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimerMgr", function() { return TimerMgr; });
 /* harmony import */ var _UnityTs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../UnityTs */ "./src/framework/UnityTs.ts");
 /* harmony import */ var _CallLater__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CallLater */ "./src/framework/utils/timer/CallLater.ts");
+/*
+*
+* 时钟管理器 使用Utf.timer访问
+* */
 
 
 var Timer = /** @class */ (function () {
