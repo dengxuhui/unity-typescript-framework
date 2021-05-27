@@ -1,4 +1,4 @@
-﻿namespace UnityTs.Framework.Conf
+﻿namespace CS.Framework.Conf
 {
     /// <summary>
     /// 全局配置

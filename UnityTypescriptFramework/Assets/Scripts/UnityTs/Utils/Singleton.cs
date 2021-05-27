@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityTs.Utils
+namespace CS.Utils
 {
     public abstract class Singleton<T> where T : class, new()
     {

@@ -44,13 +44,13 @@ public class LoggerHelper : MonoSingleton<LoggerHelper>
 
         if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
         {
-            Logger.LogError(condition + " \n" + stackTrace);
+            CS.Logger.LogError(condition + " \n" + stackTrace);
         }
     }
 
     private void CheckReport()
     {
-        Logger.CheckReportError();
+        CS.Logger.CheckReportError();
     }
 
     private void Update()
@@ -74,12 +74,12 @@ public class LoggerHelper : MonoSingleton<LoggerHelper>
                 {
                     case LOG_TYPE.LOG:
                     {
-                        Logger.Log(logInfo.msg, null);
+                        CS.Logger.Log(logInfo.msg, null);
                         break;
                     }
                     case LOG_TYPE.LOG_ERR:
                     {
-                        Logger.LogError(logInfo.msg, null);
+                        CS.Logger.LogError(logInfo.msg, null);
                         break;
                     }
                 }

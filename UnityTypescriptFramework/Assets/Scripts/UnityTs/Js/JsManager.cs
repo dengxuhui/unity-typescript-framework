@@ -1,17 +1,25 @@
 using System.Threading.Tasks;
+using AssetBundles;
+using CS.Framework.Conf;
 using Puerts;
 using UnityEngine.SceneManagement;
-using UnityTs.Framework.Conf;
 
-namespace UnityTs.Js
+namespace CS
 {
     /// <summary>
     /// js脚本管理器
     /// </summary>
     public sealed class JsManager : MonoSingleton<JsManager>
     {
+        #region property
+
+        //js ab包名
+        public static readonly string jsAssetbundleAssetName = "JS";
+        
         //js环境
         private JsEnv jsEnv = null;
+
+        #endregion
 
         #region unity
 
@@ -60,8 +68,17 @@ namespace UnityTs.Js
         /// <param name="debug"></param>
         public async void StartGame()
         {
+            var path = AssetBundleUtility.PackagePathToAssetsPath(jsAssetbundleAssetName);
+            AssetbundleName = AssetBundleUtility.AssetBundlePathToAssetBundleName(path);
             await InitJsEnv();
-            jsEnv?.Eval(@"require('bundle')");
+            if (jsEnv != null)
+            {
+                jsEnv.Eval(@"require('bundle')");       
+            }
+            else
+            {
+                Logger.LogError("Init Js Env null!!!");
+            }
         }
 
         /// <summary>
@@ -86,6 +103,15 @@ namespace UnityTs.Js
             }
 
             base.Dispose();
+        }
+        
+        /// <summary>
+        /// ab包名
+        /// </summary>
+        public string AssetbundleName
+        {
+            get;
+            protected set;
         }
 
         #endregion

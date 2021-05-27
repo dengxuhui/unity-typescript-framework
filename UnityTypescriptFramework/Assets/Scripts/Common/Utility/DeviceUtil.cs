@@ -31,7 +31,7 @@ public class DeviceUtil
         }
         catch (Exception e)
         {
-            Logger.Log("GetAndroidVersion error {0}", e.Message);
+            CS.Logger.Log("GetAndroidVersion error {0}", e.Message);
         }
 
         return 0;

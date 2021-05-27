@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using Logger = CS.Logger;
 
 /// <summary>
 /// added by wsh @ 2017.12.25

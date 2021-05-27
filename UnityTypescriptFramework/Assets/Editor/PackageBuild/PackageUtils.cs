@@ -119,7 +119,7 @@ public class PackageUtils
             ips.Sort();
             if (ips.Count <= 0)
             {
-                Logger.LogError("Get inter network ip failed!");
+                CS.Logger.LogError("Get inter network ip failed!");
             }
             else
             {
@@ -128,8 +128,8 @@ public class PackageUtils
         }
         catch (System.Exception ex)
         {
-            Logger.LogError("Get inter network ip failed with err : " + ex.Message);
-            Logger.LogError("Go Tools/Package to specify any machine as local server!!!");
+            CS.Logger.LogError("Get inter network ip failed with err : " + ex.Message);
+            CS.Logger.LogError("Go Tools/Package to specify any machine as local server!!!");
         }
         return string.Empty;
     }
@@ -158,7 +158,7 @@ public class PackageUtils
             case BuildTarget.iOS:
                 return "iOS";
             default:
-                Logger.Log("Error buildTarget!!! " + buildTarget);
+                CS.Logger.Log("Error buildTarget!!! " + buildTarget);
                 return null;
         }
     }

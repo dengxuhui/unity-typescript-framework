@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System;
-using System.Collections.Generic;
+using UnityEngine;
+using Logger = CS.Logger;
 
 /// <summary>
 /// added by wsh @ 2017.12.25
@@ -129,7 +129,7 @@ public class GameUtility
             File.WriteAllBytes(outFile, outBytes);
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeWriteAllBytes failed! path = {0} with err = {1}", outFile, ex.Message));
             return false;
@@ -153,7 +153,7 @@ public class GameUtility
             File.WriteAllLines(outFile, outLines);
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeWriteAllLines failed! path = {0} with err = {1}", outFile, ex.Message));
             return false;
@@ -177,7 +177,7 @@ public class GameUtility
             File.WriteAllText(outFile, text);
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeWriteAllText failed! path = {0} with err = {1}", outFile, ex.Message));
             return false;
@@ -201,7 +201,7 @@ public class GameUtility
             File.SetAttributes(inFile, FileAttributes.Normal);
             return File.ReadAllBytes(inFile);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeReadAllBytes failed! path = {0} with err = {1}", inFile, ex.Message));
             return null;
@@ -225,7 +225,7 @@ public class GameUtility
             File.SetAttributes(inFile, FileAttributes.Normal);
             return File.ReadAllLines(inFile);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeReadAllLines failed! path = {0} with err = {1}", inFile, ex.Message));
             return null;
@@ -249,7 +249,7 @@ public class GameUtility
             File.SetAttributes(inFile, FileAttributes.Normal);
             return File.ReadAllText(inFile);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeReadAllText failed! path = {0} with err = {1}", inFile, ex.Message));
             return null;
@@ -291,7 +291,7 @@ public class GameUtility
             Directory.CreateDirectory(folderPath);
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeClearDir failed! path = {0} with err = {1}", folderPath, ex.Message));
             return false;
@@ -313,7 +313,7 @@ public class GameUtility
             }
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeDeleteDir failed! path = {0} with err: {1}", folderPath, ex.Message));
             return false;
@@ -337,7 +337,7 @@ public class GameUtility
             File.Delete(filePath);
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeDeleteFile failed! path = {0} with err: {1}", filePath, ex.Message));
             return false;
@@ -362,7 +362,7 @@ public class GameUtility
             File.Move(sourceFileName, destFileName);
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeRenameFile failed! path = {0} with err: {1}", sourceFileName, ex.Message));
             return false;
@@ -387,7 +387,7 @@ public class GameUtility
             File.Copy(fromFile, toFile, true);
             return true;
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(string.Format("SafeCopyFile failed! formFile = {0}, toFile = {1}, with err = {2}",
                 fromFile, toFile, ex.Message));

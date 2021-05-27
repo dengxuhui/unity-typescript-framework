@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using Puerts;
+using Logger = CS.Logger;
 #if UNITY_EDITOR
 using UnityEditor;
 

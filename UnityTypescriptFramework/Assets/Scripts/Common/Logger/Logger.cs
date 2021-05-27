@@ -6,7 +6,9 @@ using System.Text;
 using UnityEngine.Profiling;
 using Debug = UnityEngine.Debug;
 
-public class Logger
+namespace CS
+{
+    public class Logger
 {
     static protected Stopwatch watch = new Stopwatch();
     private static WebClient m_webClient = new WebClient();
@@ -181,4 +183,5 @@ public class Logger
         }
     }
 
+}
 }

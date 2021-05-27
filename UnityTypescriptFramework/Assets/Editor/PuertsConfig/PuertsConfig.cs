@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CS;
 using UnityEngine;
-using UnityTs;
-using UnityTs.Js;
+using Logger = UnityEngine.Logger;
 
 //1、配置类必须打[Configure]标签
 //2、必须放Editor目录
@@ -58,7 +58,7 @@ public class PuertsConfig
                 typeof(AsyncOperation),
                 
                 typeof(JsManager),
-                typeof(Main),
+                typeof(GameLaunch),
                 typeof(Logger),
 
             };

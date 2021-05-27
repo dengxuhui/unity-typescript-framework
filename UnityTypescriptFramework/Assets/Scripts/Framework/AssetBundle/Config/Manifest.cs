@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+using Logger = CS.Logger;
 /// <summary>
 /// added by wsh @ 2017.12.23
 /// 功能：Manifest管理：提供对AssetBundleManifest类的封装

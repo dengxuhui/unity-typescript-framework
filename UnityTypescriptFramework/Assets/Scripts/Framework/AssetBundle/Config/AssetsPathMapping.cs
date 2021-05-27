@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Logger = CS.Logger;
 /// <summary>
 /// added by wsh @ 2017.12.26
 /// 功能： Assetbundle相关的Asset路径映射解析，每次在构建Assetbunlde完成自动生成，每次有资源更新时需要强行下载一次

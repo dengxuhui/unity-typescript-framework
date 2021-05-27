@@ -2,7 +2,7 @@ using System.IO;
 using Puerts;
 using UnityEngine;
 
-namespace UnityTs.Js
+namespace CS
 {
     /// <summary>
     /// js加载器
