@@ -63,5 +63,6 @@ AssetBundles/Android
 Assets/AssetsPackage/Lua
 Assets/StreamingAssets/AssetBundles
 Assets/Gen
+Assets/Gen.meta
 DLC/
 *.pyc
