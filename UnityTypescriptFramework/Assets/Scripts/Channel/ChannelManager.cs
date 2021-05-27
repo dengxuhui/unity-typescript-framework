@@ -74,7 +74,7 @@ namespace GameChannel
         {
             if (channel == null)
             {
-                return "xluaframework";
+                return "unity_typescript_framework";
             }
             return channel.GetProductName();
         }
