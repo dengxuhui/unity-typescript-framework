@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 //<summary>
 //Maze generation by dividing area in two, adding spaces in walls and repeating recursively.

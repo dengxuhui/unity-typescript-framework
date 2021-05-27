@@ -101,7 +101,7 @@ public class PuertsConfig
     static bool Filter(MemberInfo memberInfo)
     {
         return memberInfo.Name == "runInEditMode" ||
-            memberInfo.Name == "get_runInEditMode" ||
-            memberInfo.Name == "set_runInEditMode";
+               memberInfo.Name == "get_runInEditMode" ||
+               memberInfo.Name == "set_runInEditMode";
     }
 }

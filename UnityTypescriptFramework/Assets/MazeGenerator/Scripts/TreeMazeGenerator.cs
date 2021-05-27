@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 //<summary>
 //Basic class for Tree generation logic.

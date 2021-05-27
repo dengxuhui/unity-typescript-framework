@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 //<summary>
 //Ball movement controlls and simple third-person-style camera

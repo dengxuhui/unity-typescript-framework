@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using Puerts;
 using UnityEngine.SceneManagement;
 using UnityTs.Framework.Conf;
-using UnityTs.Utils;
 
 namespace UnityTs.Js
 {

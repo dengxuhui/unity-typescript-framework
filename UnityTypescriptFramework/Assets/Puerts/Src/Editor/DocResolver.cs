@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 namespace Puerts
 {
-    using UnityEngine;
-    using UnityEditor;
     using System.Xml;
 
     public class DocResolver

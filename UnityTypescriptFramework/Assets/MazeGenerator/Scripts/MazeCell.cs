@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public enum Direction{
+﻿public enum Direction{
 	Start,
 	Right,
 	Front,

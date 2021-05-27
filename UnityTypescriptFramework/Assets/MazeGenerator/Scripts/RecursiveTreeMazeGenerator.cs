@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿
 
 //<summary>
 //Subclass for selecting last cell from container.

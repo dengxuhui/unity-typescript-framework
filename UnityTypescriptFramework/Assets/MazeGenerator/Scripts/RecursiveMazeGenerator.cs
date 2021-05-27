@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 //<summary>
 //Pure recursive maze generation.

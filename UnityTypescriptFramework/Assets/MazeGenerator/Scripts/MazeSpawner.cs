@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 //<summary>
 //Game object, that creates maze and instantiates it in scene
