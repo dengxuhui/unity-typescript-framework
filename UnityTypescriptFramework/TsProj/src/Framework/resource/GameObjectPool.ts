@@ -1,6 +1,6 @@
 import { UnityEngine } from "csharp";
 import Handler from "framework/utils/Handler";
-import { ResourceManager } from "./ResourceManager";
+import { $promise, $typeof } from "puerts";
 import { ISingleton } from '../interface/ISingleton';
 /*
 * GameObject资源池
@@ -95,12 +95,12 @@ export class GameObjectPool implements ISingleton {
         if (this.checkHasCached(path)) {
             callback && callback.run();
             return;
-        }
-        let go = await ResourceManager.I.loadPrefabAsync(path);
-        if (go != (void 0)) {
-            this.cacheAndInstGameObject(path, go, inst_count);
-        }
-        callback && callback.run();
+        }    
+        // let go = await ResourceManager.I.loadPrefabAsync(path);
+        // if (go != (void 0)) {
+        //     this.cacheAndInstGameObject(path, go, inst_count);
+        // }
+        // callback && callback.run();
     }
 
     /**
@@ -142,7 +142,7 @@ export class GameObjectPool implements ISingleton {
                     UnityEngine.GameObject.Destroy(obj);
                 }
             }
-        });
+        });        
         this._instCache.clear();
         //清除cachePool中的GameObject引用
     }
