@@ -126,12 +126,16 @@ module.exports = g;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/UnityTs */ "./src/framework/UnityTs.ts");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _framework_UnityTs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./framework/UnityTs */ "./src/framework/UnityTs.ts");
+
 
 var Main = /** @class */ (function () {
     function Main() {
         //初始化框架
-        _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].init();
+        _framework_UnityTs__WEBPACK_IMPORTED_MODULE_1__["default"].init();
+        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("js start up!!");
     }
     return Main;
 }());
