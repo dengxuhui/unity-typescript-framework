@@ -14,7 +14,10 @@ namespace CS
     {
         //调试模式开关
         [SerializeField] private JsDebugger jsDebugger;
-        
+
+        //启动相关用到的prefab，不使用js代码运行，本次热更下次生效的类型
+        private const string launchPrefabPath = "ui/prefabs/view/launch/ui_launch.prefab";
+        private const string noticeTipPrefabPath = "ui/prefabs/view/launch/ui_notice_tip.prefab";
         /// <summary>
         /// 启动
         /// </summary>
