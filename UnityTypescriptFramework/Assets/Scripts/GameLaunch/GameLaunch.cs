@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using AssetBundles;
 using CS.Framework.Conf;
 using GameChannel;
@@ -18,6 +17,10 @@ namespace CS
         //启动相关用到的prefab，不使用js代码运行，本次热更下次生效的类型
         private const string launchPrefabPath = "ui/prefabs/view/launch/ui_launch.prefab";
         private const string noticeTipPrefabPath = "ui/prefabs/view/launch/ui_notice_tip.prefab";
+
+        //ab更新器
+        private AssetbundleUpdater _updater;
+
         /// <summary>
         /// 启动
         /// </summary>
@@ -31,14 +34,24 @@ namespace CS
 
             LoggerHelper.Instance.Startup();
 
+            //初始版本号
             yield return InitAppVersion();
 
-            yield return InitChannel(); 
+            //初始平台
+            yield return InitChannel();
 
             //ab管理器启动
             yield return AssetBundleManager.Instance.Initialize();
-            //js管理器启动
-            JsManager.Instance.StartGame();
+
+            yield return InitLaunchPrefab();
+            yield return null;
+            yield return InitNoticePrefab();
+
+            //开始更新下载
+            if (_updater)
+            {
+                _updater.StartCheckUpdate();
+            }
             yield break;
         }
 
@@ -82,6 +95,61 @@ namespace CS
             ChannelManager.instance.Init(channelName);
             Logger.Log($"channelName = {channelName}");
             yield break;
+        }
+
+        //初始提示界面
+        IEnumerator InitNoticePrefab()
+        {
+            var loader = AssetBundleManager.Instance.LoadAssetAsync(noticeTipPrefabPath, typeof(GameObject));
+            yield return loader;
+            var prefab = loader.asset as GameObject;
+            loader.Dispose();
+            if (prefab == null)
+            {
+                Logger.LogError($"LoadAssetAsync noticeTipPrefab err :{noticeTipPrefabPath} ");
+                yield break;
+            }
+
+            var go = InstantiatePrefab(prefab);
+            UINoticeTip.Instance.UIGameObject = go;
+            yield break;
+        }
+
+        //初始启动界面
+        IEnumerator InitLaunchPrefab()
+        {
+            var loader = AssetBundleManager.Instance.LoadAssetAsync(launchPrefabPath, typeof(GameObject));
+            yield return loader;
+            var prefab = loader.asset as GameObject;
+            loader.Dispose();
+            if (prefab == null)
+            {
+                Logger.LogError($"LoadAssetAsync launchPrefab err:{launchPrefabPath}");
+                yield break;
+            }
+
+            var launcher = InstantiatePrefab(prefab);
+            _updater = launcher.GetComponent<AssetbundleUpdater>();
+            if (_updater == null)
+            {
+                _updater = launcher.AddComponent<AssetbundleUpdater>();
+            }
+
+            yield break;
+        }
+
+        //通过prefab初始一个GO
+        private GameObject InstantiatePrefab(GameObject prefab)
+        {
+            var instanceGO = Instantiate(prefab);
+            var layer = GameObject.Find("UIRoot/LaunchLayer");
+            instanceGO.transform.SetParent(layer.transform);
+            var rt = instanceGO.GetComponent<RectTransform>();
+            rt.offsetMax = Vector2.zero;
+            rt.offsetMin = Vector2.zero;
+            rt.localScale = Vector3.one;
+            rt.localPosition = Vector3.zero;
+            return instanceGO;
         }
     }
 }
