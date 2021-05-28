@@ -131,7 +131,7 @@ public class GameUtility
         }
         catch (Exception ex)
         {
-            Logger.LogError(string.Format("SafeWriteAllBytes failed! path = {0} with err = {1}", outFile, ex.Message));
+            Logger.LogError($"SafeWriteAllBytes failed! path = {outFile} with err = {ex.Message}");
             return false;
         }
     }
@@ -155,7 +155,7 @@ public class GameUtility
         }
         catch (Exception ex)
         {
-            Logger.LogError(string.Format("SafeWriteAllLines failed! path = {0} with err = {1}", outFile, ex.Message));
+            Logger.LogError($"SafeWriteAllLines failed! path = {outFile} with err = {ex.Message}");
             return false;
         }
     }
@@ -179,7 +179,7 @@ public class GameUtility
         }
         catch (Exception ex)
         {
-            Logger.LogError(string.Format("SafeWriteAllText failed! path = {0} with err = {1}", outFile, ex.Message));
+            Logger.LogError($"SafeWriteAllText failed! path = {outFile} with err = {ex.Message}");
             return false;
         }
     }
@@ -203,7 +203,7 @@ public class GameUtility
         }
         catch (Exception ex)
         {
-            Logger.LogError(string.Format("SafeReadAllBytes failed! path = {0} with err = {1}", inFile, ex.Message));
+            Logger.LogError($"SafeReadAllBytes failed! path = {inFile} with err = {ex.Message}");
             return null;
         }
     }
@@ -227,7 +227,7 @@ public class GameUtility
         }
         catch (Exception ex)
         {
-            Logger.LogError(string.Format("SafeReadAllLines failed! path = {0} with err = {1}", inFile, ex.Message));
+            Logger.LogError($"SafeReadAllLines failed! path = {inFile} with err = {ex.Message}");
             return null;
         }
     }
@@ -251,7 +251,7 @@ public class GameUtility
         }
         catch (Exception ex)
         {
-            Logger.LogError(string.Format("SafeReadAllText failed! path = {0} with err = {1}", inFile, ex.Message));
+            Logger.LogError($"SafeReadAllText failed! path = {inFile} with err = {ex.Message}");
             return null;
         }
     }
