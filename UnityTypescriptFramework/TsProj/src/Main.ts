@@ -4,7 +4,7 @@ class Main {
     constructor() {
         //初始化框架
         UnityTs.init();     
-        CS.Logger.Log("js start up!!")         
+        CS.Logger.Log("js start up!!");    
     }
 }
 

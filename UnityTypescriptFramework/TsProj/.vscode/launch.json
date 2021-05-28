@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "address": "192.168.0.246",
+            "address": "192.168.31.200",
             "localRoot": "${workspaceFolder}",
             "name": "Attach to Remote",
             "port": 8080,

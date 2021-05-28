@@ -26,8 +26,7 @@ module.exports = {
 	},
 	output: {
 		filename: 'bundle.js',
-		// path: path.resolve(__dirname, './libs')
-		path: path.resolve(__dirname, '../Assets/AssetsPackage/Js'),
+		path: path.resolve(__dirname, '../Assets/AssetsPackage/JS'),
 	},
 	externals
 };
