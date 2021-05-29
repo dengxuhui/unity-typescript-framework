@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "es6",
+    "target": "es5",
+    "jsx": "preserve",
+    "lib": [ "ES2018" ],
+    "sourceMap": true,
+    "inlineSources": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "baseUrl": "./src/",
+    "typeRoots": [
+      "../Puerts/Typing",
+      "../Gen/Typing",
+      "./node_modules/@types"
+    ],
+
+  },
+  "include": ["src","test"],
+  "exclude": ["node_modules", "dist"]
+}
