@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/Main.ts");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/GameMain.ts");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -117,10 +117,10 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./src/Main.ts":
-/*!*********************!*\
-  !*** ./src/Main.ts ***!
-  \*********************/
+/***/ "./src/GameMain.ts":
+/*!*************************!*\
+  !*** ./src/GameMain.ts ***!
+  \*************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -129,26 +129,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _framework_UnityTs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./framework/UnityTs */ "./src/framework/UnityTs.ts");
-/* harmony import */ var _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./framework/utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
 
 
-
-var Main = /** @class */ (function () {
-    function Main() {
+var GameMain = /** @class */ (function () {
+    function GameMain() {
         //初始化框架
         _framework_UnityTs__WEBPACK_IMPORTED_MODULE_1__["default"].init();
-        _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["TimerMgr"].timer.frameOnce(1, this, function () {
-            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("js start up!! after a frame");
-        });
-        var timeStart = Date.now;
-        _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["TimerMgr"].timer.loop(1000, this, function () {
-            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("js call every 1 sec");
-        });
-        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("js start,time:" + timeStart);
+        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("js start up");
     }
-    return Main;
+    return GameMain;
 }());
-new Main();
+new GameMain();
 
 
 /***/ }),
