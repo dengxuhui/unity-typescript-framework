@@ -55,6 +55,6 @@ export default class UnityTs {
     static utils: typeof Utils = Utils;
     static init() {
         TimerMgr.init();
-        GameObjectPool.I.initialize();
+        GameObjectPool.Instance.initialize();
     }
 }

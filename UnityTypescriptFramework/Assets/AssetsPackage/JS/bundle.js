@@ -210,7 +210,7 @@ var UnityTs = /** @class */ (function () {
     }
     UnityTs.init = function () {
         _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_0__["TimerMgr"].init();
-        _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_1__["GameObjectPool"].I.initialize();
+        _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_1__["GameObjectPool"].Instance.initialize();
     };
     /* 工具类*/
     UnityTs.utils = Utils;
@@ -417,7 +417,7 @@ var GameObjectPool = /** @class */ (function () {
         this._instCache.clear();
         //清除cachePool中的GameObject引用
     };
-    GameObjectPool.I = new GameObjectPool();
+    GameObjectPool.Instance = new GameObjectPool();
     return GameObjectPool;
 }());
 

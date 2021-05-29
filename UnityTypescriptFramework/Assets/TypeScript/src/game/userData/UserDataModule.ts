@@ -9,7 +9,7 @@ export default class UserDataModule extends Module {
      * 获取实例
      */
     public static get instance(): UserDataModule {
-        return GameCenter.I.get(UserDataModule);
+        return GameCenter.Instance.get(UserDataModule);
     }
 
     constructor() {

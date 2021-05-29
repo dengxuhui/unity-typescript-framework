@@ -28,7 +28,7 @@ export default class UIModule extends Module {
      * 获取实例
      */
     public static get instance(): UIModule {
-        return GameCenter.I.get(UIModule);
+        return GameCenter.Instance.get(UIModule);
     }
 
     /**

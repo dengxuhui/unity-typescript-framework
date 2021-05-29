@@ -7,7 +7,15 @@ import UserDataModule from '../game/userData/UserDataModule';
  * 游戏中心
  */
 export default class GameCenter extends ModuleCenter implements ISingleton {
-    public static I: GameCenter = new GameCenter();
+
+    public static Instance:GameCenter = new GameCenter();
+    /**
+     * 密封构造函数
+     */
+    private constructor() {
+        super();
+    }
+    
     public initialize(): void {
         //----start 注册各种模块
         this.add(UIModule);

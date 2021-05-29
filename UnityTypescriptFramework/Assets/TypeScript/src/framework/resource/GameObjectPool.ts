@@ -6,7 +6,7 @@ import { ISingleton } from '../interface/ISingleton';
 * GameObject资源池
 * */
 export class GameObjectPool implements ISingleton {
-    public static I: GameObjectPool = new GameObjectPool();
+    public static Instance: GameObjectPool = new GameObjectPool();
 
     private _cacheTransRoot = null;
     private _goPool = new Map();
