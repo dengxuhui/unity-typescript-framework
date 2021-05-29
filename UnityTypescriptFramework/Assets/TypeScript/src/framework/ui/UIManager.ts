@@ -1,7 +1,7 @@
 import EventDispatcher from "../utils/EventDispatcher";
 import {ISingleton} from "../interface/ISingleton";
-import {UILayers} from "./UILayers";
 import {UnityEngine} from "csharp";
+import {UILayers} from "./config/UILayers";
 
 /**
  * ui管理器系统：提供UI操作，UI层级管理
@@ -21,7 +21,7 @@ export default class UIManager extends EventDispatcher implements ISingleton {
     
     
     //所有窗口记录
-    allWindows: Array<any>;
+    _allWindows: Array<any>;
 
     /**
      * 密封构造函数
@@ -35,5 +35,6 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      */
     public initialize(): void {
         UILayers.set();
+        this._allWindows = new Array<any>();
     }
 }
