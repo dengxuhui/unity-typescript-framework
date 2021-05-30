@@ -1,14 +1,13 @@
 /**
  * ui基类
  */
-import IDestroyable from "../../interface/IDestroyable";
-import {IComponent} from "../../interface/IComponent";
 import {CS, UnityEngine} from "csharp";
 import {UILayer} from "./UILayer";
 import {UIUtil} from "../util/UIUtil";
 import {$typeof} from "puerts";
+import {IUIComponent} from "../../interface/IUIComponent";
 
-export class UIBaseComponent implements IDestroyable, IComponent {
+export class UIBaseComponent implements IUIComponent {
     /**
      * 窗口view层脚本
      */

@@ -2,7 +2,6 @@ import IDestroyable from "../../interface/IDestroyable";
 import {IComponent} from "../../interface/IComponent";
 import EventDispatcher from "../../utils/EventDispatcher";
 import UIBaseModel from "./UIBaseModel";
-import {UILayer} from "../component/UILayer";
 
 export default class UIBaseCtrl implements IDestroyable, IComponent {
     /**
