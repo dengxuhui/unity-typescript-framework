@@ -1,5 +1,6 @@
 import UnityTs from './framework/UnityTs';
 import {CS} from "csharp";
+
 class GameMain{
     constructor(){
         //初始化框架

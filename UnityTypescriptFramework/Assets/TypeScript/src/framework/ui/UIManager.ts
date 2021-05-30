@@ -3,6 +3,7 @@ import {ISingleton} from "../interface/ISingleton";
 import {UnityEngine} from "csharp";
 import {UILayers} from "./config/UILayers";
 import {UIWindow} from "./UIWindow";
+import {UIMessageNames} from "./config/UIMessageNames";
 
 /**
  * ui管理器系统：提供UI操作，UI层级管理
@@ -22,7 +23,7 @@ export default class UIManager extends EventDispatcher implements ISingleton {
     
     
     //所有窗口记录
-    _allWindows: Array<any>;
+    _allWindows: Array<UIWindow>;
     //打开中的弹窗
     _openingDialogArray:Array<UIWindow>;
     // _layers

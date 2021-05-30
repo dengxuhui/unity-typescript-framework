@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CS;
+using TMPro;
 using UnityEngine;
 using Logger = UnityEngine.Logger;
 
@@ -47,11 +48,14 @@ public class PuertsConfig
                 typeof(UnityEngine.UI.Button.ButtonClickedEvent),
                 typeof(UnityEngine.Events.UnityEvent),
                 typeof(UnityEngine.UI.InputField),
+                typeof(UnityEngine.UI.Slider),
                 typeof(UnityEngine.UI.Toggle),
                 typeof(UnityEngine.UI.Toggle.ToggleEvent),
+                typeof(UnityEngine.UI.ScrollRect),
                 typeof(UnityEngine.Events.UnityEvent<bool>),
                 typeof(Application),
                 typeof(TextAsset),
+                typeof(TMP_Text),
 
                 typeof(UnityEngine.SceneManagement.SceneManager),
                 typeof(UnityEngine.SceneManagement.Scene),
