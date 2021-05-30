@@ -36,6 +36,7 @@ public class PuertsConfig
                 typeof(Type),
                 typeof(ParticleSystem),
                 typeof(Canvas),
+                typeof(CanvasGroup),
                 typeof(RenderMode),
                 typeof(Behaviour),
                 typeof(MonoBehaviour),
