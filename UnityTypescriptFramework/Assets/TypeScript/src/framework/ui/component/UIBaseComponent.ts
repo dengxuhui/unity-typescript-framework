@@ -13,7 +13,7 @@ export class UIBaseComponent implements IUIComponent {
      */
     _view: UIBaseComponent;
     /**
-     * 持有者
+     * 持有者 TODO优化类型限定
      */
     _holder: any;
     /**
