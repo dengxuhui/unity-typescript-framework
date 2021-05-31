@@ -8,7 +8,7 @@ import {$typeof} from "puerts";
 import Handler from "../utils/Handler";
 import {UIWindowNames} from "./config/UIWindowNames";
 import {EUIState} from "./config/EUIState";
-import {UIMessageNames} from "./config/UIMessageNames";
+import {UIConfigs} from "./config/UIConfigs";
 
 /**
  * ui管理器系统：提供UI操作，UI层级管理
@@ -107,15 +107,25 @@ export default class UIManager extends EventDispatcher implements ISingleton {
         if (cur_state == EUIState.None) {
             let window = new UIWindow();
             this._allWindows.set(uiName, window);
-            window.state = EUIState.Opening;
+            this.initWindow(uiName, window);
         } else if (cur_state == EUIState.Loading || cur_state == EUIState.Opening) {
             return false;
         }
+        let window = this._allWindows.get(uiName);
 
         return true;
     }
 
     //-------------------------------private----------------------
+
+    /**
+     * 初始化界面
+     * @param uiName
+     * @param window
+     */
+    private initWindow(uiName: UIWindowNames, window: UIWindow) {
+        window.state = EUIState.Initing;
+    }
 
     private innerCloseWindow() {
 

@@ -546,16 +546,25 @@ var UIManager = /** @class */ (function (_super) {
         var cur_state = this.getWindowState(uiName);
         // 还没有记录就是不存在
         if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].None) {
-            var window = new _UIWindow__WEBPACK_IMPORTED_MODULE_3__["UIWindow"]();
-            this._allWindows.set(uiName, window);
-            window.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Opening;
+            var window_1 = new _UIWindow__WEBPACK_IMPORTED_MODULE_3__["UIWindow"]();
+            this._allWindows.set(uiName, window_1);
+            this.initWindow(uiName, window_1);
         }
         else if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Loading || cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Opening) {
             return false;
         }
+        var window = this._allWindows.get(uiName);
         return true;
     };
     //-------------------------------private----------------------
+    /**
+     * 初始化界面
+     * @param uiName
+     * @param window
+     */
+    UIManager.prototype.initWindow = function (uiName, window) {
+        window.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Initing;
+    };
     UIManager.prototype.innerCloseWindow = function () {
     };
     UIManager.prototype.innerOpenWindow = function () {
@@ -868,29 +877,33 @@ var EUIState;
      */
     EUIState[EUIState["None"] = 0] = "None";
     /**
+     * 初始化中
+     */
+    EUIState[EUIState["Initing"] = 1] = "Initing";
+    /**
      * 加载中
      */
-    EUIState[EUIState["Loading"] = 1] = "Loading";
+    EUIState[EUIState["Loading"] = 2] = "Loading";
     /**
      * 打开过程中
      */
-    EUIState[EUIState["Opening"] = 2] = "Opening";
+    EUIState[EUIState["Opening"] = 3] = "Opening";
     /**
      * 已经打开
      */
-    EUIState[EUIState["Opened"] = 3] = "Opened";
+    EUIState[EUIState["Opened"] = 4] = "Opened";
     /**
      * 关闭中
      */
-    EUIState[EUIState["Closing"] = 4] = "Closing";
+    EUIState[EUIState["Closing"] = 5] = "Closing";
     /**
      * 已关闭
      */
-    EUIState[EUIState["Closed"] = 5] = "Closed";
+    EUIState[EUIState["Closed"] = 6] = "Closed";
     /**
      * 已销毁
      */
-    EUIState[EUIState["Destroyed"] = 6] = "Destroyed";
+    EUIState[EUIState["Destroyed"] = 7] = "Destroyed";
 })(EUIState || (EUIState = {}));
 
 

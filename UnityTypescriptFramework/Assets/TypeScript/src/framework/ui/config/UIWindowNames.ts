@@ -7,4 +7,8 @@ export enum UIWindowNames {
      * 主界面
      */
     UIHome,
+    /**
+     * 战斗主界面
+     */
+    UIBattleMain,
 }

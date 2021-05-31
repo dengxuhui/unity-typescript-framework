@@ -7,6 +7,10 @@ export enum EUIState {
      */
     None,
     /**
+     * 初始化中
+     */
+    Initing,
+    /**
      * 加载中
      */
     Loading,
