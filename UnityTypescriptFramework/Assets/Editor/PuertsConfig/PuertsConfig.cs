@@ -42,6 +42,7 @@ public class PuertsConfig
                 typeof(Behaviour),
                 typeof(MonoBehaviour),
 
+                typeof(UnityEngine.RectTransform),
                 typeof(UnityEngine.EventSystems.UIBehaviour),
                 typeof(UnityEngine.UI.Selectable),
                 typeof(UnityEngine.UI.Button),

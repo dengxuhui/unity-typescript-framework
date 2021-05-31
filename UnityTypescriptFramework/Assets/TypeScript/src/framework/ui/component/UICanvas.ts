@@ -1,4 +1,10 @@
 import {UIBaseComponent} from "./UIBaseComponent";
+import {CS, UnityEngine} from "csharp";
+import {UIUtil} from "../util/UIUtil";
+import {$typeof} from "puerts";
+import {EUnitySortingLayers} from "../../unity/UnityTagsAndLayers";
+import UIManager from "../UIManager";
+import {UIBaseView} from "../base/UIBaseView";
 
 /**
  * ts侧canvas组件
@@ -9,8 +15,60 @@ import {UIBaseComponent} from "./UIBaseComponent";
  -- 5、UI逻辑代码禁止手动直接设置Unity侧Cavans组件的orderInLayer，全部使用本脚本接口调整层级，避免层级混乱
  */
 export class UICanvas extends UIBaseComponent {
-    onCreate(args?: any[]): void {
+    private _canvas: UnityEngine.Canvas;
+    private _graphicRaycaster: UnityEngine.UI.GraphicRaycaster;
+    private _relativeOrder: number;
+
+    onCreate(...args: any[]): void {
         super.onCreate();
         let relative_order = args[0];
+        let canvas: UnityEngine.Canvas;
+        canvas = UIUtil.findComponent(this._transform, $typeof(UnityEngine.Canvas));
+        if (canvas == null) {
+            canvas = this._gameObject.AddComponent($typeof(UnityEngine.Canvas)) as UnityEngine.Canvas;
+        }
+        canvas.overrideSorting = true;
+        canvas.sortingLayerName = EUnitySortingLayers.UI;
+        this._canvas = canvas;
+
+        this._graphicRaycaster = UIUtil.findComponent(this._transform, $typeof(UnityEngine.UI.GraphicRaycaster));
+        if (this._graphicRaycaster == null) {
+            this._graphicRaycaster = this._gameObject.AddComponent($typeof(UnityEngine.UI.GraphicRaycaster)) as UnityEngine.UI.GraphicRaycaster;
+        }
+
+        this._relativeOrder = relative_order;
+    }
+
+    onDestroy(): void {
+        this._canvas = null;
+        this._graphicRaycaster = null;
+        super.onDestroy();
+    }
+
+    onEnable(): void {
+        super.onEnable();
+        this.setOrder(this._relativeOrder);
+    }
+
+    public setOrder(relativeOrder: number) {
+        if (relativeOrder > UIManager.MaxOrderPerWindow) {
+            CS.Logger.LogError("relative order is larger than ui manager define max order in per window!!!");
+        }
+        this._relativeOrder = relativeOrder;
+        this._canvas.sortingOrder = (this._view as UIBaseView).baseOrder + relativeOrder;
+    }
+
+    /**
+     * 获取canvas对象
+     */
+    public get canvas(): UnityEngine.Canvas {
+        return this._canvas;
+    }
+
+    /**
+     * 获取层级
+     */
+    public get order(): number {
+        return this._relativeOrder;
     }
 }

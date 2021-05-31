@@ -73,7 +73,7 @@ export class UIBaseContainer extends UIBaseComponent {
      * @param var_arg
      * @param params
      */
-    addComponent<T extends IUIComponent>(component_class: { new(T, any): T }, var_arg: any, params: any[] = null): T {
+    addComponent<T extends IUIComponent>(component_class: { new(T, any): T }, var_arg: any, ...params: any[]): T {
         let component_inst = new component_class(this, var_arg);
         component_inst.onCreate(params);
         let name = component_inst.getName();
@@ -118,7 +118,7 @@ export class UIBaseContainer extends UIBaseComponent {
      * @param name
      * @param component_class
      */
-    removeComponent(name: string, component_class: Function):IUIComponent {
+    removeComponent(name: string, component_class: Function): IUIComponent {
         let component = this.getComponent(name, component_class);
         if (component != null) {
             component.destroy();
@@ -132,7 +132,7 @@ export class UIBaseContainer extends UIBaseComponent {
      * 移除组件
      * @param component_class
      */
-    removeComponents(component_class: Function):Array<IUIComponent> {
+    removeComponents(component_class: Function): Array<IUIComponent> {
         let components = this.getComponents(component_class);
         for (let i = 0; i < components.length; i++) {
             let component = components[i];

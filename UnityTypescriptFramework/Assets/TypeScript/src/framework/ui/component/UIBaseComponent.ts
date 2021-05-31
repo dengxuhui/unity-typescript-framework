@@ -11,7 +11,7 @@ export class UIBaseComponent implements IUIComponent {
     /**
      * 窗口view层脚本
      */
-    _view: any;
+    _view: UIBaseComponent;
     /**
      * 持有者
      */

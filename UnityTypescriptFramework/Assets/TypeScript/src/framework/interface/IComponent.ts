@@ -4,7 +4,7 @@ export interface IComponent extends IDestroyable {
     /**
      * 创建
      */
-    onCreate(args?: any[]): void;
+    onCreate(...args: any[]): void;
 
     /**
      * 销毁
