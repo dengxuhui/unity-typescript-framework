@@ -52,6 +52,8 @@ public class PuertsConfig
                 typeof(UnityEngine.UI.Toggle),
                 typeof(UnityEngine.UI.Toggle.ToggleEvent),
                 typeof(UnityEngine.UI.ScrollRect),
+                typeof(UnityEngine.UI.CanvasScaler),
+                typeof(UnityEngine.UI.GraphicRaycaster),
                 typeof(UnityEngine.Events.UnityEvent<bool>),
                 typeof(Application),
                 typeof(TextAsset),
