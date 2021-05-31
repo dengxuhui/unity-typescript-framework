@@ -3,12 +3,16 @@ import {ISingleton} from "../interface/ISingleton";
 import {UnityEngine} from "csharp";
 import {UILayers} from "./config/UILayers";
 import {UIWindow} from "./UIWindow";
-import {UIMessageNames} from "./config/UIMessageNames";
 
 /**
  * ui管理器系统：提供UI操作，UI层级管理
  */
 export default class UIManager extends EventDispatcher implements ISingleton {
+    get uiCamera(): UnityEngine.Camera {
+        return this._uiCamera;
+    }
+    
+    
     public static Instance: UIManager = new UIManager();
     //ui场景根目录
     static UIRootPath: string = "UIRoot";
@@ -21,11 +25,12 @@ export default class UIManager extends EventDispatcher implements ISingleton {
     //窗口最大可使用的相对order_in_layer
     static MaxOrderPerWindow:number = 10;
     
-    
     //所有窗口记录
-    _allWindows: Array<UIWindow>;
+    private _allWindows: Array<UIWindow>;
     //打开中的弹窗
-    _openingDialogArray:Array<UIWindow>;
+    private _openingDialogArray:Array<UIWindow>;
+    //ui摄像机
+    private _uiCamera:UnityEngine.Camera;
     // _layers
     /**
      * 密封构造函数

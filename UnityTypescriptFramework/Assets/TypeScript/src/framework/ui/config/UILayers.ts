@@ -1,7 +1,7 @@
 /**
  * UI层级信息数据
  */
-class UILayerInfo {
+export class UILayerInfo {
     private constructor() {
     }
 
