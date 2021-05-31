@@ -21,7 +21,7 @@ export class UIUtil {
      * @param ctype
      * @param path
      */
-    public static findComponent(trans: UnityEngine.Transform, ctype: System.Type, path: string = null): any {
+    public static findComponent(trans: UnityEngine.Transform, ctype: System.Type, path?: string): any {
         let targetTrans = trans;
         if (path != null) {
             targetTrans = trans.Find(path);
@@ -50,7 +50,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findText(trans: UnityEngine.Transform, path: string): UnityEngine.UI.Text {
+    public static findText(trans: UnityEngine.Transform, path?: string): UnityEngine.UI.Text {
         return this.findComponent(trans, $typeof(UnityEngine.UI.Text), path);
     }
 
@@ -59,7 +59,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findTmpText(trans: UnityEngine.Transform, path: string): TMPro.TMP_Text {
+    public static findTmpText(trans: UnityEngine.Transform, path?: string): TMPro.TMP_Text {
         return this.findComponent(trans, $typeof(TMPro.TMP_Text), path);
     }
 
@@ -68,7 +68,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findImage(trans: UnityEngine.Transform, path: string): UnityEngine.UI.Image {
+    public static findImage(trans: UnityEngine.Transform, path?: string): UnityEngine.UI.Image {
         return this.findComponent(trans, $typeof(UnityEngine.UI.Image), path);
     }
 
@@ -77,7 +77,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findButton(trans: UnityEngine.Transform, path: string): UnityEngine.UI.Button {
+    public static findButton(trans: UnityEngine.Transform, path?: string): UnityEngine.UI.Button {
         return this.findComponent(trans, $typeof(UnityEngine.UI.Button), path);
     }
 
@@ -86,7 +86,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findInput(trans: UnityEngine.Transform, path: string): UnityEngine.UI.InputField {
+    public static findInput(trans: UnityEngine.Transform, path?: string): UnityEngine.UI.InputField {
         return this.findComponent(trans, $typeof(UnityEngine.UI.InputField), path);
     }
 
@@ -95,7 +95,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findSlider(trans: UnityEngine.Transform, path: string): UnityEngine.UI.Slider {
+    public static findSlider(trans: UnityEngine.Transform, path?: string): UnityEngine.UI.Slider {
         return this.findComponent(trans, $typeof(UnityEngine.UI.Slider), path);
     }
 
@@ -104,7 +104,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findScrollRect(trans: UnityEngine.Transform, path: string): UnityEngine.UI.ScrollRect {
+    public static findScrollRect(trans: UnityEngine.Transform, path?: string): UnityEngine.UI.ScrollRect {
         return this.findComponent(trans, $typeof(UnityEngine.UI.ScrollRect), path);
     }
 
@@ -113,7 +113,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findToggle(trans: UnityEngine.Transform, path: string): UnityEngine.UI.Toggle {
+    public static findToggle(trans: UnityEngine.Transform, path?: string): UnityEngine.UI.Toggle {
         return this.findComponent(trans, $typeof(UnityEngine.UI.Toggle), path);
     }
 
@@ -122,7 +122,7 @@ export class UIUtil {
      * @param trans
      * @param path
      */
-    public static findCanvasGroup(trans: UnityEngine.Transform, path: string): UnityEngine.CanvasGroup {
+    public static findCanvasGroup(trans: UnityEngine.Transform, path?: string): UnityEngine.CanvasGroup {
         return this.findComponent(trans, $typeof(UnityEngine.CanvasGroup), path);
     }
 }

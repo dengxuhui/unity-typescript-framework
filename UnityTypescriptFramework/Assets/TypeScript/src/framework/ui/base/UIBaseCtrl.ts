@@ -7,21 +7,21 @@ export default class UIBaseCtrl implements IDestroyable, IComponent {
     /**
      * 数据基类
      */
-    _main: EventDispatcher;
+    _eventHandle: EventDispatcher;
     /**
      * 数据
      */
-    _model:UIBaseModel;
-    
-    constructor(main: EventDispatcher, model: UIBaseModel) {
-        this._main = main;
+    _model: UIBaseModel;
+
+    constructor(eventDispatcher: EventDispatcher, model: UIBaseModel) {
+        this._eventHandle = eventDispatcher;
         this._model = model;
         this.onCreate();
     }
 
     destroy(): void {
         this.onDestroy();
-        this._main = null;
+        this._eventHandle = null;
         this._model = null;
     }
 

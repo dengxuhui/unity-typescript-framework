@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AssetBundles;
 using CS;
 using TMPro;
 using UnityEngine;
@@ -68,6 +69,7 @@ public class PuertsConfig
                 typeof(JsManager),
                 typeof(GameLaunch),
                 typeof(CS.Logger),
+                typeof(AssetBundleManager),
             };
 
             List<string> namespaces = new List<string>()

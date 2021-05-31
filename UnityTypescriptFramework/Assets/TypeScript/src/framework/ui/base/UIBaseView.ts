@@ -10,17 +10,18 @@ import {UILayer} from "../component/UILayer";
  * ui基类
  */
 export class UIBaseView extends UIBaseContainer {
-    private _main: EventDispatcher;
+    private _eventHandle: EventDispatcher;
     private _canvas: UICanvas;
     private _model: UIBaseModel;
     private _ctrl: UIBaseCtrl;
     private _baseOrder: number;
 
-    constructor(holder: UIBaseComponent, var_arg: any, main: EventDispatcher, model: UIBaseModel, ctrl: UIBaseCtrl) {
+    constructor(holder: UIBaseComponent, var_arg: any, eventDispatcher: EventDispatcher, model: UIBaseModel, ctrl: UIBaseCtrl) {
         super(holder, var_arg);
         this._baseOrder = 0;
         this._model = model;
         this._ctrl = ctrl;
+        this._eventHandle = eventDispatcher;
     }
 
     onCreate(): void {
@@ -36,7 +37,7 @@ export class UIBaseView extends UIBaseContainer {
         this._model = null;
         this._ctrl = null;
         this._canvas = null;
-        this._main = null;
+        this._eventHandle = null;
         super.onDestroy();
     }
 
@@ -60,14 +61,14 @@ export class UIBaseView extends UIBaseContainer {
     /**
      * 获取控制器
      */
-    public get ctrl():UIBaseCtrl{
+    public get ctrl(): UIBaseCtrl {
         return this._ctrl;
     }
 
     /**
      * 获取数据
      */
-    public get model():UIBaseModel{
+    public get model(): UIBaseModel {
         return this._model;
     }
 }
