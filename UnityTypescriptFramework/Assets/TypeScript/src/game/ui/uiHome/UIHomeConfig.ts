@@ -2,7 +2,9 @@ import {UIWindowNames} from "../../../framework/ui/config/UIWindowNames";
 import {EUILayer} from "../../../framework/ui/config/UILayers";
 import {EUIType} from "../../../framework/ui/config/EUIType";
 import {UIConfigInfo} from "../../../framework/ui/config/UIConfigs";
-import {UIBaseComponent} from "../../../framework/ui/component/UIBaseComponent";
+import {UIHomeCtrl} from "./uiHome/UIHomeCtrl";
+import {UIHomeView} from "./uiHome/UIHomeView";
+import {UIHomeModel} from "./uiHome/UIHomeModel";
 
 /**
  * 这里定义所有Home场景中使用的UI配置，
@@ -11,9 +13,9 @@ import {UIBaseComponent} from "../../../framework/ui/component/UIBaseComponent";
 let UIHome: UIConfigInfo = {
     name: UIWindowNames.UIHome,
     layer: EUILayer.NormalLayer,
-    model: null,
-    ctrl: null,
-    view: UIBaseComponent,
+    model: UIHomeModel,
+    ctrl: UIHomeCtrl,
+    view: UIHomeView,
     prefabPath: "",
     type: EUIType.View,
     objName: "UIHome"

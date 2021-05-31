@@ -5,6 +5,7 @@ import EventDispatcher from "../../utils/EventDispatcher";
 import {UIWindowNames} from "../config/UIWindowNames";
 import IDestroyable from "../../interface/IDestroyable";
 import {IComponent} from "../../interface/IComponent";
+import UIBaseCtrl from "./UIBaseCtrl";
 
 export default class UIBaseModel implements IDestroyable, IComponent {
     /**
@@ -41,4 +42,11 @@ export default class UIBaseModel implements IDestroyable, IComponent {
 
     onDisable(): void {
     }
+}
+
+/**
+ * 类构造函数接口，用于类型限定
+ */
+export interface IUIBaseModelCtor {
+    new(eventDispatcher: EventDispatcher, uiName: UIWindowNames): UIBaseModel;
 }

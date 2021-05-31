@@ -37,3 +37,10 @@ export default class UIBaseCtrl implements IDestroyable, IComponent {
     onDisable(): void {
     }
 }
+
+/**
+ * 类构造函数接口，用于类型限定
+ */
+export interface IUIBaseCtrlCtor {
+    new(eventDispatcher: EventDispatcher, model: UIBaseModel): UIBaseCtrl;
+}

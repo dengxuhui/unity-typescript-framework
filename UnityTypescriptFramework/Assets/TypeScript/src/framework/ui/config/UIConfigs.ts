@@ -2,6 +2,9 @@ import {CS} from "csharp";
 import {UIWindowNames} from "./UIWindowNames";
 import {EUILayer} from "./UILayers";
 import {EUIType} from "./EUIType";
+import {IUIBaseCtrlCtor} from "../base/UIBaseCtrl";
+import {IUIBaseModelCtor} from "../base/UIBaseModel";
+import {IUIBaseViewCtor} from "../base/UIBaseView";
 
 /**
  * 所有模块
@@ -26,15 +29,15 @@ export class UIConfigInfo {
     /**
      * 数据类
      */
-    model: Function;
+    model: IUIBaseModelCtor;
     /**
      * 控制器类
      */
-    ctrl: Function;
+    ctrl: IUIBaseCtrlCtor;
     /**
      * 视图类
      */
-    view: Function;
+    view: IUIBaseViewCtor;
     /**
      * prefab路径
      */

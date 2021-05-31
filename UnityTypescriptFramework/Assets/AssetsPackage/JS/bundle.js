@@ -136,6 +136,9 @@ var GameMain = /** @class */ (function () {
         //初始化框架
         _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].init();
         csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("js start up newer!!");
+        var name = "AER";
+        var age = 27;
+        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("my name is " + name + ",age is " + age);
     }
     return GameMain;
 }());
@@ -446,7 +449,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! puerts */ "puerts");
 /* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _utils_Handler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Handler */ "./src/framework/utils/Handler.ts");
-/* harmony import */ var _config_EUIState__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config/EUIState */ "./src/framework/ui/config/EUIState.ts");
+/* harmony import */ var _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config/UIWindowNames */ "./src/framework/ui/config/UIWindowNames.ts");
+/* harmony import */ var _config_EUIState__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./config/EUIState */ "./src/framework/ui/config/EUIState.ts");
+/* harmony import */ var _config_UIConfigs__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./config/UIConfigs */ "./src/framework/ui/config/UIConfigs.ts");
+/* harmony import */ var _config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./config/UIMessageNames */ "./src/framework/ui/config/UIMessageNames.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -462,6 +468,9 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
+
+
 
 
 
@@ -527,7 +536,7 @@ var UIManager = /** @class */ (function (_super) {
     UIManager.prototype.getWindowState = function (uiName) {
         var window = this._allWindows.get(uiName);
         if (window == null) {
-            return _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].None;
+            return _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].None;
         }
         else {
             return window.state;
@@ -545,12 +554,12 @@ var UIManager = /** @class */ (function (_super) {
         }
         var cur_state = this.getWindowState(uiName);
         // 还没有记录就是不存在
-        if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].None) {
+        if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].None) {
             var window_1 = new _UIWindow__WEBPACK_IMPORTED_MODULE_3__["UIWindow"]();
             this._allWindows.set(uiName, window_1);
             this.initWindow(uiName, window_1);
         }
-        else if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Loading || cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Opening) {
+        else if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Loading || cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opening) {
             return false;
         }
         var window = this._allWindows.get(uiName);
@@ -563,7 +572,31 @@ var UIManager = /** @class */ (function (_super) {
      * @param window
      */
     UIManager.prototype.initWindow = function (uiName, window) {
-        window.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Initing;
+        window.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Initing;
+        var config = _config_UIConfigs__WEBPACK_IMPORTED_MODULE_9__["UIConfigs"].get(uiName);
+        if (config == null) {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("UIWindowNames not exist in UIConfigs,name index is:" + _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__["UIWindowNames"][uiName]);
+        }
+        var layer = this._layerMap.get(config.layer);
+        if (layer == null) {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("No layer named:" + _config_UILayers__WEBPACK_IMPORTED_MODULE_2__["EUILayer"][config.layer]);
+        }
+        window.name = uiName;
+        var eventDispatcher = new _utils_EventDispatcher__WEBPACK_IMPORTED_MODULE_0__["default"]();
+        if (config.model != null) {
+            window.model = new config.model(eventDispatcher, uiName);
+        }
+        if (config.ctrl != null) {
+            window.ctrl = new config.ctrl(eventDispatcher, window.model);
+        }
+        if (config.view != null) {
+            window.view = new config.view(layer, config.objName, eventDispatcher, window.model, window.ctrl);
+        }
+        window.layer = config.layer;
+        window.prefabPath = config.prefabPath;
+        window.type = config.type;
+        this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__["UIMessageNames"].UIFRAME_ON_WINDOW_CREATE, window);
+        return window;
     };
     UIManager.prototype.innerCloseWindow = function () {
     };
@@ -625,6 +658,182 @@ var UIWindow = /** @class */ (function () {
     }
     return UIWindow;
 }());
+
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/base/UIBaseCtrl.ts":
+/*!*********************************************!*\
+  !*** ./src/framework/ui/base/UIBaseCtrl.ts ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var UIBaseCtrl = /** @class */ (function () {
+    function UIBaseCtrl(eventDispatcher, model) {
+        this._eventHandle = eventDispatcher;
+        this._model = model;
+        this.onCreate();
+    }
+    UIBaseCtrl.prototype.destroy = function () {
+        this.onDestroy();
+        this._eventHandle = null;
+        this._model = null;
+    };
+    UIBaseCtrl.prototype.onCreate = function () {
+    };
+    UIBaseCtrl.prototype.onDestroy = function () {
+    };
+    UIBaseCtrl.prototype.onEnable = function () {
+    };
+    UIBaseCtrl.prototype.onDisable = function () {
+    };
+    return UIBaseCtrl;
+}());
+/* harmony default export */ __webpack_exports__["default"] = (UIBaseCtrl);
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/base/UIBaseModel.ts":
+/*!**********************************************!*\
+  !*** ./src/framework/ui/base/UIBaseModel.ts ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var UIBaseModel = /** @class */ (function () {
+    function UIBaseModel(eventDispatcher, uiName) {
+        this._eventHandle = eventDispatcher;
+        this._uiName = uiName;
+        this.onCreate();
+    }
+    UIBaseModel.prototype.destroy = function () {
+        this.onDestroy();
+        this._eventHandle.offAllCaller(this);
+        this._eventHandle = null;
+        this._uiName = null;
+    };
+    UIBaseModel.prototype.onCreate = function () {
+    };
+    UIBaseModel.prototype.onDestroy = function () {
+    };
+    UIBaseModel.prototype.onEnable = function () {
+    };
+    UIBaseModel.prototype.onDisable = function () {
+    };
+    return UIBaseModel;
+}());
+/* harmony default export */ __webpack_exports__["default"] = (UIBaseModel);
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/base/UIBaseView.ts":
+/*!*********************************************!*\
+  !*** ./src/framework/ui/base/UIBaseView.ts ***!
+  \*********************************************/
+/*! exports provided: UIBaseView */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBaseView", function() { return UIBaseView; });
+/* harmony import */ var _component_UIBaseContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../component/UIBaseContainer */ "./src/framework/ui/component/UIBaseContainer.ts");
+/* harmony import */ var _component_UICanvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../component/UICanvas */ "./src/framework/ui/component/UICanvas.ts");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_2__);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+/**
+ * ui基类
+ */
+var UIBaseView = /** @class */ (function (_super) {
+    __extends(UIBaseView, _super);
+    function UIBaseView(holder, var_arg, eventDispatcher, model, ctrl) {
+        var _this = _super.call(this, holder, var_arg) || this;
+        _this._baseOrder = 0;
+        _this._model = model;
+        _this._ctrl = ctrl;
+        _this._eventHandle = eventDispatcher;
+        return _this;
+    }
+    UIBaseView.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+        this._canvas = this.addComponent(_component_UICanvas__WEBPACK_IMPORTED_MODULE_1__["UICanvas"], "", 0);
+        this._rectTransform.offsetMax = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector2.zero;
+        this._rectTransform.offsetMin = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector2.zero;
+        this._rectTransform.localScale = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector3.zero;
+        this._rectTransform.localPosition = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector3.zero;
+    };
+    UIBaseView.prototype.onDestroy = function () {
+        this._model = null;
+        this._ctrl = null;
+        this._canvas = null;
+        this._eventHandle = null;
+        _super.prototype.onDestroy.call(this);
+    };
+    UIBaseView.prototype.onEnable = function () {
+        this._baseOrder = this._holder.popWindowOrder();
+        _super.prototype.onEnable.call(this);
+    };
+    UIBaseView.prototype.onDisable = function () {
+        _super.prototype.onDisable.call(this);
+        this._holder.pushWindowOrder();
+    };
+    Object.defineProperty(UIBaseView.prototype, "baseOrder", {
+        /**
+         * 基础层级
+         */
+        get: function () {
+            return this._baseOrder;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIBaseView.prototype, "ctrl", {
+        /**
+         * 获取控制器
+         */
+        get: function () {
+            return this._ctrl;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIBaseView.prototype, "model", {
+        /**
+         * 获取数据
+         */
+        get: function () {
+            return this._model;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return UIBaseView;
+}(_component_UIBaseContainer__WEBPACK_IMPORTED_MODULE_0__["UIBaseContainer"]));
 
 
 
@@ -749,6 +958,308 @@ var UIBaseComponent = /** @class */ (function () {
     };
     return UIBaseComponent;
 }());
+
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/component/UIBaseContainer.ts":
+/*!*******************************************************!*\
+  !*** ./src/framework/ui/component/UIBaseContainer.ts ***!
+  \*******************************************************/
+/*! exports provided: UIBaseContainer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBaseContainer", function() { return UIBaseContainer; });
+/* harmony import */ var _UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UIBaseComponent */ "./src/framework/ui/component/UIBaseComponent.ts");
+/* harmony import */ var _utils_Handler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/Handler */ "./src/framework/utils/Handler.ts");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_2__);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+/**
+ * 基础组件容器
+ */
+
+
+
+var UIBaseContainer = /** @class */ (function (_super) {
+    __extends(UIBaseContainer, _super);
+    function UIBaseContainer() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIBaseContainer.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+        this._components = new Map();
+        this._length = 0;
+    };
+    UIBaseContainer.prototype.onDestroy = function () {
+        var _this = this;
+        this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
+            if (component._holder == _this) {
+                component.destroy();
+            }
+        }, null, false));
+        this._components = null;
+        _super.prototype.onDestroy.call(this);
+    };
+    UIBaseContainer.prototype.onEnable = function () {
+        _super.prototype.onEnable.call(this);
+        this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
+            component.onEnable();
+        }, null, false));
+    };
+    UIBaseContainer.prototype.onDisable = function () {
+        var _this = this;
+        _super.prototype.onDisable.call(this);
+        this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
+            if (component._holder == _this) {
+                component.onDisable();
+            }
+        }, null, false));
+    };
+    /**
+     * 遍历所有组件
+     * @param callback
+     * @param component_class
+     */
+    UIBaseContainer.prototype.walk = function (callback, component_class) {
+        if (component_class === void 0) { component_class = null; }
+        this._components.forEach(function (component_map, name) {
+            if (component_map != null) {
+                component_map.forEach(function (component, cmp_class) {
+                    if (component_class == null) {
+                        callback.runWith(component);
+                    }
+                    else if (cmp_class == component_class) {
+                        callback.runWith(component);
+                    }
+                });
+            }
+        });
+    };
+    /**
+     * 添加组件
+     * @param component_class
+     * @param var_arg
+     * @param params
+     */
+    UIBaseContainer.prototype.addComponent = function (component_class, var_arg) {
+        var params = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            params[_i - 2] = arguments[_i];
+        }
+        var component_inst = new component_class(this, var_arg);
+        component_inst.onCreate(params);
+        var name = component_inst.getName();
+        this.recordComponent(name, component_class, component_inst);
+        this._length++;
+        return component_inst;
+    };
+    /**
+     * 获取单个组件，如果没有传入类类型，返回这个名字的第一个组件
+     * @param name
+     * @param component_class
+     */
+    UIBaseContainer.prototype.getComponent = function (name, component_class) {
+        var components = this._components[name];
+        if (components == null) {
+            return null;
+        }
+        if (component_class == null) {
+            components.forEach(function (v) {
+                return v;
+            });
+        }
+        else {
+            return components.get(component_class);
+        }
+    };
+    /**
+     * 获取所有类型组件
+     * @param component_class
+     */
+    UIBaseContainer.prototype.getComponents = function (component_class) {
+        var components = new Array();
+        this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
+            components.push(component);
+        }, null, false), component_class);
+        return components;
+    };
+    /**
+     * 移除组件
+     * @param name
+     * @param component_class
+     */
+    UIBaseContainer.prototype.removeComponent = function (name, component_class) {
+        var component = this.getComponent(name, component_class);
+        if (component != null) {
+            component.destroy();
+            this._length--;
+            this._components[name][component_class] = null;
+        }
+        return component;
+    };
+    /**
+     * 移除组件
+     * @param component_class
+     */
+    UIBaseContainer.prototype.removeComponents = function (component_class) {
+        var components = this.getComponents(component_class);
+        for (var i = 0; i < components.length; i++) {
+            var component = components[i];
+            var cmp_name = component.getName();
+            component.destroy();
+            this._components[cmp_name][component_class] = null;
+            this._length--;
+        }
+        return components;
+    };
+    /**
+     * 记录组件
+     * @param name
+     * @param component_class
+     * @param component
+     */
+    UIBaseContainer.prototype.recordComponent = function (name, component_class, component) {
+        if (this._components[name][component_class] != null) {
+            csharp__WEBPACK_IMPORTED_MODULE_2__["CS"].Logger.LogError("Already exist component_class:" + component_class.name);
+        }
+        this._components[name][component_class] = component;
+    };
+    return UIBaseContainer;
+}(_UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__["UIBaseComponent"]));
+
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/component/UICanvas.ts":
+/*!************************************************!*\
+  !*** ./src/framework/ui/component/UICanvas.ts ***!
+  \************************************************/
+/*! exports provided: UICanvas */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UICanvas", function() { return UICanvas; });
+/* harmony import */ var _UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UIBaseComponent */ "./src/framework/ui/component/UIBaseComponent.ts");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _util_UIUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/UIUtil */ "./src/framework/ui/util/UIUtil.ts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! puerts */ "puerts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _unity_UnityTagsAndLayers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../unity/UnityTagsAndLayers */ "./src/framework/unity/UnityTagsAndLayers.ts");
+/* harmony import */ var _UIManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../UIManager */ "./src/framework/ui/UIManager.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+
+/**
+ * ts侧canvas组件
+ * -- 1、为了调整UI层级，所以这里的overrideSorting设置为true
+ -- 2、如果只是类似NGUI的Panel那样划分drawcall管理，直接在预设上添加Canvas，并设置overrideSorting为false
+ -- 3、这里的order是相对于window.view中base_order的差量，窗口内的order最多为10个---UIManager中配置
+ -- 4、旧窗口内所有canvas的real_order都应该在新窗口之下，即保证旧窗口内包括UI特效在内的所有组件，不会跑到新窗口之上
+ -- 5、UI逻辑代码禁止手动直接设置Unity侧Cavans组件的orderInLayer，全部使用本脚本接口调整层级，避免层级混乱
+ */
+var UICanvas = /** @class */ (function (_super) {
+    __extends(UICanvas, _super);
+    function UICanvas() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UICanvas.prototype.onCreate = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        _super.prototype.onCreate.call(this);
+        var relative_order = args[0];
+        var canvas;
+        canvas = _util_UIUtil__WEBPACK_IMPORTED_MODULE_2__["UIUtil"].findComponent(this._transform, Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Canvas));
+        if (canvas == null) {
+            canvas = this._gameObject.AddComponent(Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Canvas));
+        }
+        canvas.overrideSorting = true;
+        canvas.sortingLayerName = _unity_UnityTagsAndLayers__WEBPACK_IMPORTED_MODULE_4__["EUnitySortingLayers"].UI;
+        this._canvas = canvas;
+        this._graphicRaycaster = _util_UIUtil__WEBPACK_IMPORTED_MODULE_2__["UIUtil"].findComponent(this._transform, Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].UI.GraphicRaycaster));
+        if (this._graphicRaycaster == null) {
+            this._graphicRaycaster = this._gameObject.AddComponent(Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].UI.GraphicRaycaster));
+        }
+        this._relativeOrder = relative_order;
+    };
+    UICanvas.prototype.onDestroy = function () {
+        this._canvas = null;
+        this._graphicRaycaster = null;
+        _super.prototype.onDestroy.call(this);
+    };
+    UICanvas.prototype.onEnable = function () {
+        _super.prototype.onEnable.call(this);
+        this.setOrder(this._relativeOrder);
+    };
+    UICanvas.prototype.setOrder = function (relativeOrder) {
+        if (relativeOrder > _UIManager__WEBPACK_IMPORTED_MODULE_5__["default"].MaxOrderPerWindow) {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("relative order is larger than ui manager define max order in per window!!!");
+        }
+        this._relativeOrder = relativeOrder;
+        this._canvas.sortingOrder = this._view.baseOrder + relativeOrder;
+    };
+    Object.defineProperty(UICanvas.prototype, "canvas", {
+        /**
+         * 获取canvas对象
+         */
+        get: function () {
+            return this._canvas;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UICanvas.prototype, "order", {
+        /**
+         * 获取层级
+         */
+        get: function () {
+            return this._relativeOrder;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return UICanvas;
+}(_UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__["UIBaseComponent"]));
 
 
 
@@ -909,6 +1420,80 @@ var EUIState;
 
 /***/ }),
 
+/***/ "./src/framework/ui/config/EUIType.ts":
+/*!********************************************!*\
+  !*** ./src/framework/ui/config/EUIType.ts ***!
+  \********************************************/
+/*! exports provided: EUIType */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EUIType", function() { return EUIType; });
+/**
+ * ui类型
+ */
+var EUIType;
+(function (EUIType) {
+    /**
+     * 普通ui
+     */
+    EUIType[EUIType["View"] = 0] = "View";
+    /**
+     * 弹窗
+     */
+    EUIType[EUIType["Dialog"] = 1] = "Dialog";
+})(EUIType || (EUIType = {}));
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/config/UIConfigs.ts":
+/*!**********************************************!*\
+  !*** ./src/framework/ui/config/UIConfigs.ts ***!
+  \**********************************************/
+/*! exports provided: UIConfigInfo, UIConfigs */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIConfigInfo", function() { return UIConfigInfo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIConfigs", function() { return UIConfigs; });
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+
+/**
+ * 所有模块
+ */
+var UIModule = {
+    UIHome: __webpack_require__(/*! ../../../game/ui/uiHome/UIHomeConfig */ "./src/game/ui/uiHome/UIHomeConfig.ts"),
+    UIBattle: __webpack_require__(/*! ../../../game/ui/uiBattle/UIBattleConfig */ "./src/game/ui/uiBattle/UIBattleConfig.ts"),
+};
+/**
+ * ui配置结构体
+ */
+var UIConfigInfo = /** @class */ (function () {
+    function UIConfigInfo() {
+    }
+    return UIConfigInfo;
+}());
+
+var UIConfigs = new Map();
+for (var moduleName in UIModule) {
+    var module_1 = UIModule[moduleName];
+    for (var cfgName in module_1) {
+        var config = module_1[cfgName];
+        if (UIConfigs[config.name] != null) {
+            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("Already exist ::" + cfgName);
+        }
+        UIConfigs[config.name] = config;
+    }
+}
+
+
+
+/***/ }),
+
 /***/ "./src/framework/ui/config/UILayers.ts":
 /*!*********************************************!*\
   !*** ./src/framework/ui/config/UILayers.ts ***!
@@ -1006,6 +1591,63 @@ var UILayers = /** @class */ (function () {
     return UILayers;
 }());
 
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/config/UIMessageNames.ts":
+/*!***************************************************!*\
+  !*** ./src/framework/ui/config/UIMessageNames.ts ***!
+  \***************************************************/
+/*! exports provided: UIMessageNames */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIMessageNames", function() { return UIMessageNames; });
+var UIMessageNames = /** @class */ (function () {
+    function UIMessageNames() {
+    }
+    //ui创建
+    UIMessageNames.UIFRAME_ON_WINDOW_CREATE = "UIFRAME_ON_WINDOW_CREATE";
+    //ui打开
+    UIMessageNames.UIFRAME_ON_WINDOW_OPEN = "UIFRAME_ON_WINDOW_OPEN";
+    //ui关闭
+    UIMessageNames.UIFRAME_ON_WINDOW_CLOSE = "UIFRAME_ON_WINDOW_CLOSE";
+    //ui销毁
+    UIMessageNames.UIFRAME_ON_WINDOW_DESTROY = "UIFRAME_ON_WINDOW_DESTROY";
+    return UIMessageNames;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/config/UIWindowNames.ts":
+/*!**************************************************!*\
+  !*** ./src/framework/ui/config/UIWindowNames.ts ***!
+  \**************************************************/
+/*! exports provided: UIWindowNames */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIWindowNames", function() { return UIWindowNames; });
+var UIWindowNames;
+(function (UIWindowNames) {
+    /**
+     * 加载界面
+     */
+    UIWindowNames[UIWindowNames["UILoading"] = 0] = "UILoading";
+    /**
+     * 主界面
+     */
+    UIWindowNames[UIWindowNames["UIHome"] = 1] = "UIHome";
+    /**
+     * 战斗主界面
+     */
+    UIWindowNames[UIWindowNames["UIBattleMain"] = 2] = "UIBattleMain";
+})(UIWindowNames || (UIWindowNames = {}));
 
 
 /***/ }),
@@ -2034,6 +2676,356 @@ function uts_timerUpdate() {
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./src/game/ui/uiBattle/UIBattleConfig.ts":
+/*!************************************************!*\
+  !*** ./src/game/ui/uiBattle/UIBattleConfig.ts ***!
+  \************************************************/
+/*! exports provided: UIBattleMain */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBattleMain", function() { return UIBattleMain; });
+/* harmony import */ var _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/ui/config/UIWindowNames */ "./src/framework/ui/config/UIWindowNames.ts");
+/* harmony import */ var _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../framework/ui/config/UILayers */ "./src/framework/ui/config/UILayers.ts");
+/* harmony import */ var _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../framework/ui/config/EUIType */ "./src/framework/ui/config/EUIType.ts");
+/* harmony import */ var _uiBattle_UIBattleModel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uiBattle/UIBattleModel */ "./src/game/ui/uiBattle/uiBattle/UIBattleModel.ts");
+/* harmony import */ var _uiBattle_UIBattleCtrl__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./uiBattle/UIBattleCtrl */ "./src/game/ui/uiBattle/uiBattle/UIBattleCtrl.ts");
+/* harmony import */ var _uiBattle_UIBattleView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./uiBattle/UIBattleView */ "./src/game/ui/uiBattle/uiBattle/UIBattleView.ts");
+
+
+
+
+
+
+var UIBattleMain = {
+    name: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UIBattleMain,
+    layer: _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__["EUILayer"].NormalLayer,
+    model: _uiBattle_UIBattleModel__WEBPACK_IMPORTED_MODULE_3__["UIBattleModel"],
+    ctrl: _uiBattle_UIBattleCtrl__WEBPACK_IMPORTED_MODULE_4__["UIBattleCtrl"],
+    view: _uiBattle_UIBattleView__WEBPACK_IMPORTED_MODULE_5__["UIBattleView"],
+    prefabPath: "",
+    type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__["EUIType"].View,
+    objName: "UIBattleMain",
+};
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiBattle/uiBattle/UIBattleCtrl.ts":
+/*!*******************************************************!*\
+  !*** ./src/game/ui/uiBattle/uiBattle/UIBattleCtrl.ts ***!
+  \*******************************************************/
+/*! exports provided: UIBattleCtrl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBattleCtrl", function() { return UIBattleCtrl; });
+/* harmony import */ var _framework_ui_base_UIBaseCtrl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseCtrl */ "./src/framework/ui/base/UIBaseCtrl.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var UIBattleCtrl = /** @class */ (function (_super) {
+    __extends(UIBattleCtrl, _super);
+    function UIBattleCtrl() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIBattleCtrl.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+    };
+    UIBattleCtrl.prototype.onDestroy = function () {
+        _super.prototype.onDestroy.call(this);
+    };
+    return UIBattleCtrl;
+}(_framework_ui_base_UIBaseCtrl__WEBPACK_IMPORTED_MODULE_0__["default"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiBattle/uiBattle/UIBattleModel.ts":
+/*!********************************************************!*\
+  !*** ./src/game/ui/uiBattle/uiBattle/UIBattleModel.ts ***!
+  \********************************************************/
+/*! exports provided: UIBattleModel */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBattleModel", function() { return UIBattleModel; });
+/* harmony import */ var _framework_ui_base_UIBaseModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseModel */ "./src/framework/ui/base/UIBaseModel.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var UIBattleModel = /** @class */ (function (_super) {
+    __extends(UIBattleModel, _super);
+    function UIBattleModel() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIBattleModel.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+    };
+    UIBattleModel.prototype.onDestroy = function () {
+        _super.prototype.onDestroy.call(this);
+    };
+    return UIBattleModel;
+}(_framework_ui_base_UIBaseModel__WEBPACK_IMPORTED_MODULE_0__["default"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiBattle/uiBattle/UIBattleView.ts":
+/*!*******************************************************!*\
+  !*** ./src/game/ui/uiBattle/uiBattle/UIBattleView.ts ***!
+  \*******************************************************/
+/*! exports provided: UIBattleView */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBattleView", function() { return UIBattleView; });
+/* harmony import */ var _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseView */ "./src/framework/ui/base/UIBaseView.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var UIBattleView = /** @class */ (function (_super) {
+    __extends(UIBattleView, _super);
+    function UIBattleView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIBattleView.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+    };
+    UIBattleView.prototype.onDestroy = function () {
+        _super.prototype.onDestroy.call(this);
+    };
+    return UIBattleView;
+}(_framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__["UIBaseView"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiHome/UIHomeConfig.ts":
+/*!********************************************!*\
+  !*** ./src/game/ui/uiHome/UIHomeConfig.ts ***!
+  \********************************************/
+/*! exports provided: UIHome */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIHome", function() { return UIHome; });
+/* harmony import */ var _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/ui/config/UIWindowNames */ "./src/framework/ui/config/UIWindowNames.ts");
+/* harmony import */ var _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../framework/ui/config/UILayers */ "./src/framework/ui/config/UILayers.ts");
+/* harmony import */ var _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../framework/ui/config/EUIType */ "./src/framework/ui/config/EUIType.ts");
+/* harmony import */ var _uiHome_UIHomeCtrl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uiHome/UIHomeCtrl */ "./src/game/ui/uiHome/uiHome/UIHomeCtrl.ts");
+/* harmony import */ var _uiHome_UIHomeView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./uiHome/UIHomeView */ "./src/game/ui/uiHome/uiHome/UIHomeView.ts");
+/* harmony import */ var _uiHome_UIHomeModel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./uiHome/UIHomeModel */ "./src/game/ui/uiHome/uiHome/UIHomeModel.ts");
+
+
+
+
+
+
+/**
+ * 这里定义所有Home场景中使用的UI配置，
+ */
+var UIHome = {
+    name: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UIHome,
+    layer: _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__["EUILayer"].NormalLayer,
+    model: _uiHome_UIHomeModel__WEBPACK_IMPORTED_MODULE_5__["UIHomeModel"],
+    ctrl: _uiHome_UIHomeCtrl__WEBPACK_IMPORTED_MODULE_3__["UIHomeCtrl"],
+    view: _uiHome_UIHomeView__WEBPACK_IMPORTED_MODULE_4__["UIHomeView"],
+    prefabPath: "",
+    type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__["EUIType"].View,
+    objName: "UIHome"
+};
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiHome/uiHome/UIHomeCtrl.ts":
+/*!*************************************************!*\
+  !*** ./src/game/ui/uiHome/uiHome/UIHomeCtrl.ts ***!
+  \*************************************************/
+/*! exports provided: UIHomeCtrl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIHomeCtrl", function() { return UIHomeCtrl; });
+/* harmony import */ var _framework_ui_base_UIBaseCtrl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseCtrl */ "./src/framework/ui/base/UIBaseCtrl.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+/**
+ * 测试主场景界面
+ */
+var UIHomeCtrl = /** @class */ (function (_super) {
+    __extends(UIHomeCtrl, _super);
+    function UIHomeCtrl() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIHomeCtrl.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+    };
+    UIHomeCtrl.prototype.onDestroy = function () {
+        _super.prototype.onDestroy.call(this);
+    };
+    return UIHomeCtrl;
+}(_framework_ui_base_UIBaseCtrl__WEBPACK_IMPORTED_MODULE_0__["default"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiHome/uiHome/UIHomeModel.ts":
+/*!**************************************************!*\
+  !*** ./src/game/ui/uiHome/uiHome/UIHomeModel.ts ***!
+  \**************************************************/
+/*! exports provided: UIHomeModel */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIHomeModel", function() { return UIHomeModel; });
+/* harmony import */ var _framework_ui_base_UIBaseModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseModel */ "./src/framework/ui/base/UIBaseModel.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var UIHomeModel = /** @class */ (function (_super) {
+    __extends(UIHomeModel, _super);
+    function UIHomeModel() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIHomeModel.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+    };
+    UIHomeModel.prototype.onDestroy = function () {
+        _super.prototype.onDestroy.call(this);
+    };
+    return UIHomeModel;
+}(_framework_ui_base_UIBaseModel__WEBPACK_IMPORTED_MODULE_0__["default"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiHome/uiHome/UIHomeView.ts":
+/*!*************************************************!*\
+  !*** ./src/game/ui/uiHome/uiHome/UIHomeView.ts ***!
+  \*************************************************/
+/*! exports provided: UIHomeView */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIHomeView", function() { return UIHomeView; });
+/* harmony import */ var _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseView */ "./src/framework/ui/base/UIBaseView.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var UIHomeView = /** @class */ (function (_super) {
+    __extends(UIHomeView, _super);
+    function UIHomeView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIHomeView.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+    };
+    UIHomeView.prototype.onDestroy = function () {
+        _super.prototype.onDestroy.call(this);
+    };
+    return UIHomeView;
+}(_framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__["UIBaseView"]));
+
+
 
 /***/ }),
 

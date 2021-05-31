@@ -1,6 +1,6 @@
 import EventDispatcher from "../utils/EventDispatcher";
 import {ISingleton} from "../interface/ISingleton";
-import {UnityEngine} from "csharp";
+import {CS, UnityEngine} from "csharp";
 import {EUILayer, UILayerInfo, UILayers} from "./config/UILayers";
 import {UIWindow} from "./UIWindow";
 import {UILayer} from "./component/UILayer";
@@ -9,6 +9,7 @@ import Handler from "../utils/Handler";
 import {UIWindowNames} from "./config/UIWindowNames";
 import {EUIState} from "./config/EUIState";
 import {UIConfigs} from "./config/UIConfigs";
+import {UIMessageNames} from "./config/UIMessageNames";
 
 /**
  * ui管理器系统：提供UI操作，UI层级管理
@@ -123,8 +124,32 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      * @param uiName
      * @param window
      */
-    private initWindow(uiName: UIWindowNames, window: UIWindow) {
+    private initWindow(uiName: UIWindowNames, window: UIWindow): UIWindow {
         window.state = EUIState.Initing;
+        let config = UIConfigs.get(uiName);
+        if (config == null) {
+            CS.Logger.LogError("UIWindowNames not exist in UIConfigs,name index is:" + UIWindowNames[uiName]);
+        }
+        let layer = this._layerMap.get(config.layer);
+        if (layer == null) {
+            CS.Logger.LogError(`No layer named:${EUILayer[config.layer]}`)
+        }
+        window.name = uiName;
+        let eventDispatcher = new EventDispatcher();
+        if (config.model != null) {
+            window.model = new config.model(eventDispatcher, uiName);
+        }
+        if (config.ctrl != null) {
+            window.ctrl = new config.ctrl(eventDispatcher, window.model);
+        }
+        if (config.view != null) {
+            window.view = new config.view(layer, config.objName, eventDispatcher, window.model, window.ctrl);
+        }
+        window.layer = config.layer;
+        window.prefabPath = config.prefabPath;
+        window.type = config.type;
+        this.event(UIMessageNames.UIFRAME_ON_WINDOW_CREATE, window);
+        return window;
     }
 
     private innerCloseWindow() {

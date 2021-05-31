@@ -73,3 +73,10 @@ export class UIBaseView extends UIBaseContainer {
         return this._model;
     }
 }
+
+/**
+ * 类类型限定
+ */
+export interface IUIBaseViewCtor {
+    new(holder: UIBaseComponent, var_arg: any, eventDispatcher: EventDispatcher, model: UIBaseModel, ctrl: UIBaseCtrl): UIBaseView;
+}
