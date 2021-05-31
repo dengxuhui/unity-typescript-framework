@@ -1039,7 +1039,6 @@ var UIBaseContainer = /** @class */ (function (_super) {
      * @param component_class
      */
     UIBaseContainer.prototype.walk = function (callback, component_class) {
-        if (component_class === void 0) { component_class = null; }
         this._components.forEach(function (component_map, name) {
             if (component_map != null) {
                 component_map.forEach(function (component, cmp_class) {

@@ -1,7 +1,7 @@
 /**
  * 基础组件容器
  */
-import {UIBaseComponent} from "./UIBaseComponent";
+import {IUIBaseComponentCtor, UIBaseComponent} from "./UIBaseComponent";
 import Handler from "../../utils/Handler";
 import {IUIComponent} from "../../interface/IUIComponent";
 import {CS} from "csharp";
@@ -10,7 +10,7 @@ export class UIBaseContainer extends UIBaseComponent {
     /**
      * 所有组件
      */
-    private _components: Map<string, Map<Function, IUIComponent>>;
+    private _components: Map<string, Map<IUIBaseComponentCtor, IUIComponent>>;
     /**
      * 子节点数量
      */
@@ -18,7 +18,7 @@ export class UIBaseContainer extends UIBaseComponent {
 
     onCreate(): void {
         super.onCreate();
-        this._components = new Map<string, Map<Function, IUIComponent>>();
+        this._components = new Map<string, Map<IUIBaseComponentCtor, IUIComponent>>();
         this._length = 0;
     }
 
@@ -53,10 +53,10 @@ export class UIBaseContainer extends UIBaseComponent {
      * @param callback
      * @param component_class
      */
-    walk(callback: Handler, component_class: any = null) {
-        this._components.forEach((component_map: Map<Function, IUIComponent>, name: string) => {
+    walk(callback: Handler, component_class?: IUIBaseComponentCtor) {
+        this._components.forEach((component_map: Map<IUIBaseComponentCtor, IUIComponent>, name: string) => {
             if (component_map != null) {
-                component_map.forEach((component: IUIComponent, cmp_class: Function) => {
+                component_map.forEach((component: IUIComponent, cmp_class: IUIBaseComponentCtor) => {
                     if (component_class == null) {
                         callback.runWith(component);
                     } else if (cmp_class == component_class) {
@@ -73,13 +73,13 @@ export class UIBaseContainer extends UIBaseComponent {
      * @param var_arg
      * @param params
      */
-    addComponent<T extends IUIComponent>(component_class: { new(T, any): T }, var_arg: any, ...params: any[]): T {
-        let component_inst = new component_class(this, var_arg);
+    addComponent<T extends IUIComponent>(component_class: IUIBaseComponentCtor, var_arg: any, ...params: any[]): T {
+        let component_inst: IUIComponent = new component_class(this, var_arg);
         component_inst.onCreate(params);
         let name = component_inst.getName();
         this.recordComponent(name, component_class, component_inst);
         this._length++;
-        return component_inst;
+        return component_inst as T;
     }
 
     /**
@@ -87,8 +87,8 @@ export class UIBaseContainer extends UIBaseComponent {
      * @param name
      * @param component_class
      */
-    getComponent(name: string, component_class: Function): IUIComponent {
-        let components: Map<Function, IUIComponent> = this._components[name];
+    getComponent(name: string, component_class: IUIBaseComponentCtor): IUIComponent {
+        let components: Map<IUIBaseComponentCtor, IUIComponent> = this._components[name];
         if (components == null) {
             return null;
         }
@@ -105,7 +105,7 @@ export class UIBaseContainer extends UIBaseComponent {
      * 获取所有类型组件
      * @param component_class
      */
-    getComponents(component_class: Function) {
+    getComponents(component_class: IUIBaseComponentCtor) {
         let components = new Array<IUIComponent>();
         this.walk(Handler.create(this, (component) => {
             components.push(component);
@@ -118,7 +118,7 @@ export class UIBaseContainer extends UIBaseComponent {
      * @param name
      * @param component_class
      */
-    removeComponent(name: string, component_class: Function): IUIComponent {
+    removeComponent(name: string, component_class: IUIBaseComponentCtor): IUIComponent {
         let component = this.getComponent(name, component_class);
         if (component != null) {
             component.destroy();
@@ -132,7 +132,7 @@ export class UIBaseContainer extends UIBaseComponent {
      * 移除组件
      * @param component_class
      */
-    removeComponents(component_class: Function): Array<IUIComponent> {
+    removeComponents(component_class: IUIBaseComponentCtor): Array<IUIComponent> {
         let components = this.getComponents(component_class);
         for (let i = 0; i < components.length; i++) {
             let component = components[i];
@@ -150,7 +150,7 @@ export class UIBaseContainer extends UIBaseComponent {
      * @param component_class
      * @param component
      */
-    private recordComponent<T extends IUIComponent>(name: string, component_class: Function, component: T) {
+    private recordComponent<T extends IUIComponent>(name: string, component_class: IUIBaseComponentCtor, component: T) {
         if (this._components[name][component_class] != null) {
             CS.Logger.LogError("Already exist component_class:" + component_class.name);
         }

@@ -138,3 +138,10 @@ export class UIBaseComponent implements IUIComponent {
         return this._name;
     }
 }
+
+/**
+ * 类型限定
+ */
+export interface IUIBaseComponentCtor {
+    new(holder: any, var_arg: any): IUIComponent;
+}
