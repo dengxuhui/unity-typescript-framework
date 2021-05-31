@@ -59,7 +59,7 @@ export default class UIManager extends EventDispatcher implements ISingleton {
         this._gameObject = UnityEngine.GameObject.Find(UIManager.UIRootPath);
         this._transform = this._gameObject.transform;
         let cameraRoot = UnityEngine.GameObject.Find(UIManager.UICameraPath);
-        this._uiCamera = cameraRoot.GetComponent($typeof(UnityEngine.Camera));
+        this._uiCamera = cameraRoot.GetComponent($typeof(UnityEngine.Camera)) as UnityEngine.Camera;
         UnityEngine.Object.DontDestroyOnLoad(this._gameObject);
         let eventSys = UnityEngine.GameObject.Find(UIManager.EventSystemPath);
         UnityEngine.Object.DontDestroyOnLoad(eventSys);
@@ -69,7 +69,7 @@ export default class UIManager extends EventDispatcher implements ISingleton {
             trans.SetParent(this._transform);
             let newLayer = new UILayer(this, layer_info.name);
             newLayer.onCreate(layer_info);
-            this._layerMap.set(layer, newLayer);
+            this._layerMap.set(layer_info.type, newLayer);
         }, null, false));
     }
 }

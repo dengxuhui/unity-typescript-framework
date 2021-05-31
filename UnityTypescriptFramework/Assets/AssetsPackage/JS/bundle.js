@@ -507,7 +507,7 @@ var UIManager = /** @class */ (function (_super) {
             trans.SetParent(_this._transform);
             var newLayer = new _component_UILayer__WEBPACK_IMPORTED_MODULE_3__["UILayer"](_this, layer_info.name);
             newLayer.onCreate(layer_info);
-            _this._layerMap.set(layer, newLayer);
+            _this._layerMap.set(layer_info.type, newLayer);
         }, null, false));
     };
     UIManager.Instance = new UIManager();
@@ -706,12 +706,9 @@ var UILayer = /** @class */ (function (_super) {
         }
         _super.prototype.onCreate.call(this);
         this._gameObject.layer = _unity_UnityTagsAndLayers__WEBPACK_IMPORTED_MODULE_2__["EUnityLayers"].UI;
-        this._canvas = _util_UIUtil__WEBPACK_IMPORTED_MODULE_3__["UIUtil"].findComponent(this._transform, Object(puerts__WEBPACK_IMPORTED_MODULE_4__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Canvas));
-        if (this._canvas == null) {
-            this._canvas = this._gameObject.AddComponent(Object(puerts__WEBPACK_IMPORTED_MODULE_4__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Canvas));
-            this._transform = this._canvas.transform;
-            this._gameObject = this._canvas.gameObject;
-        }
+        this._canvas = this._gameObject.AddComponent(Object(puerts__WEBPACK_IMPORTED_MODULE_4__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Canvas));
+        this._transform = this._canvas.transform;
+        this._gameObject = this._canvas.gameObject;
         var layer = args[0];
         var canvas = this._canvas;
         canvas.renderMode = csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].RenderMode.ScreenSpaceCamera;
