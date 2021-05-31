@@ -20,19 +20,17 @@ export class UILayer extends UIBaseComponent implements IUIComponent {
     private _topWindowOrder: number;
     private _minWindowOrder: number;
 
-    onCreate(args?: any[]): void {
+    onCreate(...args: any[]): void {
         super.onCreate();
         this._gameObject.layer = EUnityLayers.UI;
-        let canvas;
-        this._canvas = UIUtil.findComponent(this._transform, $typeof(UnityEngine.Canvas));
+        this._canvas = UIUtil.findComponent(this._transform, $typeof(UnityEngine.Canvas)) as UnityEngine.Canvas;
         if (this._canvas == null) {
             this._canvas = this._gameObject.AddComponent($typeof(UnityEngine.Canvas)) as UnityEngine.Canvas;
             this._transform = this._canvas.transform;
             this._gameObject = this._canvas.gameObject;
         }
         let layer: UILayerInfo = args[0];
-        //canvas
-        canvas = this._canvas;
+        let canvas = this._canvas;
         canvas.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = UIManager.Instance.uiCamera;
         canvas.planeDistance = layer.planeDistance;

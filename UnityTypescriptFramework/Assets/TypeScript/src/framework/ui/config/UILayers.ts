@@ -1,6 +1,8 @@
 /**
  * UI层级信息数据
  */
+import Handler from "../../utils/Handler";
+
 export class UILayerInfo {
     private constructor() {
     }
@@ -86,5 +88,15 @@ export class UILayers {
      */
     public static get(layer_type: EUILayer): UILayerInfo {
         return UILayers._layers.get(layer_type);
+    }
+
+    /**
+     * 遍历
+     * @param callback
+     */
+    public static walk(callback: Handler) {
+        this._layers.forEach((v: UILayerInfo) => {
+            callback.runWith(v);
+        });
     }
 }
