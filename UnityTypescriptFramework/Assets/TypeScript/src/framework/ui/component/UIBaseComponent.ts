@@ -15,7 +15,7 @@ export class UIBaseComponent implements IUIComponent {
     /**
      * 持有者
      */
-    _holder: UIBaseComponent;
+    _holder: any;
     /**
      * transform对应的gameObject
      */
@@ -47,7 +47,7 @@ export class UIBaseComponent implements IUIComponent {
      * @param holder
      * @param var_arg
      */
-    constructor(holder: UIBaseComponent, var_arg: any) {
+    constructor(holder: any, var_arg: any) {
         this._holder = holder;
         this._var_arg = var_arg;
     }
