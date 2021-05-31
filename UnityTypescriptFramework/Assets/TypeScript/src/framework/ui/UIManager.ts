@@ -6,6 +6,9 @@ import {UIWindow} from "./UIWindow";
 import {UILayer} from "./component/UILayer";
 import {$typeof} from "puerts";
 import Handler from "../utils/Handler";
+import {UIWindowNames} from "./config/UIWindowNames";
+import {EUIState} from "./config/EUIState";
+import {UIMessageNames} from "./config/UIMessageNames";
 
 /**
  * ui管理器系统：提供UI操作，UI层级管理
@@ -28,9 +31,9 @@ export default class UIManager extends EventDispatcher implements ISingleton {
     static MaxOrderPerWindow: number = 10;
 
     //所有窗口记录
-    private _allWindows: Array<UIWindow>;
+    private _allWindows: Map<UIWindowNames, UIWindow>;
     //打开中的弹窗
-    private _openingDialogArray: Array<UIWindow>;
+    private _openingDialogs: Map<UIWindowNames, UIWindow>;
     //ui摄像机
     private _uiCamera: UnityEngine.Camera;
     //层级map
@@ -40,7 +43,6 @@ export default class UIManager extends EventDispatcher implements ISingleton {
     //根节点trans
     private _transform: UnityEngine.Transform;
 
-    // _layers
     /**
      * 密封构造函数
      */
@@ -53,8 +55,8 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      */
     public initialize(): void {
         UILayers.set();
-        this._allWindows = new Array<UIWindow>();
-        this._openingDialogArray = new Array<UIWindow>();
+        this._allWindows = new Map<UIWindowNames, UIWindow>();
+        this._openingDialogs = new Map<UIWindowNames, UIWindow>();
         this._layerMap = new Map<EUILayer, UILayer>();
         this._gameObject = UnityEngine.GameObject.Find(UIManager.UIRootPath);
         this._transform = this._gameObject.transform;
@@ -71,5 +73,62 @@ export default class UIManager extends EventDispatcher implements ISingleton {
             newLayer.onCreate(layer_info);
             this._layerMap.set(layer_info.type, newLayer);
         }, null, false));
+    }
+
+    /**
+     * 获取层级
+     * @param layer
+     */
+    public getLayer(layer: EUILayer) {
+        return this._layerMap.get(layer);
+    }
+
+    /**
+     * 获取ui状态
+     * @param uiName
+     */
+    public getWindowState(uiName: UIWindowNames) {
+        let window = this._allWindows.get(uiName);
+        if (window == null) {
+            return EUIState.None;
+        } else {
+            return window.state;
+        }
+    }
+
+    /**
+     * 打开界面
+     * @param uiName 界面名
+     * @param args 参数列表
+     */
+    public openWindow(uiName: UIWindowNames, ...args: any[]): boolean {
+        let cur_state = this.getWindowState(uiName);
+        // 还没有记录就是不存在
+        if (cur_state == EUIState.None) {
+            let window = new UIWindow();
+            this._allWindows.set(uiName, window);
+            window.state = EUIState.Opening;
+        } else if (cur_state == EUIState.Loading || cur_state == EUIState.Opening) {
+            return false;
+        }
+
+        return true;
+    }
+
+    //-------------------------------private----------------------
+
+    private innerCloseWindow() {
+
+    }
+
+    private innerOpenWindow() {
+
+    }
+
+    private activateWindow() {
+
+    }
+
+    private deactivateWindow(window: UIWindow) {
     }
 }

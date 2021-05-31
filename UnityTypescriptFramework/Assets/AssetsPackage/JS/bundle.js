@@ -441,10 +441,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _config_UILayers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./config/UILayers */ "./src/framework/ui/config/UILayers.ts");
-/* harmony import */ var _component_UILayer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./component/UILayer */ "./src/framework/ui/component/UILayer.ts");
-/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! puerts */ "puerts");
-/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _utils_Handler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Handler */ "./src/framework/utils/Handler.ts");
+/* harmony import */ var _UIWindow__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UIWindow */ "./src/framework/ui/UIWindow.ts");
+/* harmony import */ var _component_UILayer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./component/UILayer */ "./src/framework/ui/component/UILayer.ts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! puerts */ "puerts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _utils_Handler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Handler */ "./src/framework/utils/Handler.ts");
+/* harmony import */ var _config_EUIState__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config/EUIState */ "./src/framework/ui/config/EUIState.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -466,12 +468,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
+
+
 /**
  * ui管理器系统：提供UI操作，UI层级管理
  */
 var UIManager = /** @class */ (function (_super) {
     __extends(UIManager, _super);
-    // _layers
     /**
      * 密封构造函数
      */
@@ -491,24 +494,75 @@ var UIManager = /** @class */ (function (_super) {
     UIManager.prototype.initialize = function () {
         var _this = this;
         _config_UILayers__WEBPACK_IMPORTED_MODULE_2__["UILayers"].set();
-        this._allWindows = new Array();
-        this._openingDialogArray = new Array();
+        this._allWindows = new Map();
+        this._openingDialogs = new Map();
         this._layerMap = new Map();
         this._gameObject = csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].GameObject.Find(UIManager.UIRootPath);
         this._transform = this._gameObject.transform;
         var cameraRoot = csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].GameObject.Find(UIManager.UICameraPath);
-        this._uiCamera = cameraRoot.GetComponent(Object(puerts__WEBPACK_IMPORTED_MODULE_4__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Camera));
+        this._uiCamera = cameraRoot.GetComponent(Object(puerts__WEBPACK_IMPORTED_MODULE_5__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Camera));
         csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Object.DontDestroyOnLoad(this._gameObject);
         var eventSys = csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].GameObject.Find(UIManager.EventSystemPath);
         csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Object.DontDestroyOnLoad(eventSys);
-        _config_UILayers__WEBPACK_IMPORTED_MODULE_2__["UILayers"].walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_5__["default"].create(this, function (layer_info) {
+        _config_UILayers__WEBPACK_IMPORTED_MODULE_2__["UILayers"].walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_6__["default"].create(this, function (layer_info) {
             var go = new csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].GameObject(layer_info.name);
             var trans = go.transform;
             trans.SetParent(_this._transform);
-            var newLayer = new _component_UILayer__WEBPACK_IMPORTED_MODULE_3__["UILayer"](_this, layer_info.name);
+            var newLayer = new _component_UILayer__WEBPACK_IMPORTED_MODULE_4__["UILayer"](_this, layer_info.name);
             newLayer.onCreate(layer_info);
             _this._layerMap.set(layer_info.type, newLayer);
         }, null, false));
+    };
+    /**
+     * 获取层级
+     * @param layer
+     */
+    UIManager.prototype.getLayer = function (layer) {
+        return this._layerMap.get(layer);
+    };
+    /**
+     * 获取ui状态
+     * @param uiName
+     */
+    UIManager.prototype.getWindowState = function (uiName) {
+        var window = this._allWindows.get(uiName);
+        if (window == null) {
+            return _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].None;
+        }
+        else {
+            return window.state;
+        }
+    };
+    /**
+     * 打开界面
+     * @param uiName 界面名
+     * @param args 参数列表
+     */
+    UIManager.prototype.openWindow = function (uiName) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        var cur_state = this.getWindowState(uiName);
+        // 还没有记录就是不存在
+        if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].None) {
+            var window = new _UIWindow__WEBPACK_IMPORTED_MODULE_3__["UIWindow"]();
+            this._allWindows.set(uiName, window);
+            window.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Opening;
+        }
+        else if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Loading || cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_7__["EUIState"].Opening) {
+            return false;
+        }
+        return true;
+    };
+    //-------------------------------private----------------------
+    UIManager.prototype.innerCloseWindow = function () {
+    };
+    UIManager.prototype.innerOpenWindow = function () {
+    };
+    UIManager.prototype.activateWindow = function () {
+    };
+    UIManager.prototype.deactivateWindow = function (window) {
     };
     UIManager.Instance = new UIManager();
     //ui场景根目录
@@ -524,6 +578,45 @@ var UIManager = /** @class */ (function (_super) {
     return UIManager;
 }(_utils_EventDispatcher__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (UIManager);
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/UIWindow.ts":
+/*!**************************************!*\
+  !*** ./src/framework/ui/UIWindow.ts ***!
+  \**************************************/
+/*! exports provided: UIWindow */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIWindow", function() { return UIWindow; });
+/* harmony import */ var _config_UILayers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config/UILayers */ "./src/framework/ui/config/UILayers.ts");
+/* harmony import */ var _config_EUIState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config/EUIState */ "./src/framework/ui/config/EUIState.ts");
+
+
+/**
+ * 窗口包装器
+ */
+var UIWindow = /** @class */ (function () {
+    function UIWindow() {
+        /**
+         * 层级
+         */
+        this.layer = _config_UILayers__WEBPACK_IMPORTED_MODULE_0__["EUILayer"].BackgroundLayer;
+        /**
+         * 预设路径
+         */
+        this.prefabPath = "";
+        /**
+         * 状态
+         */
+        this.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_1__["EUIState"].None;
+    }
+    return UIWindow;
+}());
+
 
 
 /***/ }),
@@ -751,6 +844,54 @@ var UILayer = /** @class */ (function (_super) {
     return UILayer;
 }(_UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__["UIBaseComponent"]));
 
+
+
+/***/ }),
+
+/***/ "./src/framework/ui/config/EUIState.ts":
+/*!*********************************************!*\
+  !*** ./src/framework/ui/config/EUIState.ts ***!
+  \*********************************************/
+/*! exports provided: EUIState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EUIState", function() { return EUIState; });
+/**
+ * ui状态宏定义
+ */
+var EUIState;
+(function (EUIState) {
+    /**
+     * 默认状态
+     */
+    EUIState[EUIState["None"] = 0] = "None";
+    /**
+     * 加载中
+     */
+    EUIState[EUIState["Loading"] = 1] = "Loading";
+    /**
+     * 打开过程中
+     */
+    EUIState[EUIState["Opening"] = 2] = "Opening";
+    /**
+     * 已经打开
+     */
+    EUIState[EUIState["Opened"] = 3] = "Opened";
+    /**
+     * 关闭中
+     */
+    EUIState[EUIState["Closing"] = 4] = "Closing";
+    /**
+     * 已关闭
+     */
+    EUIState[EUIState["Closed"] = 5] = "Closed";
+    /**
+     * 已销毁
+     */
+    EUIState[EUIState["Destroyed"] = 6] = "Destroyed";
+})(EUIState || (EUIState = {}));
 
 
 /***/ }),
