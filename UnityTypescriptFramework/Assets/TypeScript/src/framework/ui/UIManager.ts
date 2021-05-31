@@ -110,10 +110,11 @@ export default class UIManager extends EventDispatcher implements ISingleton {
             this._allWindows.set(uiName, window);
             this.initWindow(uiName, window);
         } else if (cur_state == EUIState.Loading || cur_state == EUIState.Opening) {
-            return false;
+            return true;
         }
         let window = this._allWindows.get(uiName);
-
+        this.innerCloseWindow(window);
+        this.innerOpenWindow(window);
         return true;
     }
 
@@ -152,18 +153,28 @@ export default class UIManager extends EventDispatcher implements ISingleton {
         return window;
     }
 
-    private innerCloseWindow() {
-
+    private innerCloseWindow(window: UIWindow) {
+        if (window.state == EUIState.Opened || window.state == EUIState.Opening || window.state == EUIState.Loading) {
+            if (window.state != EUIState.Loading) {
+                this.deactivateWindow(window);
+            }
+            window.state = EUIState.Closed;
+            this.event(UIMessageNames.UIFRAME_ON_WINDOW_CLOSE, window);
+        }
     }
 
-    private innerOpenWindow() {
-
+    private innerOpenWindow(window: UIWindow) {
+        
     }
 
-    private activateWindow() {
-
+    private activateWindow(window: UIWindow) {
+        
     }
 
     private deactivateWindow(window: UIWindow) {
+        window?.model.deactivate();
+        window?.ctrl.deactivate();
+        window.view.setActive(false);
+        //TODO 处理弹窗类型
     }
 }

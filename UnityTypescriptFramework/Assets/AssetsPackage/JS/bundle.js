@@ -560,9 +560,11 @@ var UIManager = /** @class */ (function (_super) {
             this.initWindow(uiName, window_1);
         }
         else if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Loading || cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opening) {
-            return false;
+            return true;
         }
         var window = this._allWindows.get(uiName);
+        this.innerCloseWindow(window);
+        this.innerOpenWindow(window);
         return true;
     };
     //-------------------------------private----------------------
@@ -598,13 +600,24 @@ var UIManager = /** @class */ (function (_super) {
         this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__["UIMessageNames"].UIFRAME_ON_WINDOW_CREATE, window);
         return window;
     };
-    UIManager.prototype.innerCloseWindow = function () {
+    UIManager.prototype.innerCloseWindow = function (window) {
+        if (window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opened || window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opening || window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Loading) {
+            if (window.state != _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Loading) {
+                this.deactivateWindow(window);
+            }
+            window.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Closed;
+            this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__["UIMessageNames"].UIFRAME_ON_WINDOW_CLOSE, window);
+        }
     };
-    UIManager.prototype.innerOpenWindow = function () {
+    UIManager.prototype.innerOpenWindow = function (window) {
     };
-    UIManager.prototype.activateWindow = function () {
+    UIManager.prototype.activateWindow = function (window) {
     };
     UIManager.prototype.deactivateWindow = function (window) {
+        window === null || window === void 0 ? void 0 : window.model.deactivate();
+        window === null || window === void 0 ? void 0 : window.ctrl.deactivate();
+        window.view.setActive(false);
+        //TODO 处理弹窗类型
     };
     UIManager.Instance = new UIManager();
     //ui场景根目录
@@ -688,8 +701,28 @@ var UIBaseCtrl = /** @class */ (function () {
     UIBaseCtrl.prototype.onDestroy = function () {
     };
     UIBaseCtrl.prototype.onEnable = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
     };
     UIBaseCtrl.prototype.onDisable = function () {
+    };
+    UIBaseCtrl.prototype.onAddListener = function () {
+    };
+    UIBaseCtrl.prototype.onRemoveListener = function () {
+    };
+    UIBaseCtrl.prototype.deactivate = function () {
+        this.onRemoveListener();
+        this.onDisable();
+    };
+    UIBaseCtrl.prototype.activate = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        this.onAddListener();
+        this.onEnable(args);
     };
     return UIBaseCtrl;
 }());
@@ -724,8 +757,28 @@ var UIBaseModel = /** @class */ (function () {
     UIBaseModel.prototype.onDestroy = function () {
     };
     UIBaseModel.prototype.onEnable = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
     };
     UIBaseModel.prototype.onDisable = function () {
+    };
+    UIBaseModel.prototype.onAddListener = function () {
+    };
+    UIBaseModel.prototype.onRemoveListener = function () {
+    };
+    UIBaseModel.prototype.deactivate = function () {
+        this.onRemoveListener();
+        this.onDisable();
+    };
+    UIBaseModel.prototype.activate = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        this.onAddListener();
+        this.onEnable(args);
     };
     return UIBaseModel;
 }());
@@ -795,12 +848,22 @@ var UIBaseView = /** @class */ (function (_super) {
         _super.prototype.onDestroy.call(this);
     };
     UIBaseView.prototype.onEnable = function () {
+        var arg = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            arg[_i] = arguments[_i];
+        }
         this._baseOrder = this._holder.popWindowOrder();
         _super.prototype.onEnable.call(this);
+        this.onAddListener();
     };
     UIBaseView.prototype.onDisable = function () {
+        this.onRemoveListener();
         _super.prototype.onDisable.call(this);
         this._holder.pushWindowOrder();
+    };
+    UIBaseView.prototype.onAddListener = function () {
+    };
+    UIBaseView.prototype.onRemoveListener = function () {
     };
     Object.defineProperty(UIBaseView.prototype, "baseOrder", {
         /**

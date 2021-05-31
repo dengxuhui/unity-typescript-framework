@@ -31,10 +31,28 @@ export default class UIBaseCtrl implements IDestroyable, IComponent {
     onDestroy(): void {
     }
 
-    onEnable(): void {
+    onEnable(...args: any[]): void {
     }
 
     onDisable(): void {
+    }
+
+    onAddListener(): void {
+
+    }
+
+    onRemoveListener(): void {
+
+    }
+
+    public deactivate(): void {
+        this.onRemoveListener();
+        this.onDisable();
+    }
+
+    public activate(...args: any[]) {
+        this.onAddListener();
+        this.onEnable(args);
     }
 }
 

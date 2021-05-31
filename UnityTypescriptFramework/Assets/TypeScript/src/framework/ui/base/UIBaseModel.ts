@@ -37,10 +37,28 @@ export default class UIBaseModel implements IDestroyable, IComponent {
 
     }
 
-    onEnable(): void {
+    onEnable(...args: any[]): void {
     }
 
     onDisable(): void {
+    }
+
+    onAddListener(): void {
+
+    }
+
+    onRemoveListener(): void {
+
+    }
+
+    public deactivate(): void {
+        this.onRemoveListener();
+        this.onDisable();
+    }
+
+    public activate(...args: any[]) {
+        this.onAddListener();
+        this.onEnable(args);
     }
 }
 

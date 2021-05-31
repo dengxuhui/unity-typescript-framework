@@ -42,14 +42,24 @@ export class UIBaseView extends UIBaseContainer {
         super.onDestroy();
     }
 
-    onEnable(): void {
+    onEnable(...arg: any[]): void {
         this._baseOrder = (this._holder as UILayer).popWindowOrder();
         super.onEnable();
+        this.onAddListener();
     }
 
     onDisable(): void {
+        this.onRemoveListener();
         super.onDisable();
         (this._holder as UILayer).pushWindowOrder();
+    }
+
+    onAddListener(): void {
+
+    }
+
+    onRemoveListener(): void {
+
     }
 
     /**
