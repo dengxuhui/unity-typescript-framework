@@ -1,7 +1,7 @@
-import { UnityEngine } from "csharp";
+import {CS, UnityEngine} from "csharp";
 import Handler from "framework/utils/Handler";
-import { $promise, $typeof } from "puerts";
-import { ISingleton } from '../interface/ISingleton';
+import {ISingleton} from '../interface/ISingleton';
+
 /*
 * GameObject资源池
 * */
@@ -11,6 +11,7 @@ export class GameObjectPool implements ISingleton {
     private _cacheTransRoot = null;
     private _goPool = new Map();
     private _instCache: Map<string, Array<any>> = new Map<string, Array<any>>();
+
     /**
      * 密封构造函数
      */
@@ -18,56 +19,10 @@ export class GameObjectPool implements ISingleton {
     }
 
     /**
-     * 初始化
-     */
-    public initialize(): void {
-        let go = UnityEngine.GameObject.Find("GameObjectCacheRoot");
-        if (go == (void 0)) {
-            go = new UnityEngine.GameObject("GameObjectCacheRoot");
-            UnityEngine.Object.DontDestroyOnLoad(go);
-        }
-        this._cacheTransRoot = go.transform;
-    }
-
-    /**
-     * 
-     * @param path 
-     * @returns bool
-     */
-    public checkHasCached(path: string): boolean {
-        let cachedInst: Array<any> = this._instCache.get(path);
-        if (cachedInst && cachedInst.length > 0) {
-            return true;
-        }
-        let pooledGo = this._goPool.get(path);
-        return pooledGo != (void 0);
-    }
-
-    /**
-     * 缓存并实例化GameObject
-     * @param path 
-     * @param go 
-     * @param inst_count 
-     */
-    public cacheAndInstGameObject(path: string, go: any, inst_count: number = 1) {
-        //TODO 添加GameObject对于资源的引用
-        this._goPool.set(path, go);
-        if (inst_count > 0) {
-            let cachedInst: Array<any> = this._instCache.get(path);
-            for (let i: number = 0; i < inst_count; i++) {
-                let inst = UnityEngine.GameObject.Instantiate(go) as UnityEngine.GameObject;
-                inst.transform.SetParent(this._cacheTransRoot);
-                inst.SetActive(false);
-                cachedInst.push(inst);
-            }
-        }
-    }
-
-    /**
      * 从缓存获取对象
      * @param path
      */
-    public tryGetFromCache(path: string): any {
+    private tryGetFromCache(path: string): UnityEngine.Object {
         if (!this.checkHasCached(path)) {
             return null;
         }
@@ -85,44 +40,87 @@ export class GameObjectPool implements ISingleton {
     }
 
     /**
-     * 预加载GameObject
-     * @param path 
-     * @param inst_count 
-     * @param callback 
-     * @returns 
+     * 启用gameObject
+     * @param gameObject
      */
-    public async preLoadGameObjectAsync(path: string, inst_count: number, callback: Handler) {
-        if (this.checkHasCached(path)) {
-            callback && callback.run();
-            return;
-        }    
-        // let go = await ResourceManager.I.loadPrefabAsync(path);
-        // if (go != (void 0)) {
-        //     this.cacheAndInstGameObject(path, go, inst_count);
-        // }
-        // callback && callback.run();
+    private activeGO(gameObject: UnityEngine.GameObject) {
+        gameObject && gameObject.SetActive(true);
     }
 
     /**
-     * 异步加载资源
-     * @param path 
-     * @param callback 
+     * 初始化
      */
-    public async loadGameObjetAsync(path: string) {
-        let inst = this.tryGetFromCache(path);
-        if (inst == (void 0)) {
-            await this.preLoadGameObjectAsync(path, 1, null);
+    public initialize(): void {
+        let go = UnityEngine.GameObject.Find("GameObjectCacheRoot");
+        if (go == (void 0)) {
+            go = new UnityEngine.GameObject("GameObjectCacheRoot");
+            UnityEngine.Object.DontDestroyOnLoad(go);
         }
-        inst = this.tryGetFromCache(path);
-        inst.SetActive(true);
+        this._cacheTransRoot = go.transform;
+    }
+
+    /**
+     *
+     * @param path
+     * @returns bool
+     */
+    public checkHasCached(path: string): boolean {
+        let cachedInst: Array<any> = this._instCache.get(path);
+        if (cachedInst && cachedInst.length > 0) {
+            return true;
+        }
+        let pooledGo = this._goPool.get(path);
+        return pooledGo != (void 0);
+    }
+
+    /**
+     * 缓存并实例化GameObject
+     * @param path
+     * @param go
+     * @param inst_count
+     */
+    public cacheAndInstGameObject(path: string, go: any, inst_count: number = 1) {
+        //TODO 添加GameObject对于资源的引用
+        this._goPool.set(path, go);
+        if (inst_count > 0) {
+            let cachedInst: Array<any> = this._instCache.get(path);
+            for (let i: number = 0; i < inst_count; i++) {
+                let inst = UnityEngine.GameObject.Instantiate(go) as UnityEngine.GameObject;
+                inst.transform.SetParent(this._cacheTransRoot);
+                inst.SetActive(false);
+                cachedInst.push(inst);
+            }
+        }
+    }
+
+    /**
+     * 预加载资源
+     * @param pathArray
+     * @param callback
+     */
+    public preLoadGameObjectAsync(pathArray:Array<string>,callback:Handler){
+        
+    }
+
+    /**
+     * 获取已经加载好的GameObject对象
+     * @param path
+     * @param active
+     */
+    public getLoadedGameObject(path: string, active: boolean = true): UnityEngine.GameObject {
+        let inst = this.tryGetFromCache(path) as UnityEngine.GameObject;
+        if (inst == null) {
+            CS.Logger.LogError(`GameObjectPool=>getLoadedGameObject which is not loaded:${path}`);
+        }
+        active && this.activeGO(inst);
         return inst;
     }
 
     /**
      * 回收GameObject
-     * @param path 
-     * @param inst 
-     * @returns 
+     * @param path
+     * @param inst
+     * @returns
      */
     public recycleGameObject(path: string, inst: UnityEngine.GameObject) {
         if (inst == (void 0)) {
@@ -135,6 +133,7 @@ export class GameObjectPool implements ISingleton {
         this._instCache.set(path, cachedInst);
     }
 
+    //TODO
     public cleanup() {
         this._instCache.forEach((arr: Array<any>, path: string) => {
             for (let obj of arr) {
@@ -142,7 +141,7 @@ export class GameObjectPool implements ISingleton {
                     UnityEngine.GameObject.Destroy(obj);
                 }
             }
-        });        
+        });
         this._instCache.clear();
         //清除cachePool中的GameObject引用
     }

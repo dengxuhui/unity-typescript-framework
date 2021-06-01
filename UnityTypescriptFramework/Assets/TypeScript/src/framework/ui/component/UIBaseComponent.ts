@@ -11,36 +11,36 @@ export class UIBaseComponent implements IUIComponent {
     /**
      * 窗口view层脚本
      */
-    _view: UIBaseComponent;
+    protected _view: UIBaseComponent;
     /**
      * 持有者 TODO优化类型限定
      */
-    _holder: any;
+    protected _holder: any;
     /**
      * transform对应的gameObject
      */
-    _gameObject: UnityEngine.GameObject;
+    protected _gameObject: UnityEngine.GameObject;
     /**
      * transform组件
      */
-    _transform: UnityEngine.Transform;
+    protected _transform: UnityEngine.Transform;
     /**
      * ui rectTrans组件
      */
-    _rectTransform: UnityEngine.RectTransform;
+    protected _rectTransform: UnityEngine.RectTransform;
     /**
      * 组件名字
      */
-    _name: string;
+    protected _name: string;
     /**
      * 是否激活
      */
-    _active: boolean;
+    protected _active: boolean;
     /**
      * 多重参数
      * path,index,gameObject
      */
-    _var_arg: any;
+    protected _var_arg: any;
 
     /**
      * 添加组件
@@ -136,6 +136,20 @@ export class UIBaseComponent implements IUIComponent {
      */
     public getName(): string {
         return this._name;
+    }
+
+    /**
+     * 获取transform节点
+     */
+    public get transform():UnityEngine.Transform{
+        return this._transform;
+    }
+
+    /**
+     * 获取holder
+     */
+    public get holder():any{
+        return this._holder;
     }
 }
 

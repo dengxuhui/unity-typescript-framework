@@ -15,7 +15,6 @@ let UIBattleMain: UIConfigInfo = {
     prefabPath: "",
     components: [],
     type: EUIType.View,
-    objName: "UIBattleMain",
 };
 
 export {

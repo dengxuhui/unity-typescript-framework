@@ -50,10 +50,6 @@ export class UIConfigInfo {
      * ui类型
      */
     type: EUIType;
-    /**
-     * ui对象在场景中的名字
-     */
-    objName: string;
 }
 
 let UIConfigs: Map<UIWindowNames, UIConfigInfo> = new Map<UIWindowNames, UIConfigInfo>();

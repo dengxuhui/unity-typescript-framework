@@ -19,7 +19,6 @@ let UIHome: UIConfigInfo = {
     prefabPath: "",
     components: [],
     type: EUIType.View,
-    objName: "UIHome"
 };
 
 export {

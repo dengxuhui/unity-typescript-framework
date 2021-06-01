@@ -243,42 +243,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameObjectPool", function() { return GameObjectPool; });
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 
 /*
 * GameObject资源池
@@ -292,6 +256,33 @@ var GameObjectPool = /** @class */ (function () {
         this._goPool = new Map();
         this._instCache = new Map();
     }
+    /**
+     * 从缓存获取对象
+     * @param path
+     */
+    GameObjectPool.prototype.tryGetFromCache = function (path) {
+        if (!this.checkHasCached(path)) {
+            return null;
+        }
+        var cachedInst = this._instCache.get(path);
+        if (cachedInst != (void 0) && cachedInst.length > 0) {
+            var inst = cachedInst.pop();
+            return inst;
+        }
+        var pooledGo = this._goPool.get(path);
+        if (pooledGo != void 0) {
+            var inst = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Instantiate(pooledGo);
+            return inst;
+        }
+        return null;
+    };
+    /**
+     * 启用gameObject
+     * @param gameObject
+     */
+    GameObjectPool.prototype.activeGO = function (gameObject) {
+        gameObject && gameObject.SetActive(true);
+    };
     /**
      * 初始化
      */
@@ -337,67 +328,25 @@ var GameObjectPool = /** @class */ (function () {
         }
     };
     /**
-     * 从缓存获取对象
-     * @param path
-     */
-    GameObjectPool.prototype.tryGetFromCache = function (path) {
-        if (!this.checkHasCached(path)) {
-            return null;
-        }
-        var cachedInst = this._instCache.get(path);
-        if (cachedInst != (void 0) && cachedInst.length > 0) {
-            var inst = cachedInst.pop();
-            return inst;
-        }
-        var pooledGo = this._goPool.get(path);
-        if (pooledGo != void 0) {
-            var inst = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Instantiate(pooledGo);
-            return inst;
-        }
-        return null;
-    };
-    /**
-     * 预加载GameObject
-     * @param path
-     * @param inst_count
-     * @param callback
-     * @returns
-     */
-    GameObjectPool.prototype.preLoadGameObjectAsync = function (path, inst_count, callback) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                if (this.checkHasCached(path)) {
-                    callback && callback.run();
-                    return [2 /*return*/];
-                }
-                return [2 /*return*/];
-            });
-        });
-    };
-    /**
-     * 异步加载资源
-     * @param path
+     * 预加载资源
+     * @param pathArray
      * @param callback
      */
-    GameObjectPool.prototype.loadGameObjetAsync = function (path) {
-        return __awaiter(this, void 0, void 0, function () {
-            var inst;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        inst = this.tryGetFromCache(path);
-                        if (!(inst == (void 0))) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.preLoadGameObjectAsync(path, 1, null)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2:
-                        inst = this.tryGetFromCache(path);
-                        inst.SetActive(true);
-                        return [2 /*return*/, inst];
-                }
-            });
-        });
+    GameObjectPool.prototype.preLoadGameObjectAsync = function (pathArray, callback) {
+    };
+    /**
+     * 获取已经加载好的GameObject对象
+     * @param path
+     * @param active
+     */
+    GameObjectPool.prototype.getLoadedGameObject = function (path, active) {
+        if (active === void 0) { active = true; }
+        var inst = this.tryGetFromCache(path);
+        if (inst == null) {
+            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("GameObjectPool=>getLoadedGameObject which is not loaded:" + path);
+        }
+        active && this.activeGO(inst);
+        return inst;
     };
     /**
      * 回收GameObject
@@ -415,6 +364,7 @@ var GameObjectPool = /** @class */ (function () {
         cachedInst.push(inst);
         this._instCache.set(path, cachedInst);
     };
+    //TODO
     GameObjectPool.prototype.cleanup = function () {
         this._instCache.forEach(function (arr, path) {
             for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
@@ -454,9 +404,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _utils_Handler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Handler */ "./src/framework/utils/Handler.ts");
 /* harmony import */ var _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config/UIWindowNames */ "./src/framework/ui/config/UIWindowNames.ts");
-/* harmony import */ var _config_EUIState__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./config/EUIState */ "./src/framework/ui/config/EUIState.ts");
-/* harmony import */ var _config_UIConfigs__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./config/UIConfigs */ "./src/framework/ui/config/UIConfigs.ts");
-/* harmony import */ var _config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./config/UIMessageNames */ "./src/framework/ui/config/UIMessageNames.ts");
+/* harmony import */ var _config_UIConfigs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./config/UIConfigs */ "./src/framework/ui/config/UIConfigs.ts");
+/* harmony import */ var _config_UIMessageNames__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./config/UIMessageNames */ "./src/framework/ui/config/UIMessageNames.ts");
+/* harmony import */ var _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./config/EUIAction */ "./src/framework/ui/config/EUIAction.ts");
+/* harmony import */ var _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../resource/GameObjectPool */ "./src/framework/resource/GameObjectPool.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -472,6 +423,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -510,7 +462,7 @@ var UIManager = /** @class */ (function (_super) {
     UIManager.prototype.initialize = function () {
         var _this = this;
         _config_UILayers__WEBPACK_IMPORTED_MODULE_2__["UILayers"].set();
-        this._allWindows = new Map();
+        this._windowMap = new Map();
         this._openingDialogs = new Map();
         this._layerMap = new Map();
         this._gameObject = csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].GameObject.Find(UIManager.UIRootPath);
@@ -530,26 +482,6 @@ var UIManager = /** @class */ (function (_super) {
         }, null, false));
     };
     /**
-     * 获取层级
-     * @param layer
-     */
-    UIManager.prototype.getLayer = function (layer) {
-        return this._layerMap.get(layer);
-    };
-    /**
-     * 获取ui状态
-     * @param uiName
-     */
-    UIManager.prototype.getWindowState = function (uiName) {
-        var window = this._allWindows.get(uiName);
-        if (window == null) {
-            return _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].None;
-        }
-        else {
-            return window.state;
-        }
-    };
-    /**
      * 打开界面
      * @param uiName 界面名
      * @param args 参数列表
@@ -559,19 +491,20 @@ var UIManager = /** @class */ (function (_super) {
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        var cur_state = this.getWindowState(uiName);
-        // 还没有记录就是不存在
-        if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].None) {
-            var window_1 = new _UIWindow__WEBPACK_IMPORTED_MODULE_3__["UIWindow"]();
-            this._allWindows.set(uiName, window_1);
-            this.initWindow(uiName, window_1);
+        var window = this._windowMap.get(uiName);
+        //不存在ui，先初始化
+        if (window == null) {
+            window = new _UIWindow__WEBPACK_IMPORTED_MODULE_3__["UIWindow"]();
+            this._windowMap.set(uiName, window);
+            this.initWindow(uiName, window);
         }
-        else if (cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Loading || cur_state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opening) {
-            return true;
+        else {
+            if (window.action == _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Loading || window.action == _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Opening) {
+                //TODO 目前打开中，或者在加载中就直接返回，之后按需求修改。
+                return true;
+            }
         }
-        var window = this._allWindows.get(uiName);
-        this.innerCloseWindow(window);
-        this.innerOpenWindow(window);
+        this.innerOpenWindow(window, args);
         return true;
     };
     //-------------------------------private----------------------
@@ -581,8 +514,8 @@ var UIManager = /** @class */ (function (_super) {
      * @param window
      */
     UIManager.prototype.initWindow = function (uiName, window) {
-        window.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Initing;
-        var config = _config_UIConfigs__WEBPACK_IMPORTED_MODULE_9__["UIConfigs"].get(uiName);
+        window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Initing;
+        var config = _config_UIConfigs__WEBPACK_IMPORTED_MODULE_8__["UIConfigs"].get(uiName);
         if (config == null) {
             csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("UIWindowNames not exist in UIConfigs,name index is:" + _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__["UIWindowNames"][uiName]);
         }
@@ -599,45 +532,98 @@ var UIManager = /** @class */ (function (_super) {
             window.ctrl = new config.ctrl(eventDispatcher, window.model);
         }
         if (config.view != null) {
-            window.view = new config.view(layer, config.objName, eventDispatcher, window.model, window.ctrl);
+            window.view = new config.view(layer, _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__["UIWindowNames"][config.name], eventDispatcher, window.model, window.ctrl);
         }
         window.layer = config.layer;
         window.prefabPath = config.prefabPath;
+        window.components = config.components;
         window.type = config.type;
-        this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__["UIMessageNames"].UIFRAME_ON_WINDOW_CREATE, window);
+        window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].None;
+        this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_9__["UIMessageNames"].UIFRAME_ON_WINDOW_CREATE, window);
         return window;
     };
+    /**
+     * 关闭界面，会处理可能在加载的情况，然后再禁用界面
+     * @param window
+     */
     UIManager.prototype.innerCloseWindow = function (window) {
-        if (window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opened || window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opening || window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Loading) {
-            if (window.state != _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Loading) {
-                this.deactivateWindow(window);
-            }
-            window.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Closed;
-            this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__["UIMessageNames"].UIFRAME_ON_WINDOW_CLOSE, window);
+        var deactivate = true;
+        //还在加载中就要关闭界面把加载回调给清除,加载中view还没拉起来就没必要去禁用view也不能去禁用会报错
+        if (window.action == _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Loading) {
+            var handler = this._loadHandlerMap.get(window.name);
+            handler && handler.clear();
+            this._loadHandlerMap.delete(window.name);
+            window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].None;
+            deactivate = false;
         }
+        deactivate && this.deactivateWindow(window);
     };
     /**
-     * 内部打开窗口
+     * 内部打开窗口，处理加载
      * @param window
      * @param args
      */
     UIManager.prototype.innerOpenWindow = function (window) {
+        var _this = this;
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        if (window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opened || window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opening) {
+        if (window.action == _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Opening || window.isOpened) {
             csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("you should close window first,window name: " + _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__["UIWindowNames"][window.name]);
             return;
         }
+        if (window.isLoaded) {
+            this.activateWindow(window);
+        }
+        else {
+            window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Loading;
+            var loadCB = _utils_Handler__WEBPACK_IMPORTED_MODULE_6__["default"].create(this, function (window, args) {
+                window.isLoaded = true;
+                var go = _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_11__["GameObjectPool"].Instance.getLoadedGameObject(window.prefabPath, true);
+                var layer = _this._layerMap.get(window.layer);
+                var trans = go.transform;
+                trans.SetParent(layer.transform);
+                trans.name = _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__["UIWindowNames"][window.name];
+                window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].None;
+                window.view.onCreate();
+                _this.activateWindow(window, args);
+            }, [window, args], true);
+            this._loadHandlerMap.set(window.name, loadCB);
+            var loadArray = window.components && window.components.concat([window.prefabPath]) || [window.prefabPath];
+            _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_11__["GameObjectPool"].Instance.preLoadGameObjectAsync(loadArray, loadCB);
+        }
     };
+    /**
+     * 激活界面
+     * @param window
+     * @param args
+     */
     UIManager.prototype.activateWindow = function (window) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Opening;
+        window === null || window === void 0 ? void 0 : window.model.activate(args);
+        window === null || window === void 0 ? void 0 : window.ctrl.activate(args);
+        window.view.setActive(true);
+        window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].None;
+        window.isOpened = true;
+        this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_9__["UIMessageNames"].UIFRAME_ON_WINDOW_OPEN, window);
     };
+    /**
+     * 禁用界面
+     * @param window
+     */
     UIManager.prototype.deactivateWindow = function (window) {
+        window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Closing;
         window === null || window === void 0 ? void 0 : window.model.deactivate();
         window === null || window === void 0 ? void 0 : window.ctrl.deactivate();
         window.view.setActive(false);
-        //TODO 处理弹窗类型
+        window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].None;
+        window.isOpened = false;
+        this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_9__["UIMessageNames"].UIFRAME_ON_WINDOW_CLOSE, window);
     };
     UIManager.Instance = new UIManager();
     //ui场景根目录
@@ -668,7 +654,7 @@ var UIManager = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIWindow", function() { return UIWindow; });
 /* harmony import */ var _config_UILayers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config/UILayers */ "./src/framework/ui/config/UILayers.ts");
-/* harmony import */ var _config_EUIState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config/EUIState */ "./src/framework/ui/config/EUIState.ts");
+/* harmony import */ var _config_EUIAction__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config/EUIAction */ "./src/framework/ui/config/EUIAction.ts");
 
 
 /**
@@ -687,9 +673,21 @@ var UIWindow = /** @class */ (function () {
          */
         this.prefabPath = "";
         /**
-         * 状态
+         * 预加载组件prefab
          */
-        this.state = _config_EUIState__WEBPACK_IMPORTED_MODULE_1__["EUIState"].None;
+        this.components = [];
+        /**
+         * ui当前进行中的行为，行为完成置为none
+         */
+        this.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_1__["EUIAction"].None;
+        /**
+         * 是否加载完成
+         */
+        this.isLoaded = false;
+        /**
+         * 是否打开
+         */
+        this.isOpened = false;
     }
     return UIWindow;
 }());
@@ -1041,6 +1039,26 @@ var UIBaseComponent = /** @class */ (function () {
     UIBaseComponent.prototype.getName = function () {
         return this._name;
     };
+    Object.defineProperty(UIBaseComponent.prototype, "transform", {
+        /**
+         * 获取transform节点
+         */
+        get: function () {
+            return this._transform;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIBaseComponent.prototype, "holder", {
+        /**
+         * 获取holder
+         */
+        get: function () {
+            return this._holder;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return UIBaseComponent;
 }());
 
@@ -1096,7 +1114,7 @@ var UIBaseContainer = /** @class */ (function (_super) {
     UIBaseContainer.prototype.onDestroy = function () {
         var _this = this;
         this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
-            if (component._holder == _this) {
+            if (component.holder == _this) {
                 component.destroy();
             }
         }, null, false));
@@ -1113,7 +1131,7 @@ var UIBaseContainer = /** @class */ (function (_super) {
         var _this = this;
         _super.prototype.onDisable.call(this);
         this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
-            if (component._holder == _this) {
+            if (component.holder == _this) {
                 component.onDisable();
             }
         }, null, false));
@@ -1452,56 +1470,44 @@ var UILayer = /** @class */ (function (_super) {
 
 /***/ }),
 
-/***/ "./src/framework/ui/config/EUIState.ts":
-/*!*********************************************!*\
-  !*** ./src/framework/ui/config/EUIState.ts ***!
-  \*********************************************/
-/*! exports provided: EUIState */
+/***/ "./src/framework/ui/config/EUIAction.ts":
+/*!**********************************************!*\
+  !*** ./src/framework/ui/config/EUIAction.ts ***!
+  \**********************************************/
+/*! exports provided: EUIAction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EUIState", function() { return EUIState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EUIAction", function() { return EUIAction; });
 /**
  * @author by dengxuhui
- * @create time 2021/6/1 10:26
- * ui状态宏定义
+ * @create time 2021/6/1 11:01
+ * ui当前的行为
 **/
-var EUIState;
-(function (EUIState) {
+var EUIAction;
+(function (EUIAction) {
     /**
-     * 默认状态
+     * 当前没有任何行为
      */
-    EUIState[EUIState["None"] = 0] = "None";
+    EUIAction[EUIAction["None"] = 0] = "None";
     /**
      * 初始化中
      */
-    EUIState[EUIState["Initing"] = 1] = "Initing";
+    EUIAction[EUIAction["Initing"] = 1] = "Initing";
     /**
      * 加载中
      */
-    EUIState[EUIState["Loading"] = 2] = "Loading";
+    EUIAction[EUIAction["Loading"] = 2] = "Loading";
     /**
-     * 打开过程中
+     * 打开中
      */
-    EUIState[EUIState["Opening"] = 3] = "Opening";
-    /**
-     * 已经打开
-     */
-    EUIState[EUIState["Opened"] = 4] = "Opened";
+    EUIAction[EUIAction["Opening"] = 3] = "Opening";
     /**
      * 关闭中
      */
-    EUIState[EUIState["Closing"] = 5] = "Closing";
-    /**
-     * 已关闭
-     */
-    EUIState[EUIState["Closed"] = 6] = "Closed";
-    /**
-     * 已销毁
-     */
-    EUIState[EUIState["Destroyed"] = 7] = "Destroyed";
-})(EUIState || (EUIState = {}));
+    EUIAction[EUIAction["Closing"] = 4] = "Closing";
+})(EUIAction || (EUIAction = {}));
 
 
 /***/ }),
@@ -2796,7 +2802,6 @@ var UIBattleMain = {
     prefabPath: "",
     components: [],
     type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__["EUIType"].View,
-    objName: "UIBattleMain",
 };
 
 
@@ -2972,7 +2977,6 @@ var UIHome = {
     prefabPath: "",
     components: [],
     type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__["EUIType"].View,
-    objName: "UIHome"
 };
 
 

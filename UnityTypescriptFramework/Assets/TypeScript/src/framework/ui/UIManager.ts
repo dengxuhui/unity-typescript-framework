@@ -7,10 +7,10 @@ import {UILayer} from "./component/UILayer";
 import {$typeof} from "puerts";
 import Handler from "../utils/Handler";
 import {UIWindowNames} from "./config/UIWindowNames";
-import {EUIState} from "./config/EUIState";
 import {UIConfigs} from "./config/UIConfigs";
 import {UIMessageNames} from "./config/UIMessageNames";
-import {string} from "../utils/StringUtil";
+import {EUIAction} from "./config/EUIAction";
+import {GameObjectPool} from "../resource/GameObjectPool";
 
 /**
  * @author by dengxuhui
@@ -36,7 +36,9 @@ export default class UIManager extends EventDispatcher implements ISingleton {
     static MaxOrderPerWindow: number = 10;
 
     //所有窗口记录
-    private _allWindows: Map<UIWindowNames, UIWindow>;
+    private _windowMap: Map<UIWindowNames, UIWindow>;
+    //加载回调
+    private _loadHandlerMap: Map<UIWindowNames, Handler>;
     //打开中的弹窗
     private _openingDialogs: Map<UIWindowNames, UIWindow>;
     //ui摄像机
@@ -60,7 +62,7 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      */
     public initialize(): void {
         UILayers.set();
-        this._allWindows = new Map<UIWindowNames, UIWindow>();
+        this._windowMap = new Map<UIWindowNames, UIWindow>();
         this._openingDialogs = new Map<UIWindowNames, UIWindow>();
         this._layerMap = new Map<EUILayer, UILayer>();
         this._gameObject = UnityEngine.GameObject.Find(UIManager.UIRootPath);
@@ -81,44 +83,24 @@ export default class UIManager extends EventDispatcher implements ISingleton {
     }
 
     /**
-     * 获取层级
-     * @param layer
-     */
-    public getLayer(layer: EUILayer) {
-        return this._layerMap.get(layer);
-    }
-
-    /**
-     * 获取ui状态
-     * @param uiName
-     */
-    public getWindowState(uiName: UIWindowNames) {
-        let window = this._allWindows.get(uiName);
-        if (window == null) {
-            return EUIState.None;
-        } else {
-            return window.state;
-        }
-    }
-
-    /**
      * 打开界面
      * @param uiName 界面名
      * @param args 参数列表
      */
     public openWindow(uiName: UIWindowNames, ...args: any[]): boolean {
-        let cur_state = this.getWindowState(uiName);
-        // 还没有记录就是不存在
-        if (cur_state == EUIState.None) {
-            let window = new UIWindow();
-            this._allWindows.set(uiName, window);
+        let window = this._windowMap.get(uiName);
+        //不存在ui，先初始化
+        if (window == null) {
+            window = new UIWindow();
+            this._windowMap.set(uiName, window);
             this.initWindow(uiName, window);
-        } else if (cur_state == EUIState.Loading || cur_state == EUIState.Opening) {
-            return true;
+        } else {
+            if (window.action == EUIAction.Loading || window.action == EUIAction.Opening) {
+                //TODO 目前打开中，或者在加载中就直接返回，之后按需求修改。
+                return true;
+            }
         }
-        let window = this._allWindows.get(uiName);
-        this.innerCloseWindow(window);
-        this.innerOpenWindow(window);
+        this.innerOpenWindow(window, args);
         return true;
     }
 
@@ -130,7 +112,7 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      * @param window
      */
     private initWindow(uiName: UIWindowNames, window: UIWindow): UIWindow {
-        window.state = EUIState.Initing;
+        window.action = EUIAction.Initing;
         let config = UIConfigs.get(uiName);
         if (config == null) {
             CS.Logger.LogError("UIWindowNames not exist in UIConfigs,name index is:" + UIWindowNames[uiName]);
@@ -148,45 +130,91 @@ export default class UIManager extends EventDispatcher implements ISingleton {
             window.ctrl = new config.ctrl(eventDispatcher, window.model);
         }
         if (config.view != null) {
-            window.view = new config.view(layer, config.objName, eventDispatcher, window.model, window.ctrl);
+            window.view = new config.view(layer, UIWindowNames[config.name], eventDispatcher, window.model, window.ctrl);
         }
         window.layer = config.layer;
         window.prefabPath = config.prefabPath;
+        window.components = config.components;
         window.type = config.type;
+        window.action = EUIAction.None;
         this.event(UIMessageNames.UIFRAME_ON_WINDOW_CREATE, window);
         return window;
     }
 
+    /**
+     * 关闭界面，会处理可能在加载的情况，然后再禁用界面
+     * @param window
+     */
     private innerCloseWindow(window: UIWindow) {
-        if (window.state == EUIState.Opened || window.state == EUIState.Opening || window.state == EUIState.Loading) {
-            if (window.state != EUIState.Loading) {
-                this.deactivateWindow(window);
-            }
-            window.state = EUIState.Closed;
-            this.event(UIMessageNames.UIFRAME_ON_WINDOW_CLOSE, window);
+        let deactivate: boolean = true;
+        //还在加载中就要关闭界面把加载回调给清除,加载中view还没拉起来就没必要去禁用view也不能去禁用会报错
+        if (window.action == EUIAction.Loading) {
+            let handler = this._loadHandlerMap.get(window.name);
+            handler && handler.clear();
+            this._loadHandlerMap.delete(window.name);
+            window.action = EUIAction.None;
+            deactivate = false;
         }
+        deactivate && this.deactivateWindow(window);
     }
 
     /**
-     * 内部打开窗口
+     * 内部打开窗口，处理加载
      * @param window
      * @param args
      */
     private innerOpenWindow(window: UIWindow, ...args: any[]) {
-        if (window.state == EUIState.Opened || window.state == EUIState.Opening) {
+        if (window.action == EUIAction.Opening || window.isOpened) {
             CS.Logger.LogError(`you should close window first,window name: ${UIWindowNames[window.name]}`);
             return;
         }
+        if (window.isLoaded) {
+            this.activateWindow(window);
+        } else {
+            window.action = EUIAction.Loading;
+            let loadCB: Handler = Handler.create(this, (window: UIWindow, args: any[]) => {
+                window.isLoaded = true;
+                let go = GameObjectPool.Instance.getLoadedGameObject(window.prefabPath, true);
+                let layer: UILayer = this._layerMap.get(window.layer);
+                let trans = go.transform;
+                trans.SetParent(layer.transform);
+                trans.name = UIWindowNames[window.name];
+                window.action = EUIAction.None;
+                window.view.onCreate();
+                this.activateWindow(window, args);
+            }, [window, args], true);
+            this._loadHandlerMap.set(window.name, loadCB);
+            let loadArray: Array<string> = window.components && window.components.concat([window.prefabPath]) || [window.prefabPath];
+            GameObjectPool.Instance.preLoadGameObjectAsync(loadArray, loadCB);
+        }
     }
 
-    private activateWindow(window: UIWindow) {
-
+    /**
+     * 激活界面
+     * @param window
+     * @param args
+     */
+    private activateWindow(window: UIWindow, ...args: any[]) {
+        window.action = EUIAction.Opening;
+        window?.model.activate(args);
+        window?.ctrl.activate(args);
+        window.view.setActive(true);
+        window.action = EUIAction.None;
+        window.isOpened = true;
+        this.event(UIMessageNames.UIFRAME_ON_WINDOW_OPEN, window);
     }
 
+    /**
+     * 禁用界面
+     * @param window
+     */
     private deactivateWindow(window: UIWindow) {
+        window.action = EUIAction.Closing;
         window?.model.deactivate();
         window?.ctrl.deactivate();
         window.view.setActive(false);
-        //TODO 处理弹窗类型
+        window.action = EUIAction.None;
+        window.isOpened = false;
+        this.event(UIMessageNames.UIFRAME_ON_WINDOW_CLOSE, window);
     }
 }

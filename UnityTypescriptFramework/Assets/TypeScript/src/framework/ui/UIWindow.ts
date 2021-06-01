@@ -4,8 +4,8 @@ import UIBaseCtrl from "./base/UIBaseCtrl";
 import {EUIType} from "./config/EUIType";
 import {EUILayer} from "./config/UILayers";
 import {UIBaseView} from "./base/UIBaseView";
-import EventDispatcher from "../utils/EventDispatcher";
-import {EUIState} from "./config/EUIState";
+import {EUIAction} from "./config/EUIAction";
+
 /**
  * @author by dengxuhui 
  * @create time 2021/6/1 10:26
@@ -33,19 +33,27 @@ export class UIWindow {
      */
     view:UIBaseView;
     /**
-     * 事件句柄
-     */
-    eventHandle:EventDispatcher;
-    /**
      * 预设路径
      */
     prefabPath:string = "";
+    /**
+     * 预加载组件prefab
+     */
+    components:Array<string> = [];
     /**
      * ui类型
      */
     type:EUIType;
     /**
-     * 状态
+     * ui当前进行中的行为，行为完成置为none
      */
-    state:EUIState = EUIState.None;
+    action:EUIAction = EUIAction.None;
+    /**
+     * 是否加载完成
+     */
+    isLoaded:boolean = false;
+    /**
+     * 是否打开
+     */
+    isOpened:boolean = false;
 }

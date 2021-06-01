@@ -24,7 +24,7 @@ export class UIBaseContainer extends UIBaseComponent {
 
     onDestroy(): void {
         this.walk(Handler.create(this, (component: UIBaseComponent) => {
-            if (component._holder == this) {
+            if (component.holder == this) {
                 component.destroy();
             }
         }, null, false));
@@ -42,7 +42,7 @@ export class UIBaseContainer extends UIBaseComponent {
     onDisable(): void {
         super.onDisable();
         this.walk(Handler.create(this, (component: UIBaseComponent) => {
-            if (component._holder == this) {
+            if (component.holder == this) {
                 component.onDisable();
             }
         }, null, false));
