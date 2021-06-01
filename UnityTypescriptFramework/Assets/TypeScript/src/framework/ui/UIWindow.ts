@@ -6,10 +6,11 @@ import {EUILayer} from "./config/UILayers";
 import {UIBaseView} from "./base/UIBaseView";
 import EventDispatcher from "../utils/EventDispatcher";
 import {EUIState} from "./config/EUIState";
-
 /**
+ * @author by dengxuhui 
+ * @create time 2021/6/1 10:26
  * 窗口包装器
- */
+**/
 export class UIWindow {
     /**
      * ui名

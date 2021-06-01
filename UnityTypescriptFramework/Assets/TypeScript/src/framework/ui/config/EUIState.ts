@@ -1,6 +1,8 @@
 /**
+ * @author by dengxuhui 
+ * @create time 2021/6/1 10:26
  * ui状态宏定义
- */
+**/
 export enum EUIState {
     /**
      * 默认状态

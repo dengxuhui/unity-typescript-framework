@@ -10,10 +10,14 @@ import {UIWindowNames} from "./config/UIWindowNames";
 import {EUIState} from "./config/EUIState";
 import {UIConfigs} from "./config/UIConfigs";
 import {UIMessageNames} from "./config/UIMessageNames";
+import {string} from "../utils/StringUtil";
 
 /**
- * ui管理器系统：提供UI操作，UI层级管理
- */
+ * @author by dengxuhui 
+ * @create time 2021/6/1 10:25
+ * 
+ * UI管理器
+**/
 export default class UIManager extends EventDispatcher implements ISingleton {
     get uiCamera(): UnityEngine.Camera {
         return this._uiCamera;
@@ -163,12 +167,22 @@ export default class UIManager extends EventDispatcher implements ISingleton {
         }
     }
 
-    private innerOpenWindow(window: UIWindow) {
+    /**
+     * 内部打开窗口
+     * @param window
+     * @param args
+     */
+    private innerOpenWindow(window: UIWindow, ...args: any[]) {
+        if (window.state == EUIState.Opened || window.state == EUIState.Opening) {
+            CS.Logger.LogError(`you should close window first,window name: ${UIWindowNames[window.name]}`);
+            return;
+        }
+        let hasPrefabRes = !string.IsNullOrEmpty(window.prefabPath);
         
     }
 
     private activateWindow(window: UIWindow) {
-        
+
     }
 
     private deactivateWindow(window: UIWindow) {

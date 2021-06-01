@@ -129,6 +129,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/UnityTs */ "./src/framework/UnityTs.ts");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _game_ui_uiHome_uiHome_UIHomeView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game/ui/uiHome/uiHome/UIHomeView */ "./src/game/ui/uiHome/uiHome/UIHomeView.ts");
+/* harmony import */ var _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./framework/ui/base/UIBaseView */ "./src/framework/ui/base/UIBaseView.ts");
+
+
 
 
 var GameMain = /** @class */ (function () {
@@ -136,9 +140,9 @@ var GameMain = /** @class */ (function () {
         //初始化框架
         _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].init();
         csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("js start up newer!!");
-        var name = "AER";
-        var age = 27;
-        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("my name is " + name + ",age is " + age);
+        var homeView = new _game_ui_uiHome_uiHome_UIHomeView__WEBPACK_IMPORTED_MODULE_2__["UIHomeView"](null, null, null, null, null);
+        var isTrue = homeView instanceof _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_3__["UIBaseView"];
+        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("home view instance is :" + isTrue);
     }
     return GameMain;
 }());
@@ -453,6 +457,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_EUIState__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./config/EUIState */ "./src/framework/ui/config/EUIState.ts");
 /* harmony import */ var _config_UIConfigs__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./config/UIConfigs */ "./src/framework/ui/config/UIConfigs.ts");
 /* harmony import */ var _config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./config/UIMessageNames */ "./src/framework/ui/config/UIMessageNames.ts");
+/* harmony import */ var _utils_StringUtil__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -479,9 +484,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
+
 /**
- * ui管理器系统：提供UI操作，UI层级管理
- */
+ * @author by dengxuhui
+ * @create time 2021/6/1 10:25
+ *
+ * UI管理器
+**/
 var UIManager = /** @class */ (function (_super) {
     __extends(UIManager, _super);
     /**
@@ -609,7 +618,21 @@ var UIManager = /** @class */ (function (_super) {
             this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__["UIMessageNames"].UIFRAME_ON_WINDOW_CLOSE, window);
         }
     };
+    /**
+     * 内部打开窗口
+     * @param window
+     * @param args
+     */
     UIManager.prototype.innerOpenWindow = function (window) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        if (window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opened || window.state == _config_EUIState__WEBPACK_IMPORTED_MODULE_8__["EUIState"].Opening) {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("you should close window first,window name: " + _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__["UIWindowNames"][window.name]);
+            return;
+        }
+        var hasPrefabRes = !_utils_StringUtil__WEBPACK_IMPORTED_MODULE_11__["string"].IsNullOrEmpty(window.prefabPath);
     };
     UIManager.prototype.activateWindow = function (window) {
     };
@@ -652,8 +675,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
+ * @author by dengxuhui
+ * @create time 2021/6/1 10:26
  * 窗口包装器
- */
+**/
 var UIWindow = /** @class */ (function () {
     function UIWindow() {
         /**
@@ -1441,8 +1466,10 @@ var UILayer = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EUIState", function() { return EUIState; });
 /**
+ * @author by dengxuhui
+ * @create time 2021/6/1 10:26
  * ui状态宏定义
- */
+**/
 var EUIState;
 (function (EUIState) {
     /**
@@ -2258,6 +2285,35 @@ var Handler = /** @class */ (function () {
     return Handler;
 }());
 /* harmony default export */ __webpack_exports__["default"] = (Handler);
+
+
+/***/ }),
+
+/***/ "./src/framework/utils/StringUtil.ts":
+/*!*******************************************!*\
+  !*** ./src/framework/utils/StringUtil.ts ***!
+  \*******************************************/
+/*! exports provided: string */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "string", function() { return string; });
+/**
+* @author by dengxuhui
+* @create time 2021/6/1
+**/
+var string = {
+    /**
+     * 字符串是否是null或者空字符串
+     * @param s
+     * @constructor
+     */
+    IsNullOrEmpty: function (s) {
+        return s == null || s == "";
+    }
+};
+
 
 
 /***/ }),
