@@ -39,9 +39,13 @@ export class UIConfigInfo {
      */
     view: IUIBaseViewCtor;
     /**
-     * prefab路径
+     * prefab路径集合
      */
-    prefabPath: string;
+    prefabPath:string;
+    /**
+     * 预加载prefabs路径
+     */
+    components:Array<string>;
     /**
      * ui类型
      */

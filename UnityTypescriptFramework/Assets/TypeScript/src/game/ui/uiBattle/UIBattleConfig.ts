@@ -13,6 +13,7 @@ let UIBattleMain: UIConfigInfo = {
     ctrl: UIBattleCtrl,
     view: UIBattleView,
     prefabPath: "",
+    components: [],
     type: EUIType.View,
     objName: "UIBattleMain",
 };

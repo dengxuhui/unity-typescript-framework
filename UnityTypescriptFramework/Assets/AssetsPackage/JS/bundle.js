@@ -457,7 +457,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_EUIState__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./config/EUIState */ "./src/framework/ui/config/EUIState.ts");
 /* harmony import */ var _config_UIConfigs__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./config/UIConfigs */ "./src/framework/ui/config/UIConfigs.ts");
 /* harmony import */ var _config_UIMessageNames__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./config/UIMessageNames */ "./src/framework/ui/config/UIMessageNames.ts");
-/* harmony import */ var _utils_StringUtil__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -484,13 +483,12 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-
 /**
  * @author by dengxuhui
  * @create time 2021/6/1 10:25
  *
  * UI管理器
-**/
+ **/
 var UIManager = /** @class */ (function (_super) {
     __extends(UIManager, _super);
     /**
@@ -632,7 +630,6 @@ var UIManager = /** @class */ (function (_super) {
             csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("you should close window first,window name: " + _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__["UIWindowNames"][window.name]);
             return;
         }
-        var hasPrefabRes = !_utils_StringUtil__WEBPACK_IMPORTED_MODULE_11__["string"].IsNullOrEmpty(window.prefabPath);
     };
     UIManager.prototype.activateWindow = function (window) {
     };
@@ -2289,35 +2286,6 @@ var Handler = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/framework/utils/StringUtil.ts":
-/*!*******************************************!*\
-  !*** ./src/framework/utils/StringUtil.ts ***!
-  \*******************************************/
-/*! exports provided: string */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "string", function() { return string; });
-/**
-* @author by dengxuhui
-* @create time 2021/6/1
-**/
-var string = {
-    /**
-     * 字符串是否是null或者空字符串
-     * @param s
-     * @constructor
-     */
-    IsNullOrEmpty: function (s) {
-        return s == null || s == "";
-    }
-};
-
-
-
-/***/ }),
-
 /***/ "./src/framework/utils/timer/CallLater.ts":
 /*!************************************************!*\
   !*** ./src/framework/utils/timer/CallLater.ts ***!
@@ -2826,6 +2794,7 @@ var UIBattleMain = {
     ctrl: _uiBattle_UIBattleCtrl__WEBPACK_IMPORTED_MODULE_4__["UIBattleCtrl"],
     view: _uiBattle_UIBattleView__WEBPACK_IMPORTED_MODULE_5__["UIBattleView"],
     prefabPath: "",
+    components: [],
     type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__["EUIType"].View,
     objName: "UIBattleMain",
 };
@@ -3001,6 +2970,7 @@ var UIHome = {
     ctrl: _uiHome_UIHomeCtrl__WEBPACK_IMPORTED_MODULE_3__["UIHomeCtrl"],
     view: _uiHome_UIHomeView__WEBPACK_IMPORTED_MODULE_4__["UIHomeView"],
     prefabPath: "",
+    components: [],
     type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__["EUIType"].View,
     objName: "UIHome"
 };

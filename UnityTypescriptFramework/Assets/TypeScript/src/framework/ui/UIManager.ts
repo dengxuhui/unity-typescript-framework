@@ -13,11 +13,11 @@ import {UIMessageNames} from "./config/UIMessageNames";
 import {string} from "../utils/StringUtil";
 
 /**
- * @author by dengxuhui 
+ * @author by dengxuhui
  * @create time 2021/6/1 10:25
- * 
+ *
  * UI管理器
-**/
+ **/
 export default class UIManager extends EventDispatcher implements ISingleton {
     get uiCamera(): UnityEngine.Camera {
         return this._uiCamera;
@@ -177,8 +177,6 @@ export default class UIManager extends EventDispatcher implements ISingleton {
             CS.Logger.LogError(`you should close window first,window name: ${UIWindowNames[window.name]}`);
             return;
         }
-        let hasPrefabRes = !string.IsNullOrEmpty(window.prefabPath);
-        
     }
 
     private activateWindow(window: UIWindow) {

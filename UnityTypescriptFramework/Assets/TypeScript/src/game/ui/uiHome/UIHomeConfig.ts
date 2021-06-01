@@ -17,6 +17,7 @@ let UIHome: UIConfigInfo = {
     ctrl: UIHomeCtrl,
     view: UIHomeView,
     prefabPath: "",
+    components: [],
     type: EUIType.View,
     objName: "UIHome"
 };
