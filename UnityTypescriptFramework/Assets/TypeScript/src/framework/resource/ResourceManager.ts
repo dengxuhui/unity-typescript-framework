@@ -23,6 +23,7 @@ export class ResourceManager implements ISingleton {
             if(loader.isDone){
                 handler && handler.runWith(loader.asset);
                 loader.Dispose();
+                this._requestHandler.delete(loader);
             }
         });
     }

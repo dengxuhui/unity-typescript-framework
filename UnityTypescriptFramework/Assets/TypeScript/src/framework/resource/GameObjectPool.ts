@@ -1,6 +1,7 @@
 import {CS, UnityEngine} from "csharp";
 import Handler from "framework/utils/Handler";
 import {ISingleton} from '../interface/ISingleton';
+import {ResourceManager} from "./ResourceManager";
 
 /*
 * GameObject资源池
@@ -99,7 +100,7 @@ export class GameObjectPool implements ISingleton {
      * @param callback
      */
     public preLoadGameObjectAsync(pathArray:Array<string>,callback:Handler){
-        
+        // ResourceManager.Instance.loadAssetAsync()
     }
 
     /**
