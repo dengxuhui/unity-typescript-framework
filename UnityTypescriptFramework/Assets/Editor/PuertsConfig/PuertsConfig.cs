@@ -1,5 +1,4 @@
-﻿
-using Puerts;
+﻿using Puerts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +19,8 @@ public class PuertsConfig
     {
         get
         {
-            var list =  new List<Type>()
+            var list = new List<Type>()
             {
-
                 typeof(Debug),
                 typeof(Vector3),
                 typeof(Vector2),
@@ -60,30 +58,32 @@ public class PuertsConfig
                 typeof(Application),
                 typeof(TextAsset),
                 typeof(TMP_Text),
+                typeof(MonoSingleton<AssetBundleManager>),
 
                 typeof(UnityEngine.SceneManagement.SceneManager),
                 typeof(UnityEngine.SceneManagement.Scene),
                 typeof(UnityEngine.SceneManagement.LoadSceneMode),
                 typeof(AsyncOperation),
-                
+
                 typeof(JsManager),
                 typeof(GameLaunch),
                 typeof(CS.Logger),
                 typeof(AssetBundleManager),
+                typeof(BaseAssetAsyncLoader),
+                typeof(ResourceAsyncOperation),
             };
 
             List<string> namespaces = new List<string>()
             {
-                "libx",
             };
 
             Assembly[] ass = AppDomain.CurrentDomain.GetAssemblies();
             list.AddRange((from assembly in ass
-                             where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
-                             from type in assembly.GetExportedTypes()
-                             where type.Namespace != null && namespaces.Contains(type.Namespace) && !isExcluded(type)
-                                   && type.BaseType != typeof(MulticastDelegate) && !type.IsEnum
-                             select type));
+                where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
+                from type in assembly.GetExportedTypes()
+                where type.Namespace != null && namespaces.Contains(type.Namespace) && !isExcluded(type)
+                      && type.BaseType != typeof(MulticastDelegate) && !type.IsEnum
+                select type));
             return list;
         }
     }
