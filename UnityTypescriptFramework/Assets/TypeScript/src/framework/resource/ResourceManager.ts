@@ -18,9 +18,9 @@ export class ResourceManager implements ISingleton {
         if (this._requestHandler.size <= 0) {
             return;
         }
-        
-        this._requestHandler.forEach((handler,loader) => {
-            if(loader.isDone){
+
+        this._requestHandler.forEach((handler, loader) => {
+            if (loader.isDone) {
                 handler && handler.runWith(loader.asset);
                 loader.Dispose();
                 this._requestHandler.delete(loader);
@@ -35,7 +35,8 @@ export class ResourceManager implements ISingleton {
         TimerMgr.timer.frameLoop(1, this, this.onUpdate, null, true);
     }
 
-    public async loadAssetAsync(path: string, res_type: System.Type, callback: Handler) {
-        this._api.LoadAssetAsync(path, res_type);
+    public loadAssetAsync(path: string, res_type: System.Type, callback: Handler) {
+        let request = this._api.LoadAssetAsync(path, res_type);
+        this._requestHandler.set(request, callback);
     }
 }
