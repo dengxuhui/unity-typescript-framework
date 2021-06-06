@@ -243,6 +243,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameObjectPool", function() { return GameObjectPool; });
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+!(function webpackMissingModule() { var e = new Error("Cannot find module 'framework/utils/Handler'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _utils_StringUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
+/* harmony import */ var _ResourceManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ResourceManager */ "./src/framework/resource/ResourceManager.ts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! puerts */ "puerts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
 
 /*
 * GameObject资源池
@@ -265,14 +274,12 @@ var GameObjectPool = /** @class */ (function () {
             return null;
         }
         var cachedInst = this._instCache.get(path);
-        if (cachedInst != (void 0) && cachedInst.length > 0) {
-            var inst = cachedInst.pop();
-            return inst;
+        if (cachedInst != null && cachedInst.length > 0) {
+            return cachedInst.pop();
         }
         var pooledGo = this._goPool.get(path);
-        if (pooledGo != void 0) {
-            var inst = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Instantiate(pooledGo);
-            return inst;
+        if (pooledGo != null) {
+            return csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Instantiate(pooledGo);
         }
         return null;
     };
@@ -282,17 +289,6 @@ var GameObjectPool = /** @class */ (function () {
      */
     GameObjectPool.prototype.activeGO = function (gameObject) {
         gameObject && gameObject.SetActive(true);
-    };
-    /**
-     * 初始化
-     */
-    GameObjectPool.prototype.initialize = function () {
-        var go = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Find("GameObjectCacheRoot");
-        if (go == (void 0)) {
-            go = new csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject("GameObjectCacheRoot");
-            csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].Object.DontDestroyOnLoad(go);
-        }
-        this._cacheTransRoot = go.transform;
     };
     /**
      *
@@ -305,7 +301,7 @@ var GameObjectPool = /** @class */ (function () {
             return true;
         }
         var pooledGo = this._goPool.get(path);
-        return pooledGo != (void 0);
+        return pooledGo != null;
     };
     /**
      * 缓存并实例化GameObject
@@ -315,24 +311,71 @@ var GameObjectPool = /** @class */ (function () {
      */
     GameObjectPool.prototype.cacheAndInstGameObject = function (path, go, inst_count) {
         if (inst_count === void 0) { inst_count = 1; }
-        //TODO 添加GameObject对于资源的引用
         this._goPool.set(path, go);
         if (inst_count > 0) {
-            var cachedInst = this._instCache.get(path);
+            var cachedInst = this._instCache.get(path) || [];
             for (var i = 0; i < inst_count; i++) {
                 var inst = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Instantiate(go);
                 inst.transform.SetParent(this._cacheTransRoot);
                 inst.SetActive(false);
                 cachedInst.push(inst);
             }
+            this._instCache.set(path, cachedInst);
+        }
+    };
+    //----------------------------------public function ------------------------
+    /**
+     * 初始化
+     */
+    GameObjectPool.prototype.initialize = function () {
+        var go = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Find("GameObjectCacheRoot");
+        if (go == (void 0)) {
+            go = new csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject("GameObjectCacheRoot");
+            csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].Object.DontDestroyOnLoad(go);
+        }
+        this._cacheTransRoot = go.transform;
+        this._typeGameObject = Object(puerts__WEBPACK_IMPORTED_MODULE_4__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject);
+    };
+    /**
+     * 预加载资源，回调里面不返回加载的资源
+     * @param pathArray
+     * @param callback
+     * @param instCount
+     */
+    GameObjectPool.prototype.preLoadGameObjectAsync = function (pathArray, callback, instCount) {
+        var _this = this;
+        if (instCount === void 0) { instCount = 1; }
+        var len = pathArray.length;
+        var loadCount = len;
+        for (var i = 0; i < len; i++) {
+            var path = pathArray[i];
+            _ResourceManager__WEBPACK_IMPORTED_MODULE_3__["ResourceManager"].Instance.loadAssetAsync(path, this._typeGameObject, !(function webpackMissingModule() { var e = new Error("Cannot find module 'framework/utils/Handler'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).create(this, function (p, gameObject) {
+                if (gameObject != null) {
+                    _this.cacheAndInstGameObject(p, gameObject, instCount);
+                }
+                if (--loadCount <= 0) {
+                    callback && callback.run();
+                }
+            }, [path], true));
         }
     };
     /**
-     * 预加载资源
-     * @param pathArray
+     * 异步加载GameObject，会把加载好的GameObject传给回调
+     * @param path
      * @param callback
      */
-    GameObjectPool.prototype.preLoadGameObjectAsync = function (pathArray, callback) {
+    GameObjectPool.prototype.loadGameObjectAsync = function (path, callback) {
+        var _this = this;
+        var inst = this.tryGetFromCache(path);
+        if (inst != null) {
+            this.activeGO(inst);
+            return;
+        }
+        this.preLoadGameObjectAsync([path], !(function webpackMissingModule() { var e = new Error("Cannot find module 'framework/utils/Handler'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).create(this, function () {
+            var inst = _this.tryGetFromCache(path);
+            _this.activeGO(inst);
+            callback && callback.runWith(inst);
+        }));
     };
     /**
      * 获取已经加载好的GameObject对象
@@ -355,7 +398,8 @@ var GameObjectPool = /** @class */ (function () {
      * @returns
      */
     GameObjectPool.prototype.recycleGameObject = function (path, inst) {
-        if (inst == (void 0)) {
+        if (inst == null || _utils_StringUtil__WEBPACK_IMPORTED_MODULE_2__["string"].IsNullOrEmpty(path)) {
+            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("GameObjectPool::recycleGameObject params error,path or game object inst is null or empty");
             return;
         }
         inst.transform.SetParent(this._cacheTransRoot);
@@ -364,21 +408,110 @@ var GameObjectPool = /** @class */ (function () {
         cachedInst.push(inst);
         this._instCache.set(path, cachedInst);
     };
-    //TODO
+    /**
+     * 清理
+     */
     GameObjectPool.prototype.cleanup = function () {
         this._instCache.forEach(function (arr, path) {
-            for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
-                var obj = arr_1[_i];
-                if (obj != (void 0)) {
-                    csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Destroy(obj);
+            if (arr.length) {
+                var len = arr.length;
+                for (var i = 0; i < len; i++) {
+                    var go = arr[i];
+                    if (go != null) {
+                        csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject.Destroy(go);
+                    }
                 }
             }
         });
         this._instCache.clear();
-        //清除cachePool中的GameObject引用
+        this._goPool.clear();
     };
     GameObjectPool.Instance = new GameObjectPool();
     return GameObjectPool;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/framework/resource/ResourceManager.ts":
+/*!***************************************************!*\
+  !*** ./src/framework/resource/ResourceManager.ts ***!
+  \***************************************************/
+/*! exports provided: ResourceManager */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResourceManager", function() { return ResourceManager; });
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
+/* harmony import */ var _utils_StringUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
+
+
+
+var ResourceManager = /** @class */ (function () {
+    function ResourceManager() {
+    }
+    ResourceManager.prototype.onUpdate = function () {
+        var _this = this;
+        if (this._requestAssetsHandler.size > 0) {
+            this._requestAssetsHandler.forEach(function (handler, loader) {
+                if (loader.isDone) {
+                    handler && handler.runWith(loader.asset);
+                    loader.Dispose();
+                    _this._requestAssetsHandler.delete(loader);
+                }
+            });
+        }
+        if (this._requestABHandler.size > 0) {
+            this._requestABHandler.forEach(function (handler, loader) {
+                if (loader.isDone) {
+                    handler && handler.runWith(true);
+                    loader.Dispose();
+                    _this._requestABHandler.delete(loader);
+                }
+            });
+        }
+    };
+    ResourceManager.prototype.initialize = function () {
+        this._api = csharp__WEBPACK_IMPORTED_MODULE_0__["AssetBundles"].AssetBundleManager.Instance;
+        this._requestAssetsHandler = new Map();
+        this._requestABHandler = new Map();
+        _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__["TimerMgr"].timer.frameLoop(2, this, this.onUpdate, null, true);
+    };
+    /**
+     * 异步加载资源
+     * @param path
+     * @param res_type
+     * @param callback
+     */
+    ResourceManager.prototype.loadAssetAsync = function (path, res_type, callback) {
+        if (_utils_StringUtil__WEBPACK_IMPORTED_MODULE_2__["string"].IsNullOrEmpty(path)) {
+            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("ResourceManager::loadAssetAsync params error,path is empty");
+            return false;
+        }
+        var request = this._api.LoadAssetAsync(path, res_type);
+        this._requestAssetsHandler.set(request, callback);
+        return true;
+    };
+    /**
+     * 异步加载AB包
+     * @param path
+     * @param callBack
+     */
+    ResourceManager.prototype.loadAssetBundleAsync = function (path, callBack) {
+        if (_utils_StringUtil__WEBPACK_IMPORTED_MODULE_2__["string"].IsNullOrEmpty(path)) {
+            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("ResourceManager::loadAssetBundleAsync params error,path is empty");
+            return;
+        }
+        var request = this._api.LoadAssetBundleAsync(path);
+        this._requestABHandler.set(request, callBack);
+        return true;
+    };
+    ResourceManager.Instance = new ResourceManager();
+    return ResourceManager;
 }());
 
 
@@ -506,6 +639,17 @@ var UIManager = /** @class */ (function (_super) {
         }
         this.innerOpenWindow(window, args);
         return true;
+    };
+    /**
+     * 关闭界面
+     * @param uiName 界面名
+     */
+    UIManager.prototype.closeWindow = function (uiName) {
+        var window = this._windowMap.get(uiName);
+        if (window == null) {
+            return false;
+        }
+        this.innerCloseWindow(window);
     };
     //-------------------------------private----------------------
     /**
@@ -2288,6 +2432,35 @@ var Handler = /** @class */ (function () {
     return Handler;
 }());
 /* harmony default export */ __webpack_exports__["default"] = (Handler);
+
+
+/***/ }),
+
+/***/ "./src/framework/utils/StringUtil.ts":
+/*!*******************************************!*\
+  !*** ./src/framework/utils/StringUtil.ts ***!
+  \*******************************************/
+/*! exports provided: string */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "string", function() { return string; });
+/**
+* @author by dengxuhui
+* @create time 2021/6/1
+**/
+var string = {
+    /**
+     * 字符串是否是null或者空字符串
+     * @param s
+     * @constructor
+     */
+    IsNullOrEmpty: function (s) {
+        return s == null || s == "";
+    }
+};
+
 
 
 /***/ }),

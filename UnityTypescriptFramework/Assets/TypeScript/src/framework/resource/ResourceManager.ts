@@ -11,7 +11,7 @@ export class ResourceManager implements ISingleton {
      */
     private _api: AssetBundles.AssetBundleManager;
     private _requestAssetsHandler: Map<AssetBundles.BaseAssetAsyncLoader, Handler>;
-    private _requestABHandler: Map<AssetBundles.BaseAssetAsyncLoader, Handler>;
+    private _requestABHandler: Map<AssetBundles.BaseAssetBundleAsyncLoader, Handler>;
 
     private constructor() {
     }
@@ -42,7 +42,7 @@ export class ResourceManager implements ISingleton {
     public initialize(): void {
         this._api = AssetBundles.AssetBundleManager.Instance;
         this._requestAssetsHandler = new Map<AssetBundles.BaseAssetAsyncLoader, Handler>();
-        this._requestABHandler = new Map<AssetBundles.BaseAssetAsyncLoader, Handler>();
+        this._requestABHandler = new Map<AssetBundles.BaseAssetBundleAsyncLoader, Handler>();
         TimerMgr.timer.frameLoop(2, this, this.onUpdate, null, true);
     }
 
