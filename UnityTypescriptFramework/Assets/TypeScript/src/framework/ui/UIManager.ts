@@ -104,6 +104,18 @@ export default class UIManager extends EventDispatcher implements ISingleton {
         return true;
     }
 
+    /**
+     * 关闭界面
+     * @param uiName 界面名
+     */
+    public closeWindow(uiName:UIWindowNames):boolean{
+        let window = this._windowMap.get(uiName);
+        if(window == null){
+            return false;
+        }
+        this.innerCloseWindow(window);
+    }
+
     //-------------------------------private----------------------
 
     /**
