@@ -1,7 +1,7 @@
 import {ISingleton} from "../interface/ISingleton";
 import {AssetBundles, CS, System} from "csharp";
 import Handler from "../utils/Handler";
-import {TimerMgr} from "../utils/timer/Timer";
+import {Timer} from "../utils/timer/Timer";
 import {string} from "../utils/StringUtil";
 
 export class ResourceManager implements ISingleton {
@@ -43,7 +43,7 @@ export class ResourceManager implements ISingleton {
         this._api = AssetBundles.AssetBundleManager.Instance;
         this._requestAssetsHandler = new Map<AssetBundles.BaseAssetAsyncLoader, Handler>();
         this._requestABHandler = new Map<AssetBundles.BaseAssetBundleAsyncLoader, Handler>();
-        TimerMgr.timer.frameLoop(2, this, this.onUpdate, null, true);
+        Timer.timer.frameLoop(2, this, this.onUpdate, null, true);
     }
 
     /**

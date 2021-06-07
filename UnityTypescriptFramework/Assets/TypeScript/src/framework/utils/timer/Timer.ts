@@ -5,9 +5,9 @@
 import UnityTs from "../../UnityTs";
 import CallLater from './CallLater';
 
-class Timer {
+class InnerTimer {
     /*timer入口*/
-    static gSysTimer: Timer = null;
+    static gSysTimer: InnerTimer = null;
 
     /*对象池*/
     private static _pool: any[] = [];
@@ -26,7 +26,7 @@ class Timer {
     private _count: number = 0;
 
     constructor(autoActive: boolean = true) {
-        autoActive && Timer.gSysTimer && Timer.gSysTimer.frameLoop(1, this, this._update);
+        autoActive && InnerTimer.gSysTimer && InnerTimer.gSysTimer.frameLoop(1, this, this._update);
     }
 
     /* 获取两帧之间的时间间隔，单位毫秒*/
@@ -98,7 +98,7 @@ class Timer {
     _recoverHandler(handler: TimerHandler): void {
         if (this._map[handler.key] == handler) this._map[handler.key] = null;
         handler.clear();
-        Timer._pool.push(handler);
+        InnerTimer._pool.push(handler);
     }
 
     /* 创建TimerHandler实例*/
@@ -121,7 +121,7 @@ class Timer {
                 return handler;
             }
         }
-        handler = Timer._pool.length > 0 ? Timer._pool.pop() : new TimerHandler();
+        handler = InnerTimer._pool.length > 0 ? InnerTimer._pool.pop() : new TimerHandler();
         handler.repeat = repeat;
         handler.useFrame = useFrame;
         handler.delay = delay;
@@ -138,7 +138,7 @@ class Timer {
     /*获取handler*/
     _getHandler(caller: any, method: any): TimerHandler {
         let cid: number = caller ? caller.$_GID || (caller.$_GID = UnityTs.utils.getGID()) : 0;
-        let mid: number = method.$_TID || (method.$_TID = (Timer._mid++) * 100000);
+        let mid: number = method.$_TID || (method.$_TID = (InnerTimer._mid++) * 100000);
         return this._map[cid + mid];
     }
 
@@ -149,7 +149,7 @@ class Timer {
         let caller: any = handler.caller;
         let method: any = handler.method;
         let cid: number = caller ? caller.$_GID || (caller.$_GID = UnityTs.utils.getGID()) : 0;
-        let mid: number = method.$_TID || (method.$_TID = (Timer._mid++) * 100000);
+        let mid: number = method.$_TID || (method.$_TID = (InnerTimer._mid++) * 100000);
         handler.key = cid + mid;
         this._map[handler.key] = handler;
     }
@@ -207,7 +207,7 @@ class Timer {
 
     /** 返回统计信息。*/
     toString(): string {
-        return " handlers:" + this._handlers.length + " pool:" + Timer._pool.length;
+        return " handlers:" + this._handlers.length + " pool:" + InnerTimer._pool.length;
     }
 
     /**
@@ -324,8 +324,8 @@ class TimerHandler {
 * 
 * timer管理器 如果需要新增timer，在这里新建实例，一般一个就够用了。
 * */
-export class TimerMgr {
-    static _timer: Timer;
+export class Timer {
+    static _timer: InnerTimer;
     private static _inited: boolean = false;
     //私有构造函数
     private constructor() {
@@ -342,7 +342,7 @@ export class TimerMgr {
             return;
         }
         this._inited = true;
-        this._timer = new Timer();
+        this._timer = new InnerTimer();
         // @ts-ignore
         global.__tgjsRegisterTickHandler(uts_timerUpdate);
         // @ts-ignore
@@ -351,5 +351,5 @@ export class TimerMgr {
 }
 
 function uts_timerUpdate(){
-    TimerMgr._timer._update();
+    Timer._timer._update();
 }

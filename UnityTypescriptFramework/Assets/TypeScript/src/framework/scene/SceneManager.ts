@@ -2,7 +2,7 @@ import {ISingleton} from "../interface/ISingleton";
 import {BaseScene} from "./base/BaseScene";
 import UIManager from "../ui/UIManager";
 import IDestroyable from "../interface/IDestroyable";
-import {TimerMgr} from "../utils/timer/Timer";
+import {Timer} from "../utils/timer/Timer";
 
 export class SceneManager implements ISingleton, IDestroyable {
     /**
@@ -50,7 +50,7 @@ export class SceneManager implements ISingleton, IDestroyable {
     }
     
     private innerSwitchScene(){
-        TimerMgr.timer.frameOnce(1,this,()=>{
+        Timer.timer.frameOnce(1,this,()=>{
             
         },null);
     }
