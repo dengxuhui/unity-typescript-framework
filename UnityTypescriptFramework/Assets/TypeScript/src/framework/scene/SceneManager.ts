@@ -4,6 +4,8 @@ import UIManager from "../ui/UIManager";
 import IDestroyable from "../interface/IDestroyable";
 import {Timer} from "../utils/timer/Timer";
 import {CS} from "csharp";
+import {SceneConfig} from "../../game/scenes/config/SceneConfig";
+import {ResourceManager} from "../resource/ResourceManager";
 
 export class SceneManager implements ISingleton, IDestroyable {
     /**
@@ -47,14 +49,16 @@ export class SceneManager implements ISingleton, IDestroyable {
             return;
         }
         this._busing = true;
-        this._innerSwitchScene().then(() => {
+        this._innerSwitchScene(sceneConfig).then(() => {
             this._busing = false;
             CS.Logger.Log("switch scene complete!!")
         })
     }
 
     //切换场景
-    async _innerSwitchScene() {
-
+    async _innerSwitchScene(config: SceneConfig) {
+        UIManager.Instance.openWindow(config.Loading);
+        await Timer.timer.waitFrame(1);
+        await ResourceManager.Instance.waitProcessOver();
     }
 }

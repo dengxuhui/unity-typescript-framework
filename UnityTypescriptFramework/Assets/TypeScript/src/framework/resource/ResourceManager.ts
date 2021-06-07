@@ -76,4 +76,19 @@ export class ResourceManager implements ISingleton {
         this._requestABHandler.set(request, callBack);
         return true;
     }
+
+    /**
+     * 等待正在加载中的完成
+     */
+    async waitProcessOver() {
+        return new Promise<void>(resolve => {
+            let caller = {};
+            Timer.timer.frameLoop(1, caller, () => {
+                if (!this._api.IsProsessRunning) {
+                    Timer.timer.clearAll(caller);
+                    resolve();
+                }
+            }, null, true);
+        });
+    }
 }
