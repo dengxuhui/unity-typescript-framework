@@ -154,6 +154,29 @@ class InnerTimer {
         this._map[handler.key] = handler;
     }
 
+    /**
+     * 等待毫秒
+     * @param delay
+     */
+    async wait(delay: number) {
+        return new Promise<void>(resolve => {
+            this.once(delay, this, () => {
+                resolve();
+            }, null, true);
+        });
+    }
+
+    /**
+     * 等待帧
+     * @param delay
+     */
+    async waitFrame(delay: number) {
+        return new Promise<void>(resolve => {
+            this.frameOnce(delay, this, () => {
+                resolve();
+            }, null, true);
+        });
+    }
 
     /**
      * 定时执行一次。
@@ -273,9 +296,9 @@ class InnerTimer {
 
     /**
      * 延迟执行。
-     * @param	caller 执行域(this)。
-     * @param	method 定时器回调函数。
-     * @param	args 回调参数。
+     * @param    caller 执行域(this)。
+     * @param    method 定时器回调函数。
+     * @param    args 回调参数。
      */
     callLater(caller: any, method: Function, args?: any[]): void {
         CallLater.I.callLater(caller, method, args);
@@ -283,8 +306,8 @@ class InnerTimer {
 
     /**
      * 立即执行 callLater 。
-     * @param	caller 执行域(this)。
-     * @param	method 定时器回调函数。
+     * @param    caller 执行域(this)。
+     * @param    method 定时器回调函数。
      */
     runCallLater(caller: any, method: Function): void {
         CallLater.I.runCallLater(caller, method);
@@ -327,9 +350,11 @@ class TimerHandler {
 export class Timer {
     static _timer: InnerTimer;
     private static _inited: boolean = false;
+
     //私有构造函数
     private constructor() {
     }
+
     /*
     * 获取timer唯一实例
     * */
@@ -350,6 +375,6 @@ export class Timer {
     }
 }
 
-function uts_timerUpdate(){
+function uts_timerUpdate() {
     Timer._timer._update();
 }

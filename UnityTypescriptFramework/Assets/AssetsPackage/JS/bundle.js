@@ -129,9 +129,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/UnityTs */ "./src/framework/UnityTs.ts");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _game_ui_uiHome_uiHome_UIHomeView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game/ui/uiHome/uiHome/UIHomeView */ "./src/game/ui/uiHome/uiHome/UIHomeView.ts");
-/* harmony import */ var _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./framework/ui/base/UIBaseView */ "./src/framework/ui/base/UIBaseView.ts");
-
+/* harmony import */ var _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./framework/utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 
 
 
@@ -140,10 +174,30 @@ var GameMain = /** @class */ (function () {
         //初始化框架
         _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].init();
         csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("js start up newer!!");
-        var homeView = new _game_ui_uiHome_uiHome_UIHomeView__WEBPACK_IMPORTED_MODULE_2__["UIHomeView"](null, null, null, null, null);
-        var isTrue = homeView instanceof _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_3__["UIBaseView"];
-        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("home view instance is :" + isTrue);
+        // let homeView = new UIHomeView(null, null, null, null, null);
+        // let isTrue = homeView instanceof UIBaseView;
+        // CS.Logger.Log("home view instance is :" + isTrue);
+        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("1current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
+        this.AsyncTest().then(function (r) {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("5current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
+        });
+        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("3current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
     }
+    GameMain.prototype.AsyncTest = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("2current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
+                        return [4 /*yield*/, _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.waitFrame(10)];
+                    case 1:
+                        _a.sent();
+                        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("4current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     return GameMain;
 }());
 new GameMain();
@@ -218,7 +272,7 @@ var UnityTs = /** @class */ (function () {
     function UnityTs() {
     }
     UnityTs.init = function () {
-        _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_0__["TimerMgr"].init();
+        _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_0__["Timer"].init();
         _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_1__["GameObjectPool"].Instance.initialize();
         _ui_UIManager__WEBPACK_IMPORTED_MODULE_2__["default"].Instance.initialize();
     };
@@ -243,11 +297,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameObjectPool", function() { return GameObjectPool; });
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
-!(function webpackMissingModule() { var e = new Error("Cannot find module 'framework/utils/Handler'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-/* harmony import */ var _utils_StringUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
-/* harmony import */ var _ResourceManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ResourceManager */ "./src/framework/resource/ResourceManager.ts");
-/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! puerts */ "puerts");
-/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _utils_StringUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
+/* harmony import */ var _ResourceManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ResourceManager */ "./src/framework/resource/ResourceManager.ts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! puerts */ "puerts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _utils_Handler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Handler */ "./src/framework/utils/Handler.ts");
 
 
 
@@ -334,7 +388,7 @@ var GameObjectPool = /** @class */ (function () {
             csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].Object.DontDestroyOnLoad(go);
         }
         this._cacheTransRoot = go.transform;
-        this._typeGameObject = Object(puerts__WEBPACK_IMPORTED_MODULE_4__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject);
+        this._typeGameObject = Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject);
     };
     /**
      * 预加载资源，回调里面不返回加载的资源
@@ -349,7 +403,7 @@ var GameObjectPool = /** @class */ (function () {
         var loadCount = len;
         for (var i = 0; i < len; i++) {
             var path = pathArray[i];
-            _ResourceManager__WEBPACK_IMPORTED_MODULE_3__["ResourceManager"].Instance.loadAssetAsync(path, this._typeGameObject, !(function webpackMissingModule() { var e = new Error("Cannot find module 'framework/utils/Handler'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).create(this, function (p, gameObject) {
+            _ResourceManager__WEBPACK_IMPORTED_MODULE_2__["ResourceManager"].Instance.loadAssetAsync(path, this._typeGameObject, _utils_Handler__WEBPACK_IMPORTED_MODULE_4__["default"].create(this, function (p, gameObject) {
                 if (gameObject != null) {
                     _this.cacheAndInstGameObject(p, gameObject, instCount);
                 }
@@ -371,7 +425,7 @@ var GameObjectPool = /** @class */ (function () {
             this.activeGO(inst);
             return;
         }
-        this.preLoadGameObjectAsync([path], !(function webpackMissingModule() { var e = new Error("Cannot find module 'framework/utils/Handler'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()).create(this, function () {
+        this.preLoadGameObjectAsync([path], _utils_Handler__WEBPACK_IMPORTED_MODULE_4__["default"].create(this, function () {
             var inst = _this.tryGetFromCache(path);
             _this.activeGO(inst);
             callback && callback.runWith(inst);
@@ -398,7 +452,7 @@ var GameObjectPool = /** @class */ (function () {
      * @returns
      */
     GameObjectPool.prototype.recycleGameObject = function (path, inst) {
-        if (inst == null || _utils_StringUtil__WEBPACK_IMPORTED_MODULE_2__["string"].IsNullOrEmpty(path)) {
+        if (inst == null || _utils_StringUtil__WEBPACK_IMPORTED_MODULE_1__["string"].IsNullOrEmpty(path)) {
             csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("GameObjectPool::recycleGameObject params error,path or game object inst is null or empty");
             return;
         }
@@ -479,7 +533,7 @@ var ResourceManager = /** @class */ (function () {
         this._api = csharp__WEBPACK_IMPORTED_MODULE_0__["AssetBundles"].AssetBundleManager.Instance;
         this._requestAssetsHandler = new Map();
         this._requestABHandler = new Map();
-        _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__["TimerMgr"].timer.frameLoop(2, this, this.onUpdate, null, true);
+        _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__["Timer"].timer.frameLoop(2, this, this.onUpdate, null, true);
     };
     /**
      * 异步加载资源
@@ -2586,22 +2640,58 @@ var LaterHandler = /** @class */ (function () {
 /*!********************************************!*\
   !*** ./src/framework/utils/timer/Timer.ts ***!
   \********************************************/
-/*! exports provided: TimerMgr */
+/*! exports provided: Timer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimerMgr", function() { return TimerMgr; });
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return Timer; });
 /* harmony import */ var _UnityTs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../UnityTs */ "./src/framework/UnityTs.ts");
 /* harmony import */ var _CallLater__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CallLater */ "./src/framework/utils/timer/CallLater.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 /*
 *
 * 时钟管理器 使用Utf.timer访问
 * */
 
 
-var Timer = /** @class */ (function () {
-    function Timer(autoActive) {
+var InnerTimer = /** @class */ (function () {
+    function InnerTimer(autoActive) {
         if (autoActive === void 0) { autoActive = true; }
         this.scale = 1;
         this.currTimer = Date.now();
@@ -2613,9 +2703,9 @@ var Timer = /** @class */ (function () {
         this._handlers = [];
         this._temp = [];
         this._count = 0;
-        autoActive && Timer.gSysTimer && Timer.gSysTimer.frameLoop(1, this, this._update);
+        autoActive && InnerTimer.gSysTimer && InnerTimer.gSysTimer.frameLoop(1, this, this._update);
     }
-    Object.defineProperty(Timer.prototype, "delta", {
+    Object.defineProperty(InnerTimer.prototype, "delta", {
         /* 获取两帧之间的时间间隔，单位毫秒*/
         get: function () {
             return this._delta;
@@ -2624,7 +2714,7 @@ var Timer = /** @class */ (function () {
         configurable: true
     });
     /* 帧循环*/
-    Timer.prototype._update = function () {
+    InnerTimer.prototype._update = function () {
         if (this.scale <= 0) {
             this._lastTimer = Date.now();
             this._delta = 0;
@@ -2672,7 +2762,7 @@ var Timer = /** @class */ (function () {
             this._clearHandlers();
     };
     /*整理handlers数组*/
-    Timer.prototype._clearHandlers = function () {
+    InnerTimer.prototype._clearHandlers = function () {
         var handlers = this._handlers;
         for (var i = 0, n = handlers.length; i < n; i++) {
             var handler = handlers[i];
@@ -2686,14 +2776,14 @@ var Timer = /** @class */ (function () {
         this._temp = handlers;
     };
     /*回收handler*/
-    Timer.prototype._recoverHandler = function (handler) {
+    InnerTimer.prototype._recoverHandler = function (handler) {
         if (this._map[handler.key] == handler)
             this._map[handler.key] = null;
         handler.clear();
-        Timer._pool.push(handler);
+        InnerTimer._pool.push(handler);
     };
     /* 创建TimerHandler实例*/
-    Timer.prototype._create = function (useFrame, repeat, delay, caller, method, args, coverBefore) {
+    InnerTimer.prototype._create = function (useFrame, repeat, delay, caller, method, args, coverBefore) {
         if (!delay) {
             method.apply(caller, args);
             return null;
@@ -2712,7 +2802,7 @@ var Timer = /** @class */ (function () {
                 return handler;
             }
         }
-        handler = Timer._pool.length > 0 ? Timer._pool.pop() : new TimerHandler();
+        handler = InnerTimer._pool.length > 0 ? InnerTimer._pool.pop() : new TimerHandler();
         handler.repeat = repeat;
         handler.useFrame = useFrame;
         handler.delay = delay;
@@ -2725,21 +2815,53 @@ var Timer = /** @class */ (function () {
         return handler;
     };
     /*获取handler*/
-    Timer.prototype._getHandler = function (caller, method) {
+    InnerTimer.prototype._getHandler = function (caller, method) {
         var cid = caller ? caller.$_GID || (caller.$_GID = _UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].utils.getGID()) : 0;
-        var mid = method.$_TID || (method.$_TID = (Timer._mid++) * 100000);
+        var mid = method.$_TID || (method.$_TID = (InnerTimer._mid++) * 100000);
         return this._map[cid + mid];
     };
     /*
     * 索引handler
     * */
-    Timer.prototype._indexHandler = function (handler) {
+    InnerTimer.prototype._indexHandler = function (handler) {
         var caller = handler.caller;
         var method = handler.method;
         var cid = caller ? caller.$_GID || (caller.$_GID = _UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].utils.getGID()) : 0;
-        var mid = method.$_TID || (method.$_TID = (Timer._mid++) * 100000);
+        var mid = method.$_TID || (method.$_TID = (InnerTimer._mid++) * 100000);
         handler.key = cid + mid;
         this._map[handler.key] = handler;
+    };
+    /**
+     * 等待毫秒
+     * @param delay
+     */
+    InnerTimer.prototype.wait = function (delay) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve) {
+                        _this.once(delay, _this, function () {
+                            resolve();
+                        }, null, true);
+                    })];
+            });
+        });
+    };
+    /**
+     * 等待帧
+     * @param delay
+     */
+    InnerTimer.prototype.waitFrame = function (delay) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve) {
+                        _this.frameOnce(delay, _this, function () {
+                            resolve();
+                        }, null, true);
+                    })];
+            });
+        });
     };
     /**
      * 定时执行一次。
@@ -2749,7 +2871,7 @@ var Timer = /** @class */ (function () {
      * @param    args    回调参数。
      * @param    coverBefore    是否覆盖之前的延迟执行，默认为 true 。
      */
-    Timer.prototype.once = function (delay, caller, method, args, coverBefore) {
+    InnerTimer.prototype.once = function (delay, caller, method, args, coverBefore) {
         if (args === void 0) { args = null; }
         if (coverBefore === void 0) { coverBefore = true; }
         this._create(false, false, delay, caller, method, args, coverBefore);
@@ -2763,7 +2885,7 @@ var Timer = /** @class */ (function () {
      * @param    coverBefore    是否覆盖之前的延迟执行，默认为 true 。
      * @param    jumpFrame 时钟是否跳帧。基于时间的循环回调，单位时间间隔内，如能执行多次回调，出于性能考虑，引擎默认只执行一次，设置jumpFrame=true后，则回调会连续执行多次
      */
-    Timer.prototype.loop = function (delay, caller, method, args, coverBefore, jumpFrame) {
+    InnerTimer.prototype.loop = function (delay, caller, method, args, coverBefore, jumpFrame) {
         if (args === void 0) { args = null; }
         if (coverBefore === void 0) { coverBefore = true; }
         if (jumpFrame === void 0) { jumpFrame = false; }
@@ -2779,7 +2901,7 @@ var Timer = /** @class */ (function () {
      * @param    args    回调参数。
      * @param    coverBefore    是否覆盖之前的延迟执行，默认为 true 。
      */
-    Timer.prototype.frameOnce = function (delay, caller, method, args, coverBefore) {
+    InnerTimer.prototype.frameOnce = function (delay, caller, method, args, coverBefore) {
         if (args === void 0) { args = null; }
         if (coverBefore === void 0) { coverBefore = true; }
         this._create(true, false, delay, caller, method, args, coverBefore);
@@ -2792,21 +2914,21 @@ var Timer = /** @class */ (function () {
      * @param    args    回调参数。
      * @param    coverBefore    是否覆盖之前的延迟执行，默认为 true 。
      */
-    Timer.prototype.frameLoop = function (delay, caller, method, args, coverBefore) {
+    InnerTimer.prototype.frameLoop = function (delay, caller, method, args, coverBefore) {
         if (args === void 0) { args = null; }
         if (coverBefore === void 0) { coverBefore = true; }
         this._create(true, true, delay, caller, method, args, coverBefore);
     };
     /** 返回统计信息。*/
-    Timer.prototype.toString = function () {
-        return " handlers:" + this._handlers.length + " pool:" + Timer._pool.length;
+    InnerTimer.prototype.toString = function () {
+        return " handlers:" + this._handlers.length + " pool:" + InnerTimer._pool.length;
     };
     /**
      * 清理定时器。
      * @param    caller 执行域(this)。
      * @param    method 定时器回调函数。
      */
-    Timer.prototype.clear = function (caller, method) {
+    InnerTimer.prototype.clear = function (caller, method) {
         var handler = this._getHandler(caller, method);
         if (handler) {
             this._map[handler.key] = null;
@@ -2818,7 +2940,7 @@ var Timer = /** @class */ (function () {
      * 清理对象身上的所有定时器。
      * @param    caller 执行域(this)。
      */
-    Timer.prototype.clearAll = function (caller) {
+    InnerTimer.prototype.clearAll = function (caller) {
         if (!caller)
             return;
         var i = 0;
@@ -2837,7 +2959,7 @@ var Timer = /** @class */ (function () {
      * @param    caller 执行域(this)。
      * @param    method 定时器回调函数。
      */
-    Timer.prototype.runTimer = function (caller, method) {
+    InnerTimer.prototype.runTimer = function (caller, method) {
         var handler = this._getHandler(caller, method);
         if (handler && handler.method != null) {
             this._map[handler.key] = null;
@@ -2847,39 +2969,39 @@ var Timer = /** @class */ (function () {
     /**
      * 暂停时钟
      */
-    Timer.prototype.pause = function () {
+    InnerTimer.prototype.pause = function () {
         this.scale = 0;
     };
     /**
      * 恢复时钟
      */
-    Timer.prototype.resume = function () {
+    InnerTimer.prototype.resume = function () {
         this.scale = 1;
     };
     //-----------延迟执行
     /**
      * 延迟执行。
-     * @param	caller 执行域(this)。
-     * @param	method 定时器回调函数。
-     * @param	args 回调参数。
+     * @param    caller 执行域(this)。
+     * @param    method 定时器回调函数。
+     * @param    args 回调参数。
      */
-    Timer.prototype.callLater = function (caller, method, args) {
+    InnerTimer.prototype.callLater = function (caller, method, args) {
         _CallLater__WEBPACK_IMPORTED_MODULE_1__["default"].I.callLater(caller, method, args);
     };
     /**
      * 立即执行 callLater 。
-     * @param	caller 执行域(this)。
-     * @param	method 定时器回调函数。
+     * @param    caller 执行域(this)。
+     * @param    method 定时器回调函数。
      */
-    Timer.prototype.runCallLater = function (caller, method) {
+    InnerTimer.prototype.runCallLater = function (caller, method) {
         _CallLater__WEBPACK_IMPORTED_MODULE_1__["default"].I.runCallLater(caller, method);
     };
     /*timer入口*/
-    Timer.gSysTimer = null;
+    InnerTimer.gSysTimer = null;
     /*对象池*/
-    Timer._pool = [];
-    Timer._mid = 1;
-    return Timer;
+    InnerTimer._pool = [];
+    InnerTimer._mid = 1;
+    return InnerTimer;
 }());
 /* 私有timer函数类*/
 var TimerHandler = /** @class */ (function () {
@@ -2907,11 +3029,11 @@ var TimerHandler = /** @class */ (function () {
 *
 * timer管理器 如果需要新增timer，在这里新建实例，一般一个就够用了。
 * */
-var TimerMgr = /** @class */ (function () {
+var Timer = /** @class */ (function () {
     //私有构造函数
-    function TimerMgr() {
+    function Timer() {
     }
-    Object.defineProperty(TimerMgr, "timer", {
+    Object.defineProperty(Timer, "timer", {
         /*
         * 获取timer唯一实例
         * */
@@ -2921,23 +3043,23 @@ var TimerMgr = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    TimerMgr.init = function () {
+    Timer.init = function () {
         if (this._inited) {
             return;
         }
         this._inited = true;
-        this._timer = new Timer();
+        this._timer = new InnerTimer();
         // @ts-ignore
         global.__tgjsRegisterTickHandler(uts_timerUpdate);
         // @ts-ignore
         delete global.__tgjsRegisterTickHandler;
     };
-    TimerMgr._inited = false;
-    return TimerMgr;
+    Timer._inited = false;
+    return Timer;
 }());
 
 function uts_timerUpdate() {
-    TimerMgr._timer._update();
+    Timer._timer._update();
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))

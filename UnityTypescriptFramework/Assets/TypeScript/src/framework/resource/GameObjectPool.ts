@@ -1,9 +1,9 @@
 import {CS, System, UnityEngine} from "csharp";
-import Handler from "framework/utils/Handler";
 import {ISingleton} from '../interface/ISingleton';
 import {string} from "../utils/StringUtil";
 import {ResourceManager} from "./ResourceManager";
 import {$typeof} from "puerts";
+import Handler from "../utils/Handler";
 
 /*
 * GameObject资源池
