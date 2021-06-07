@@ -1,8 +1,7 @@
 import UnityTs from './framework/UnityTs';
 import {CS} from "csharp";
-import {UIHomeView} from "./game/ui/uiHome/uiHome/UIHomeView";
-import {UIBaseView} from "./framework/ui/base/UIBaseView";
 import {Timer} from "./framework/utils/timer/Timer";
+import {SceneConfig, SceneConfigs} from "./game/scenes/config/SceneConfig";
 
 class GameMain {
     constructor() {

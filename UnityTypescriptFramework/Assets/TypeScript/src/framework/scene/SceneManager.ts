@@ -3,6 +3,7 @@ import {BaseScene} from "./base/BaseScene";
 import UIManager from "../ui/UIManager";
 import IDestroyable from "../interface/IDestroyable";
 import {Timer} from "../utils/timer/Timer";
+import {CS} from "csharp";
 
 export class SceneManager implements ISingleton, IDestroyable {
     /**
@@ -42,16 +43,18 @@ export class SceneManager implements ISingleton, IDestroyable {
         if (this._busing) {
             return;
         }
-        if (this._currentScene && this._currentScene.getConfig() == sceneConfig) {
+        if (this._currentScene && this._currentScene.config == sceneConfig) {
             return;
         }
         this._busing = true;
-        // this.innerSwitchScene();
+        this._innerSwitchScene().then(() => {
+            this._busing = false;
+            CS.Logger.Log("switch scene complete!!")
+        })
     }
-    
-    private innerSwitchScene(){
-        Timer.timer.frameOnce(1,this,()=>{
-            
-        },null);
+
+    //切换场景
+    async _innerSwitchScene() {
+
     }
 }
