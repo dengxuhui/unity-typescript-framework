@@ -1,13 +1,19 @@
-﻿using Puerts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using AssetBundles;
 using CS;
+using Puerts;
 using TMPro;
 using UnityEngine;
-using Logger = UnityEngine.Logger;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Logger = CS.Logger;
+using Object = UnityEngine.Object;
 
 //1、配置类必须打[Configure]标签
 //2、必须放Editor目录
@@ -30,7 +36,7 @@ public class PuertsConfig
                 typeof(Transform),
                 typeof(Component),
                 typeof(GameObject),
-                typeof(UnityEngine.Object),
+                typeof(Object),
                 typeof(Delegate),
                 typeof(System.Object),
                 typeof(Type),
@@ -41,33 +47,34 @@ public class PuertsConfig
                 typeof(Behaviour),
                 typeof(MonoBehaviour),
 
-                typeof(UnityEngine.RectTransform),
-                typeof(UnityEngine.EventSystems.UIBehaviour),
-                typeof(UnityEngine.UI.Selectable),
-                typeof(UnityEngine.UI.Button),
-                typeof(UnityEngine.UI.Button.ButtonClickedEvent),
-                typeof(UnityEngine.Events.UnityEvent),
-                typeof(UnityEngine.UI.InputField),
-                typeof(UnityEngine.UI.Slider),
-                typeof(UnityEngine.UI.Toggle),
-                typeof(UnityEngine.UI.Toggle.ToggleEvent),
-                typeof(UnityEngine.UI.ScrollRect),
-                typeof(UnityEngine.UI.CanvasScaler),
-                typeof(UnityEngine.UI.GraphicRaycaster),
-                typeof(UnityEngine.Events.UnityEvent<bool>),
+                typeof(RectTransform),
+                typeof(UIBehaviour),
+                typeof(Selectable),
+                typeof(Button),
+                typeof(Button.ButtonClickedEvent),
+                typeof(UnityEvent),
+                typeof(InputField),
+                typeof(Slider),
+                typeof(Toggle),
+                typeof(Toggle.ToggleEvent),
+                typeof(ScrollRect),
+                typeof(CanvasScaler),
+                typeof(GraphicRaycaster),
+                typeof(UnityEvent<bool>),
+                typeof(Resources),
                 typeof(Application),
                 typeof(TextAsset),
                 typeof(TMP_Text),
                 typeof(MonoSingleton<AssetBundleManager>),
 
-                typeof(UnityEngine.SceneManagement.SceneManager),
-                typeof(UnityEngine.SceneManagement.Scene),
-                typeof(UnityEngine.SceneManagement.LoadSceneMode),
+                typeof(SceneManager),
+                typeof(Scene),
+                typeof(LoadSceneMode),
                 typeof(AsyncOperation),
 
                 typeof(JsManager),
                 typeof(GameLaunch),
-                typeof(CS.Logger),
+                typeof(Logger),
                 typeof(AssetBundleManager),
                 typeof(BaseAssetAsyncLoader),
                 typeof(ResourceAsyncOperation),
@@ -79,7 +86,7 @@ public class PuertsConfig
 
             Assembly[] ass = AppDomain.CurrentDomain.GetAssemblies();
             list.AddRange((from assembly in ass
-                where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
+                where !(assembly.ManifestModule is ModuleBuilder)
                 from type in assembly.GetExportedTypes()
                 where type.Namespace != null && namespaces.Contains(type.Namespace) && !isExcluded(type)
                       && type.BaseType != typeof(MulticastDelegate) && !type.IsEnum

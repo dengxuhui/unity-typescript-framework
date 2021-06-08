@@ -76,11 +76,16 @@ export class ResourceManager implements ISingleton {
         this._requestABHandler.set(request, callBack);
         return true;
     }
+    
+    public cleanup(){
+        this._api.ClearAssetsCache();
+        this._api.UnloadAllUnusedResidentAssetBundles();
+    }
 
     /**
      * 等待正在加载中的完成
      */
-    async waitProcessOver() {
+    async waitProcessRunningOver() {
         return new Promise<void>(resolve => {
             let caller = {};
             Timer.timer.frameLoop(1, caller, () => {

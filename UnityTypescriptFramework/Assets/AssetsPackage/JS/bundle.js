@@ -129,43 +129,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/UnityTs */ "./src/framework/UnityTs.ts");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./framework/utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
+/* harmony import */ var _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./framework/scene/SceneManager */ "./src/framework/scene/SceneManager.ts");
+/* harmony import */ var _game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game/scenes/config/SceneConfig */ "./src/game/scenes/config/SceneConfig.ts");
+
 
 
 
@@ -174,30 +140,8 @@ var GameMain = /** @class */ (function () {
         //初始化框架
         _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].init();
         csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("js start up newer!!");
-        // let homeView = new UIHomeView(null, null, null, null, null);
-        // let isTrue = homeView instanceof UIBaseView;
-        // CS.Logger.Log("home view instance is :" + isTrue);
-        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("1current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
-        this.AsyncTest().then(function (r) {
-            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("5current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
-        });
-        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("3current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
+        _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__["SceneManager"].Instance.switchScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].HomeScene);
     }
-    GameMain.prototype.AsyncTest = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("2current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
-                        return [4 /*yield*/, _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.waitFrame(10)];
-                    case 1:
-                        _a.sent();
-                        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("4current frame:" + _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_2__["Timer"].timer.currFrame);
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
     return GameMain;
 }());
 new GameMain();
@@ -217,7 +161,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
 /* harmony import */ var _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./resource/GameObjectPool */ "./src/framework/resource/GameObjectPool.ts");
 /* harmony import */ var _ui_UIManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/UIManager */ "./src/framework/ui/UIManager.ts");
+/* harmony import */ var _scene_SceneManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./scene/SceneManager */ "./src/framework/scene/SceneManager.ts");
 /* 全局类入口*/
+
 
 
 
@@ -275,6 +221,7 @@ var UnityTs = /** @class */ (function () {
         _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_0__["Timer"].init();
         _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_1__["GameObjectPool"].Instance.initialize();
         _ui_UIManager__WEBPACK_IMPORTED_MODULE_2__["default"].Instance.initialize();
+        _scene_SceneManager__WEBPACK_IMPORTED_MODULE_3__["SceneManager"].Instance.initialize();
     };
     /* 工具类*/
     UnityTs.utils = Utils;
@@ -600,10 +547,14 @@ var ResourceManager = /** @class */ (function () {
         this._requestABHandler.set(request, callBack);
         return true;
     };
+    ResourceManager.prototype.cleanup = function () {
+        this._api.ClearAssetsCache();
+        this._api.UnloadAllUnusedResidentAssetBundles();
+    };
     /**
      * 等待正在加载中的完成
      */
-    ResourceManager.prototype.waitProcessOver = function () {
+    ResourceManager.prototype.waitProcessRunningOver = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
@@ -621,6 +572,224 @@ var ResourceManager = /** @class */ (function () {
     };
     ResourceManager.Instance = new ResourceManager();
     return ResourceManager;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/framework/scene/SceneManager.ts":
+/*!*********************************************!*\
+  !*** ./src/framework/scene/SceneManager.ts ***!
+  \*********************************************/
+/*! exports provided: SceneManager */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SceneManager", function() { return SceneManager; });
+/* harmony import */ var _ui_UIManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ui/UIManager */ "./src/framework/ui/UIManager.ts");
+/* harmony import */ var _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../game/scenes/config/SceneConfig */ "./src/game/scenes/config/SceneConfig.ts");
+/* harmony import */ var _resource_ResourceManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../resource/ResourceManager */ "./src/framework/resource/ResourceManager.ts");
+/* harmony import */ var _ui_config_UILayers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../ui/config/UILayers */ "./src/framework/ui/config/UILayers.ts");
+/* harmony import */ var _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../resource/GameObjectPool */ "./src/framework/resource/GameObjectPool.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+
+
+
+
+
+
+var SceneManager = /** @class */ (function () {
+    function SceneManager() {
+    }
+    SceneManager.prototype.initialize = function () {
+        this._sceneMap = new Map();
+        this._busing = false;
+        this._currentScene = null;
+    };
+    SceneManager.prototype.destroy = function () {
+        this._currentScene = null;
+        if (this._sceneMap) {
+            this._sceneMap.forEach(function (scene, name) {
+                scene && scene.destroy();
+            });
+            this._sceneMap = null;
+        }
+    };
+    /**
+     * 切换场景
+     * @param sceneConfig
+     */
+    SceneManager.prototype.switchScene = function (sceneConfig) {
+        var _this = this;
+        if (this._busing) {
+            return;
+        }
+        if (this._currentScene && this._currentScene.config == sceneConfig) {
+            return;
+        }
+        this._busing = true;
+        this._innerSwitchScene(sceneConfig).then(function () {
+            _this._busing = false;
+            csharp__WEBPACK_IMPORTED_MODULE_2__["CS"].Logger.Log("switch scene complete!!");
+        });
+    };
+    /**
+     * 等待一帧
+     * @private
+     */
+    SceneManager.prototype._waitFrame = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__["Timer"].timer.waitFrame(1)];
+            });
+        });
+    };
+    //切换场景
+    SceneManager.prototype._innerSwitchScene = function (config) {
+        return __awaiter(this, void 0, void 0, function () {
+            var window, model, sceneMgr, resources, logicScene, curProgress;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _ui_UIManager__WEBPACK_IMPORTED_MODULE_0__["default"].Instance.openWindow(config.Loading);
+                        window = _ui_UIManager__WEBPACK_IMPORTED_MODULE_0__["default"].Instance.getWindow(config.Loading);
+                        model = window.model;
+                        model.setValue(0);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, _resource_ResourceManager__WEBPACK_IMPORTED_MODULE_4__["ResourceManager"].Instance.waitProcessRunningOver()];
+                    case 2:
+                        _a.sent();
+                        //清理旧场景
+                        this._currentScene && this._currentScene.OnLeave();
+                        model.setValue(model.getValue() + 0.01);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 3:
+                        _a.sent();
+                        //清理ui
+                        _ui_UIManager__WEBPACK_IMPORTED_MODULE_0__["default"].Instance.destroyWindowExceptLayer(_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_5__["EUILayer"].TopLayer);
+                        model.setValue(model.getValue() + 0.01);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 4:
+                        _a.sent();
+                        //清理资源缓存
+                        _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_6__["GameObjectPool"].Instance.cleanup();
+                        model.setValue(model.getValue() + 0.01);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 5:
+                        _a.sent();
+                        _resource_ResourceManager__WEBPACK_IMPORTED_MODULE_4__["ResourceManager"].Instance.cleanup();
+                        model.setValue(model.getValue() + 0.01);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 6:
+                        _a.sent();
+                        sceneMgr = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].SceneManagement.SceneManager;
+                        resources = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Resources;
+                        sceneMgr.LoadScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].LoadingScene.Level);
+                        model.setValue(model.getValue() + 0.01);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 7:
+                        _a.sent();
+                        return [4 /*yield*/, resources.UnloadUnusedAssets()];
+                    case 8:
+                        _a.sent();
+                        model.setValue(model.getValue() + 0.1);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 9:
+                        _a.sent();
+                        logicScene = this._sceneMap.get(config.Name);
+                        if (logicScene == null) {
+                            logicScene = new config.Class(config);
+                            this._sceneMap.set(config.Name, logicScene);
+                        }
+                        logicScene.OnEnter();
+                        model.setValue(model.getValue() + 0.02);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 10:
+                        _a.sent();
+                        //加载场景
+                        return [4 /*yield*/, sceneMgr.LoadSceneAsync(config.Level)];
+                    case 11:
+                        //加载场景
+                        _a.sent();
+                        model.setValue(model.getValue() + 0.15);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 12:
+                        _a.sent();
+                        curProgress = model.getValue();
+                        //预加载场景资源
+                        return [4 /*yield*/, logicScene.preloadAsync(model, 0.65)];
+                    case 13:
+                        //预加载场景资源
+                        _a.sent();
+                        model.setValue(curProgress + 0.65);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 14:
+                        _a.sent();
+                        logicScene.OnComplete();
+                        model.setValue(1);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 15:
+                        _a.sent();
+                        this._currentScene = logicScene;
+                        //释放loading
+                        _ui_UIManager__WEBPACK_IMPORTED_MODULE_0__["default"].Instance.destroyWindow(config.Loading);
+                        return [4 /*yield*/, this._waitFrame()];
+                    case 16:
+                        _a.sent();
+                        resources.UnloadUnusedAssets();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * 实例
+     */
+    SceneManager.Instance = new SceneManager();
+    return SceneManager;
 }());
 
 
@@ -760,6 +929,38 @@ var UIManager = /** @class */ (function (_super) {
         }
         this.innerCloseWindow(window);
     };
+    /**
+     * 释放除去某一层的ui
+     * @param layer
+     */
+    UIManager.prototype.destroyWindowExceptLayer = function (layer) {
+        var _this = this;
+        this._windowMap.forEach(function (window, name) {
+            if (window.layer != layer) {
+                _this.innerCloseWindow(window);
+                _this.innerDestroyWindow(window);
+            }
+        });
+    };
+    /**
+     * 释放窗口
+     * @param uiName
+     */
+    UIManager.prototype.destroyWindow = function (uiName) {
+        var window = this._windowMap.get(uiName);
+        if (window == null) {
+            return;
+        }
+        this.innerCloseWindow(window);
+        this.innerDestroyWindow(window);
+    };
+    /**
+     * 获取界面
+     * @param uiName
+     */
+    UIManager.prototype.getWindow = function (uiName) {
+        return this._windowMap.get(uiName);
+    };
     //-------------------------------private----------------------
     /**
      * 初始化界面
@@ -857,6 +1058,9 @@ var UIManager = /** @class */ (function (_super) {
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
+        if (window.isOpened) {
+            return;
+        }
         window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Opening;
         window === null || window === void 0 ? void 0 : window.model.activate(args);
         window === null || window === void 0 ? void 0 : window.ctrl.activate(args);
@@ -870,6 +1074,9 @@ var UIManager = /** @class */ (function (_super) {
      * @param window
      */
     UIManager.prototype.deactivateWindow = function (window) {
+        if (!window.isOpened) {
+            return;
+        }
         window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].Closing;
         window === null || window === void 0 ? void 0 : window.model.deactivate();
         window === null || window === void 0 ? void 0 : window.ctrl.deactivate();
@@ -877,6 +1084,16 @@ var UIManager = /** @class */ (function (_super) {
         window.action = _config_EUIAction__WEBPACK_IMPORTED_MODULE_10__["EUIAction"].None;
         window.isOpened = false;
         this.event(_config_UIMessageNames__WEBPACK_IMPORTED_MODULE_9__["UIMessageNames"].UIFRAME_ON_WINDOW_CLOSE, window);
+    };
+    UIManager.prototype.innerDestroyWindow = function (window) {
+        var _a, _b, _c;
+        if (window.isLoaded) {
+            _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_11__["GameObjectPool"].Instance.recycleGameObject(window.prefabPath, window.view.gameObject);
+        }
+        (_a = window.model) === null || _a === void 0 ? void 0 : _a.destroy();
+        (_b = window.ctrl) === null || _b === void 0 ? void 0 : _b.destroy();
+        (_c = window.view) === null || _c === void 0 ? void 0 : _c.destroy();
+        this._windowMap.delete(window.name);
     };
     UIManager.Instance = new UIManager();
     //ui场景根目录
@@ -1308,6 +1525,16 @@ var UIBaseComponent = /** @class */ (function () {
          */
         get: function () {
             return this._holder;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UIBaseComponent.prototype, "gameObject", {
+        /**
+         * 获取游戏对象
+         */
+        get: function () {
+            return this._gameObject;
         },
         enumerable: false,
         configurable: true
@@ -3118,6 +3345,76 @@ function uts_timerUpdate() {
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./src/game/scenes/config/SceneConfig.ts":
+/*!***********************************************!*\
+  !*** ./src/game/scenes/config/SceneConfig.ts ***!
+  \***********************************************/
+/*! exports provided: SceneConfig, SceneConfigs */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SceneConfig", function() { return SceneConfig; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SceneConfigs", function() { return SceneConfigs; });
+/* harmony import */ var _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/ui/config/UIWindowNames */ "./src/framework/ui/config/UIWindowNames.ts");
+
+/**
+ * 场景配置
+ */
+var SceneConfig = /** @class */ (function () {
+    function SceneConfig() {
+    }
+    return SceneConfig;
+}());
+
+/**
+ * 启动场景
+ */
+var launch = {
+    Level: 0,
+    Name: "LaunchScene",
+    Class: null,
+    Loading: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UILoading,
+};
+/**
+ * 加载场景
+ */
+var loading = {
+    Level: 0,
+    Name: "LoadingScene",
+    Class: null,
+    Loading: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UILoading,
+};
+/**
+ * 主界场景
+ */
+var home = {
+    Level: 3,
+    Name: "HomeScene",
+    Class: null,
+    Loading: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UILoading,
+};
+/**
+ * 战斗场景
+ */
+var battle = {
+    Level: 4,
+    Name: "BattleScene",
+    Class: null,
+    Loading: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UILoading,
+};
+var SceneConfigs = {
+    //加载场景 通用
+    LoadingScene: loading,
+    LaunchScene: launch,
+    HomeScene: home,
+    BattleScene: battle,
+};
+
+
 
 /***/ }),
 

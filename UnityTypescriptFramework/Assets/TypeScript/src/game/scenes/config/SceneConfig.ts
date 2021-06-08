@@ -59,10 +59,11 @@ let battle: SceneConfig = {
 };
 
 let SceneConfigs = {
+    //加载场景 通用
+    LoadingScene: loading,
     LaunchScene: launch,
     HomeScene: home,
     BattleScene: battle,
-
 };
 
 export {

@@ -108,12 +108,46 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      * 关闭界面
      * @param uiName 界面名
      */
-    public closeWindow(uiName:UIWindowNames):boolean{
+    public closeWindow(uiName: UIWindowNames): boolean {
         let window = this._windowMap.get(uiName);
-        if(window == null){
+        if (window == null) {
             return false;
         }
         this.innerCloseWindow(window);
+    }
+
+    /**
+     * 释放除去某一层的ui
+     * @param layer
+     */
+    public destroyWindowExceptLayer(layer: EUILayer) {
+        this._windowMap.forEach((window, name) => {
+            if (window.layer != layer) {
+                this.innerCloseWindow(window);
+                this.innerDestroyWindow(window);
+            }
+        });
+    }
+
+    /**
+     * 释放窗口
+     * @param uiName
+     */
+    public destroyWindow(uiName: UIWindowNames) {
+        let window = this._windowMap.get(uiName);
+        if (window == null) {
+            return;
+        }
+        this.innerCloseWindow(window);
+        this.innerDestroyWindow(window);
+    }
+
+    /**
+     * 获取界面
+     * @param uiName
+     */
+    public getWindow(uiName: UIWindowNames): UIWindow {
+        return this._windowMap.get(uiName);
     }
 
     //-------------------------------private----------------------
@@ -207,6 +241,9 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      * @param args
      */
     private activateWindow(window: UIWindow, ...args: any[]) {
+        if (window.isOpened) {
+            return
+        }
         window.action = EUIAction.Opening;
         window?.model.activate(args);
         window?.ctrl.activate(args);
@@ -221,6 +258,9 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      * @param window
      */
     private deactivateWindow(window: UIWindow) {
+        if (!window.isOpened) {
+            return
+        }
         window.action = EUIAction.Closing;
         window?.model.deactivate();
         window?.ctrl.deactivate();
@@ -228,5 +268,15 @@ export default class UIManager extends EventDispatcher implements ISingleton {
         window.action = EUIAction.None;
         window.isOpened = false;
         this.event(UIMessageNames.UIFRAME_ON_WINDOW_CLOSE, window);
+    }
+
+    private innerDestroyWindow(window: UIWindow) {
+        if (window.isLoaded) {
+            GameObjectPool.Instance.recycleGameObject(window.prefabPath, window.view.gameObject);
+        }
+        window.model?.destroy();
+        window.ctrl?.destroy();
+        window.view?.destroy();
+        this._windowMap.delete(window.name);
     }
 }

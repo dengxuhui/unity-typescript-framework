@@ -1,6 +1,7 @@
 import IDestroyable from "../../interface/IDestroyable";
 import {SceneConfig} from "../../../game/scenes/config/SceneConfig";
 import {System} from "csharp";
+import {IUILoadingModel} from "../../../game/ui/uiLoading/IUILoading";
 
 /**
  * 场景基类
@@ -56,10 +57,10 @@ export class BaseScene implements IDestroyable {
      * 进入时
      * @constructor
      */
-    public OnEnter(){
-        
+    public OnEnter() {
+
     }
-    
+
     /**
      * 离开时
      * @constructor
@@ -73,8 +74,17 @@ export class BaseScene implements IDestroyable {
      * 加载完成时
      * @constructor
      */
-    public OnComplete(){
-        
+    public OnComplete() {
+
+    }
+
+    /**
+     * 预加载场景资源
+     * @param model
+     * @param maxProgress
+     */
+    public async preloadAsync(model?: IUILoadingModel, maxProgress?: number) {
+
     }
 
 

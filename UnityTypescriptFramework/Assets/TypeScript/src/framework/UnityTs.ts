@@ -3,6 +3,7 @@
 import {Timer} from "./utils/timer/Timer";
 import {GameObjectPool} from './resource/GameObjectPool';
 import UIManager from "./ui/UIManager";
+import {SceneManager} from "./scene/SceneManager";
 
 class Utils {
     /*id*/
@@ -59,5 +60,6 @@ export default class UnityTs {
         Timer.init();
         GameObjectPool.Instance.initialize();
         UIManager.Instance.initialize();
+        SceneManager.Instance.initialize();
     }
 }

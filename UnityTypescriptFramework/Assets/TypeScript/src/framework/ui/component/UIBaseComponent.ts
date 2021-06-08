@@ -151,6 +151,13 @@ export class UIBaseComponent implements IUIComponent {
     public get holder():any{
         return this._holder;
     }
+
+    /**
+     * 获取游戏对象
+     */
+    public get gameObject():UnityEngine.GameObject{
+        return this._gameObject;
+    }
 }
 
 /**
