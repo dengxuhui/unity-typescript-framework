@@ -3862,6 +3862,37 @@ var HomeModule = /** @class */ (function (_super) {
 
 /***/ }),
 
+/***/ "./src/game/module/userData/BaseData.ts":
+/*!**********************************************!*\
+  !*** ./src/game/module/userData/BaseData.ts ***!
+  \**********************************************/
+/*! exports provided: BaseData */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseData", function() { return BaseData; });
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+/**
+ * 数据基类
+ * @author by dengxuhui
+ * @create time 2021/6/9 14:45
+ **/
+
+var BaseData = /** @class */ (function () {
+    function BaseData() {
+    }
+    BaseData.prototype.onCreate = function () {
+        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("must override this function");
+    };
+    return BaseData;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/game/module/userData/UserDataModule.ts":
 /*!****************************************************!*\
   !*** ./src/game/module/userData/UserDataModule.ts ***!
@@ -3874,6 +3905,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserDataModule", function() { return UserDataModule; });
 /* harmony import */ var _framework_module_BaseModule__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/module/BaseModule */ "./src/framework/module/BaseModule.ts");
 /* harmony import */ var _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../framework/module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
+/* harmony import */ var _baseData_UserBaseData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./baseData/UserBaseData */ "./src/game/module/userData/baseData/UserBaseData.ts");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_3__);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3889,6 +3923,8 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
+
 
 
 /**
@@ -3912,8 +3948,34 @@ var UserDataModule = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 添加数据
+     * @param dataClass
+     */
+    UserDataModule.prototype.addData = function (dataClass) {
+        if (this._dataMap.has(dataClass)) {
+            csharp__WEBPACK_IMPORTED_MODULE_3__["CS"].Logger.Log("can not add data repeat,data class is:" + dataClass.name);
+            return;
+        }
+        var inst = new dataClass();
+        inst.onCreate();
+        this._dataMap.set(dataClass, inst);
+    };
+    /**
+     * 获取数据
+     * @param dataClass
+     */
+    UserDataModule.prototype.getData = function (dataClass) {
+        if (!this._dataMap.has(dataClass)) {
+            csharp__WEBPACK_IMPORTED_MODULE_3__["CS"].Logger.LogError("not exist data instance,please add before,class is:" + dataClass.name);
+            return;
+        }
+        return this._dataMap.get(dataClass);
+    };
     UserDataModule.prototype.onAdd = function () {
         _super.prototype.onAdd.call(this);
+        this._dataMap = new Map();
+        this.addData(_baseData_UserBaseData__WEBPACK_IMPORTED_MODULE_2__["UserBaseData"]);
     };
     UserDataModule.prototype.onRemove = function () {
         _super.prototype.onRemove.call(this);
@@ -3926,6 +3988,50 @@ var UserDataModule = /** @class */ (function (_super) {
     };
     return UserDataModule;
 }(_framework_module_BaseModule__WEBPACK_IMPORTED_MODULE_0__["BaseModule"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/module/userData/baseData/UserBaseData.ts":
+/*!***********************************************************!*\
+  !*** ./src/game/module/userData/baseData/UserBaseData.ts ***!
+  \***********************************************************/
+/*! exports provided: UserBaseData */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserBaseData", function() { return UserBaseData; });
+/* harmony import */ var _BaseData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BaseData */ "./src/game/module/userData/BaseData.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+/**
+ * 玩家基础数据
+ * @author by dengxuhui
+ * @create time 2021/6/9 14:57
+**/
+var UserBaseData = /** @class */ (function (_super) {
+    __extends(UserBaseData, _super);
+    function UserBaseData() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return UserBaseData;
+}(_BaseData__WEBPACK_IMPORTED_MODULE_0__["BaseData"]));
 
 
 
