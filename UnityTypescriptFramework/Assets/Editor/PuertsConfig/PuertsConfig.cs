@@ -85,6 +85,7 @@ public class PuertsConfig
 
             List<string> namespaces = new List<string>()
             {
+                "DG.Tweening"
             };
 
             Assembly[] ass = AppDomain.CurrentDomain.GetAssemblies();

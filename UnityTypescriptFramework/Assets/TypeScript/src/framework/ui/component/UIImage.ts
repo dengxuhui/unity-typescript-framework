@@ -2,6 +2,8 @@ import {UIBaseComponent} from "./UIBaseComponent";
 import {UnityEngine} from "csharp";
 import {IAtlasConfig} from "../../resource/config/AtlasConfig";
 import {UIUtil} from "../util/UIUtil";
+import {ResourceManager} from "../../resource/ResourceManager";
+import Handler from "../../utils/Handler";
 
 /**
  * image组件
@@ -32,7 +34,32 @@ export class UIImage extends UIBaseComponent {
     }
 
     onDestroy(): void {
+        this._atlas = null;
+        this._unityImage = null;
+        this._spriteName = null;
         super.onDestroy();
+    }
+
+    setActive(active: boolean) {
+        super.setActive(active);
+        this._innerActive = active;
+    }
+
+    /**
+     * 设置填充
+     * @param fillAmount
+     */
+    public setFillAmount(fillAmount: number) {
+        this._unityImage.fillAmount = fillAmount;
+    }
+
+    /**
+     * 缓动填充
+     * @param fillAmount
+     * @param duration
+     */
+    public doFillAmount(fillAmount: number, duration: number) {
+        this._unityImage.DOFillAmount(fillAmount, duration);
     }
 
     /**
@@ -52,7 +79,17 @@ export class UIImage extends UIBaseComponent {
         if (this._innerActive && hideAtLoad) {
             this._unityImage.gameObject.SetActive(false);
         }
-        let useAtlas = atlas || this._atlas; 
+        let useAtlas = atlas || this._atlas;
+        ResourceManager.Instance.loadImageAsync(spriteName, useAtlas, Handler.create(this, (n: string, sprite: UnityEngine.Sprite) => {
+            if (this._unityImage == null || sprite == null) {
+                return;
+            }
+            if (this._spriteName != n) {
+                return;
+            }
+            this._unityImage.sprite = sprite;
+            if (this._innerActive) this._unityImage.gameObject.SetActive(true);
+        }, [spriteName]));
     }
 
     /**
@@ -61,4 +98,6 @@ export class UIImage extends UIBaseComponent {
     public get spriteName(): string {
         return this._spriteName;
     }
+
+    //----------------------private--------------
 }

@@ -4866,6 +4866,7 @@ var UILoadingView = /** @class */ (function (_super) {
     UILoadingView.prototype.onCreate = function () {
         _super.prototype.onCreate.call(this);
         this._txtLoading = this.addComponent(_framework_ui_component_UIText__WEBPACK_IMPORTED_MODULE_1__["UIText"], "content/m_desc");
+        // this._imgLoadingSlider = this.addComponent<UIImage>("");
     };
     return UILoadingView;
 }(_framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__["UIBaseView"]));
