@@ -2340,6 +2340,83 @@ var UILayer = /** @class */ (function (_super) {
 
 /***/ }),
 
+/***/ "./src/framework/ui/component/UIText.ts":
+/*!**********************************************!*\
+  !*** ./src/framework/ui/component/UIText.ts ***!
+  \**********************************************/
+/*! exports provided: UIText */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIText", function() { return UIText; });
+/* harmony import */ var _UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UIBaseComponent */ "./src/framework/ui/component/UIBaseComponent.ts");
+/* harmony import */ var _util_UIUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/UIUtil */ "./src/framework/ui/util/UIUtil.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+/**
+ * ui文本
+ * @author by dengxuhui
+ * @create time 2021/6/9 15:56
+ **/
+var UIText = /** @class */ (function (_super) {
+    __extends(UIText, _super);
+    function UIText() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIText.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+        this._unityText = _util_UIUtil__WEBPACK_IMPORTED_MODULE_1__["UIUtil"].findText(this._transform);
+        this._content = this._unityText.text;
+    };
+    UIText.prototype.onDestroy = function () {
+        this._unityText = null;
+        _super.prototype.onDestroy.call(this);
+    };
+    Object.defineProperty(UIText.prototype, "text", {
+        /**
+         * 获取文本内容
+         */
+        get: function () {
+            return this._content;
+        },
+        /**
+         * 设置文本
+         * @param content
+         */
+        set: function (content) {
+            if (this._content == content) {
+                return;
+            }
+            if (this._unityText != null)
+                this._unityText.text = content;
+            this._content = content;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return UIText;
+}(_UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__["UIBaseComponent"]));
+
+
+
+/***/ }),
+
 /***/ "./src/framework/ui/config/EUIAction.ts":
 /*!**********************************************!*\
   !*** ./src/framework/ui/config/EUIAction.ts ***!
@@ -4719,6 +4796,7 @@ var UILoadingModel = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UILoadingView", function() { return UILoadingView; });
 /* harmony import */ var _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseView */ "./src/framework/ui/base/UIBaseView.ts");
+/* harmony import */ var _framework_ui_component_UIText__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../framework/ui/component/UIText */ "./src/framework/ui/component/UIText.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4735,6 +4813,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     };
 })();
 
+
 /**
  * 通用loading界面
  */
@@ -4743,9 +4822,9 @@ var UILoadingView = /** @class */ (function (_super) {
     function UILoadingView() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    // private _txtLoading:uite
     UILoadingView.prototype.onCreate = function () {
         _super.prototype.onCreate.call(this);
+        this._txtLoading = this.addComponent(_framework_ui_component_UIText__WEBPACK_IMPORTED_MODULE_1__["UIText"], "content/m_desc");
     };
     return UILoadingView;
 }(_framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__["UIBaseView"]));
