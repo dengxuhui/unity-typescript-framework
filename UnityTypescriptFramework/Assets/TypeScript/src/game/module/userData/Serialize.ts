@@ -11,7 +11,7 @@ export class Serialize {
      * @param data
      */
     public decodeData(data: any) {
-        CS.Logger.LogError("must override this function");
+        CS.Logger.LogError(this.constructor.name + "::must override this function=>decodeData()");
     }
 
     /**
@@ -19,6 +19,6 @@ export class Serialize {
      * @param data
      */
     public encodeData(data: any) {
-        CS.Logger.LogError("must override this function");
+        CS.Logger.LogError(this.constructor.name + "::must override this function=>encodeData()");
     }
 }

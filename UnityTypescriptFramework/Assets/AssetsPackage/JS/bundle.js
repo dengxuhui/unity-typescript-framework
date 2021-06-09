@@ -3884,7 +3884,7 @@ var BaseData = /** @class */ (function () {
     function BaseData() {
     }
     BaseData.prototype.onCreate = function () {
-        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("must override this function");
+        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError(this.constructor.name + "::must override this function=>onCreate()");
     };
     return BaseData;
 }());
@@ -4030,6 +4030,8 @@ var UserBaseData = /** @class */ (function (_super) {
     function UserBaseData() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    UserBaseData.prototype.onCreate = function () {
+    };
     return UserBaseData;
 }(_BaseData__WEBPACK_IMPORTED_MODULE_0__["BaseData"]));
 

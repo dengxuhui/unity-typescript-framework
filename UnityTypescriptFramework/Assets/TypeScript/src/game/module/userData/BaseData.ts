@@ -7,7 +7,7 @@ import {CS} from "csharp";
 
 export class BaseData {
     public onCreate() {
-        CS.Logger.LogError("must override this function");
+        CS.Logger.LogError(this.constructor.name + "::must override this function=>onCreate()");
     }
 }
 

@@ -7,4 +7,7 @@ import {BaseData} from "../BaseData";
 **/
 export class UserBaseData extends BaseData {
     
+    onCreate() {
+
+    }
 }
