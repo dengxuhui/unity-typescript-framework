@@ -7,6 +7,12 @@ import {UILoadingView} from "./uiLoading/UILoadingView";
 import {EUIType} from "../../../framework/ui/config/EUIType";
 
 /**
+ * loading场景ui配置
+ * @author by dengxuhui
+ * @create time 2021/6/9 14:07
+ **/
+
+/**
  * 通用加载界面
  */
 let UILoading: UIConfigInfo = {
@@ -20,4 +26,11 @@ let UILoading: UIConfigInfo = {
     type: EUIType.View
 };
 
-export {UILoading}
+/**
+ * 配置导出
+ */
+let UILoadingConfig = {
+    UILoading: UILoading
+};
+
+export {UILoadingConfig}

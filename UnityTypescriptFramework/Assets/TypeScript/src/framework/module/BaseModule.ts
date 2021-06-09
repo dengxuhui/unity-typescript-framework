@@ -10,8 +10,9 @@ import {CS} from "csharp";
 export class BaseModule extends EventDispatcher implements IModule {
     /**
      * 是否可更新
+     * 默认模块不可更新，如果存在模块需要被更新，设置可更新
      */
-    protected _updatable:boolean = true;
+    protected _updatable:boolean = false;
     
     public onAdd(): void {
         this.onAddListener();

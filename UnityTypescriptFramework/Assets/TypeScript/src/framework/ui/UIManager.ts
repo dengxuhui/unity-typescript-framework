@@ -162,10 +162,12 @@ export default class UIManager extends EventDispatcher implements ISingleton {
         let config = UIConfigs.get(uiName);
         if (config == null) {
             CS.Logger.LogError("UIWindowNames not exist in UIConfigs,name index is:" + UIWindowNames[uiName]);
+            return;
         }
         let layer = this._layerMap.get(config.layer);
         if (layer == null) {
-            CS.Logger.LogError(`No layer named:${EUILayer[config.layer]}`)
+            CS.Logger.LogError(`No layer named:${EUILayer[config.layer]}`);
+            return;
         }
         window.name = uiName;
         let eventDispatcher = new EventDispatcher();

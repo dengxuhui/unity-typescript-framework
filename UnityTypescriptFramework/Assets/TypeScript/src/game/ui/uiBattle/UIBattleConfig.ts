@@ -6,6 +6,12 @@ import {UIBattleModel} from "./uiBattle/UIBattleModel";
 import {UIBattleCtrl} from "./uiBattle/UIBattleCtrl";
 import {UIBattleView} from "./uiBattle/UIBattleView";
 
+/**
+ * battle场景ui配置
+ * @author by dengxuhui 
+ * @create time 2021/6/9 14:06
+**/
+
 let UIBattleMain: UIConfigInfo = {
     name: UIWindowNames.UIBattleMain,
     layer: EUILayer.NormalLayer,
@@ -17,6 +23,13 @@ let UIBattleMain: UIConfigInfo = {
     type: EUIType.View,
 };
 
+/**
+ * 配置导出
+ */
+let UIBattleConfig = {
+    UIBattleMain:UIBattleMain
+};
+
 export {
-    UIBattleMain
+    UIBattleConfig
 };

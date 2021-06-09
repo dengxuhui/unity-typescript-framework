@@ -7,6 +7,12 @@ import {UIHomeView} from "./uiHome/UIHomeView";
 import {UIHomeModel} from "./uiHome/UIHomeModel";
 
 /**
+ * home场景界面配置
+ * @author by dengxuhui 
+ * @create time 2021/6/9 14:06
+**/
+
+/**
  * 这里定义所有Home场景中使用的UI配置，
  */
 
@@ -21,6 +27,13 @@ let UIHome: UIConfigInfo = {
     type: EUIType.View,
 };
 
+/**
+ * 配置导出
+ */
+let UIHomeConfig = {
+    UIHome:UIHome
+};
+
 export {
-    UIHome
+    UIHomeConfig
 };

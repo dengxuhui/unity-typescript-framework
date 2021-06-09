@@ -133,6 +133,42 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game/scenes/config/SceneConfig */ "./src/game/scenes/config/SceneConfig.ts");
 /* harmony import */ var _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./framework/module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
 /* harmony import */ var _game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./game/module/common/CommonModule */ "./src/game/module/common/CommonModule.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 
 
 
@@ -143,15 +179,29 @@ __webpack_require__.r(__webpack_exports__);
  * 游戏入口
  * @author by dengxuhui
  * @create time 2021/6/9 11:39
-**/
+ **/
 var GameMain = /** @class */ (function () {
     function GameMain() {
         csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("JavaScript start running!!");
         //初始化框架
         _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].init();
-        _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__["CommonModule"]);
-        _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__["SceneManager"].Instance.switchScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].HomeScene);
+        this.StartGame().then(function () {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("game start!!");
+        });
     }
+    /**
+     * 游戏启动
+     * @constructor
+     */
+    GameMain.prototype.StartGame = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__["CommonModule"]);
+                _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__["SceneManager"].Instance.switchScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].HomeScene);
+                return [2 /*return*/];
+            });
+        });
+    };
     return GameMain;
 }());
 new GameMain();
@@ -291,8 +341,9 @@ var BaseModule = /** @class */ (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         /**
          * 是否可更新
+         * 默认模块不可更新，如果存在模块需要被更新，设置可更新
          */
-        _this._updatable = true;
+        _this._updatable = false;
         return _this;
     }
     BaseModule.prototype.onAdd = function () {
@@ -980,6 +1031,9 @@ var SceneManager = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseScene", function() { return BaseScene; });
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_StringUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -1016,9 +1070,13 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+
+
 /**
  * 场景基类
- */
+ * @author by dengxuhui
+ * @create time 2021/6/9 13:52
+**/
 var BaseScene = /** @class */ (function () {
     /**
      * 构造函数
@@ -1079,6 +1137,32 @@ var BaseScene = /** @class */ (function () {
                 return [2 /*return*/];
             });
         });
+    };
+    /**
+     * 添加预加载prefab
+     * @param path
+     */
+    BaseScene.prototype.addPreloadPrefab = function (path) {
+        if (_utils_StringUtil__WEBPACK_IMPORTED_MODULE_1__["string"].IsNullOrEmpty(path) || !path.endsWith(".prefab")) {
+            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("scene preload prefab path must end with .prefab");
+            return;
+        }
+        this._preloadPrefab.push(path);
+    };
+    /**
+     * 添加预加载资源类型
+     * @param path
+     * @param resType
+     */
+    BaseScene.prototype.addPreloadResource = function (path, resType) {
+        if (_utils_StringUtil__WEBPACK_IMPORTED_MODULE_1__["string"].IsNullOrEmpty(path)) {
+            return;
+        }
+        if (this._preloadResources.has(path)) {
+            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("repeat add preload resource,path:" + path);
+            return;
+        }
+        this._preloadResources.set(path, resType);
     };
     Object.defineProperty(BaseScene.prototype, "config", {
         /**
@@ -1273,10 +1357,12 @@ var UIManager = /** @class */ (function (_super) {
         var config = _config_UIConfigs__WEBPACK_IMPORTED_MODULE_8__["UIConfigs"].get(uiName);
         if (config == null) {
             csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("UIWindowNames not exist in UIConfigs,name index is:" + _config_UIWindowNames__WEBPACK_IMPORTED_MODULE_7__["UIWindowNames"][uiName]);
+            return;
         }
         var layer = this._layerMap.get(config.layer);
         if (layer == null) {
             csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("No layer named:" + _config_UILayers__WEBPACK_IMPORTED_MODULE_2__["EUILayer"][config.layer]);
+            return;
         }
         window.name = uiName;
         var eventDispatcher = new _utils_EventDispatcher__WEBPACK_IMPORTED_MODULE_0__["default"]();
@@ -2334,13 +2420,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIConfigs", function() { return UIConfigs; });
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _game_ui_uiHome_UIHomeConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../game/ui/uiHome/UIHomeConfig */ "./src/game/ui/uiHome/UIHomeConfig.ts");
+/* harmony import */ var _game_ui_uiBattle_UIBattleConfig__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../game/ui/uiBattle/UIBattleConfig */ "./src/game/ui/uiBattle/UIBattleConfig.ts");
+/* harmony import */ var _game_ui_uiLoading_UILoadingConfig__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../game/ui/uiLoading/UILoadingConfig */ "./src/game/ui/uiLoading/UILoadingConfig.ts");
+
+
+
 
 /**
  * 所有模块
  */
 var UIModule = {
-    UIHome: __webpack_require__(/*! ../../../game/ui/uiHome/UIHomeConfig */ "./src/game/ui/uiHome/UIHomeConfig.ts"),
-    UIBattle: __webpack_require__(/*! ../../../game/ui/uiBattle/UIBattleConfig */ "./src/game/ui/uiBattle/UIBattleConfig.ts"),
+    UIHome: _game_ui_uiHome_UIHomeConfig__WEBPACK_IMPORTED_MODULE_1__["UIHomeConfig"],
+    UIBattle: _game_ui_uiBattle_UIBattleConfig__WEBPACK_IMPORTED_MODULE_2__["UIBattleConfig"],
+    UILoading: _game_ui_uiLoading_UILoadingConfig__WEBPACK_IMPORTED_MODULE_3__["UILoadingConfig"],
 };
 /**
  * ui配置结构体
@@ -2356,10 +2449,10 @@ for (var moduleName in UIModule) {
     var module_1 = UIModule[moduleName];
     for (var cfgName in module_1) {
         var config = module_1[cfgName];
-        if (UIConfigs[config.name] != null) {
+        if (UIConfigs.has(config.name)) {
             csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("Already exist ::" + cfgName);
         }
-        UIConfigs[config.name] = config;
+        UIConfigs.set(config.name, config);
     }
 }
 
@@ -3898,12 +3991,12 @@ var HomeScene = /** @class */ (function (_super) {
 /*!************************************************!*\
   !*** ./src/game/ui/uiBattle/UIBattleConfig.ts ***!
   \************************************************/
-/*! exports provided: UIBattleMain */
+/*! exports provided: UIBattleConfig */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBattleMain", function() { return UIBattleMain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBattleConfig", function() { return UIBattleConfig; });
 /* harmony import */ var _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/ui/config/UIWindowNames */ "./src/framework/ui/config/UIWindowNames.ts");
 /* harmony import */ var _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../framework/ui/config/UILayers */ "./src/framework/ui/config/UILayers.ts");
 /* harmony import */ var _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../framework/ui/config/EUIType */ "./src/framework/ui/config/EUIType.ts");
@@ -3916,6 +4009,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * battle场景ui配置
+ * @author by dengxuhui
+ * @create time 2021/6/9 14:06
+**/
 var UIBattleMain = {
     name: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UIBattleMain,
     layer: _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__["EUILayer"].NormalLayer,
@@ -3925,6 +4023,12 @@ var UIBattleMain = {
     prefabPath: "",
     components: [],
     type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__["EUIType"].View,
+};
+/**
+ * 配置导出
+ */
+var UIBattleConfig = {
+    UIBattleMain: UIBattleMain
 };
 
 
@@ -4070,12 +4174,12 @@ var UIBattleView = /** @class */ (function (_super) {
 /*!********************************************!*\
   !*** ./src/game/ui/uiHome/UIHomeConfig.ts ***!
   \********************************************/
-/*! exports provided: UIHome */
+/*! exports provided: UIHomeConfig */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIHome", function() { return UIHome; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIHomeConfig", function() { return UIHomeConfig; });
 /* harmony import */ var _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/ui/config/UIWindowNames */ "./src/framework/ui/config/UIWindowNames.ts");
 /* harmony import */ var _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../framework/ui/config/UILayers */ "./src/framework/ui/config/UILayers.ts");
 /* harmony import */ var _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../framework/ui/config/EUIType */ "./src/framework/ui/config/EUIType.ts");
@@ -4089,6 +4193,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
+ * home场景界面配置
+ * @author by dengxuhui
+ * @create time 2021/6/9 14:06
+**/
+/**
  * 这里定义所有Home场景中使用的UI配置，
  */
 var UIHome = {
@@ -4100,6 +4209,12 @@ var UIHome = {
     prefabPath: "",
     components: [],
     type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_2__["EUIType"].View,
+};
+/**
+ * 配置导出
+ */
+var UIHomeConfig = {
+    UIHome: UIHome
 };
 
 
@@ -4238,6 +4353,209 @@ var UIHomeView = /** @class */ (function (_super) {
         _super.prototype.onDestroy.call(this);
     };
     return UIHomeView;
+}(_framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__["UIBaseView"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiLoading/UILoadingConfig.ts":
+/*!**************************************************!*\
+  !*** ./src/game/ui/uiLoading/UILoadingConfig.ts ***!
+  \**************************************************/
+/*! exports provided: UILoadingConfig */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UILoadingConfig", function() { return UILoadingConfig; });
+/* harmony import */ var _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/ui/config/UIWindowNames */ "./src/framework/ui/config/UIWindowNames.ts");
+/* harmony import */ var _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../framework/ui/config/UILayers */ "./src/framework/ui/config/UILayers.ts");
+/* harmony import */ var _uiLoading_UILoadingModel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./uiLoading/UILoadingModel */ "./src/game/ui/uiLoading/uiLoading/UILoadingModel.ts");
+/* harmony import */ var _uiLoading_UILoadingCtrl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uiLoading/UILoadingCtrl */ "./src/game/ui/uiLoading/uiLoading/UILoadingCtrl.ts");
+/* harmony import */ var _uiLoading_UILoadingView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./uiLoading/UILoadingView */ "./src/game/ui/uiLoading/uiLoading/UILoadingView.ts");
+/* harmony import */ var _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../framework/ui/config/EUIType */ "./src/framework/ui/config/EUIType.ts");
+
+
+
+
+
+
+/**
+ * loading场景ui配置
+ * @author by dengxuhui
+ * @create time 2021/6/9 14:07
+ **/
+/**
+ * 通用加载界面
+ */
+var UILoading = {
+    name: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UILoading,
+    layer: _framework_ui_config_UILayers__WEBPACK_IMPORTED_MODULE_1__["EUILayer"].TopLayer,
+    model: _uiLoading_UILoadingModel__WEBPACK_IMPORTED_MODULE_2__["UILoadingModel"],
+    ctrl: _uiLoading_UILoadingCtrl__WEBPACK_IMPORTED_MODULE_3__["UILoadingCtrl"],
+    view: _uiLoading_UILoadingView__WEBPACK_IMPORTED_MODULE_4__["UILoadingView"],
+    prefabPath: "",
+    components: [],
+    type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_5__["EUIType"].View
+};
+/**
+ * 配置导出
+ */
+var UILoadingConfig = {
+    UILoading: UILoading
+};
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiLoading/uiLoading/UILoadingCtrl.ts":
+/*!**********************************************************!*\
+  !*** ./src/game/ui/uiLoading/uiLoading/UILoadingCtrl.ts ***!
+  \**********************************************************/
+/*! exports provided: UILoadingCtrl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UILoadingCtrl", function() { return UILoadingCtrl; });
+/* harmony import */ var _framework_ui_base_UIBaseCtrl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseCtrl */ "./src/framework/ui/base/UIBaseCtrl.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+/**
+ * 通用loading控制器
+ */
+var UILoadingCtrl = /** @class */ (function (_super) {
+    __extends(UILoadingCtrl, _super);
+    function UILoadingCtrl() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return UILoadingCtrl;
+}(_framework_ui_base_UIBaseCtrl__WEBPACK_IMPORTED_MODULE_0__["default"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiLoading/uiLoading/UILoadingModel.ts":
+/*!***********************************************************!*\
+  !*** ./src/game/ui/uiLoading/uiLoading/UILoadingModel.ts ***!
+  \***********************************************************/
+/*! exports provided: UILoadingModel */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UILoadingModel", function() { return UILoadingModel; });
+/* harmony import */ var _framework_ui_base_UIBaseModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseModel */ "./src/framework/ui/base/UIBaseModel.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+/**
+ * 通用loading数据
+ */
+var UILoadingModel = /** @class */ (function (_super) {
+    __extends(UILoadingModel, _super);
+    function UILoadingModel() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /**
+         * 进度值
+         */
+        _this._value = 0;
+        return _this;
+    }
+    UILoadingModel.prototype.onEnable = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        _super.prototype.onEnable.apply(this, args);
+        this._value = 0;
+    };
+    UILoadingModel.prototype.onDisable = function () {
+        _super.prototype.onDisable.call(this);
+        this._value = 0;
+    };
+    UILoadingModel.prototype.getValue = function () {
+        return this._value;
+    };
+    UILoadingModel.prototype.setValue = function (val) {
+        if (val > 1 || val < 0) {
+            return;
+        }
+        this._value = val;
+    };
+    return UILoadingModel;
+}(_framework_ui_base_UIBaseModel__WEBPACK_IMPORTED_MODULE_0__["default"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/ui/uiLoading/uiLoading/UILoadingView.ts":
+/*!**********************************************************!*\
+  !*** ./src/game/ui/uiLoading/uiLoading/UILoadingView.ts ***!
+  \**********************************************************/
+/*! exports provided: UILoadingView */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UILoadingView", function() { return UILoadingView; });
+/* harmony import */ var _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseView */ "./src/framework/ui/base/UIBaseView.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+/**
+ * 通用loading界面
+ */
+var UILoadingView = /** @class */ (function (_super) {
+    __extends(UILoadingView, _super);
+    function UILoadingView() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return UILoadingView;
 }(_framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__["UIBaseView"]));
 
 

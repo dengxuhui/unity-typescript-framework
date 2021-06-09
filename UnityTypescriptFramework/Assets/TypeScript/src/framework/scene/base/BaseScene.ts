@@ -1,11 +1,14 @@
 import IDestroyable from "../../interface/IDestroyable";
 import {SceneConfig} from "../../../game/scenes/config/SceneConfig";
-import {System} from "csharp";
+import {CS, System} from "csharp";
 import {IUILoadingModel} from "../../../game/ui/uiLoading/IUILoading";
+import {string} from "../../utils/StringUtil";
 
 /**
  * 场景基类
- */
+ * @author by dengxuhui 
+ * @create time 2021/6/9 13:52
+**/
 export class BaseScene implements IDestroyable {
     /**
      * 场景配置
@@ -87,6 +90,33 @@ export class BaseScene implements IDestroyable {
 
     }
 
+    /**
+     * 添加预加载prefab
+     * @param path
+     */
+    public addPreloadPrefab(path: string) {
+        if (string.IsNullOrEmpty(path) || !path.endsWith(".prefab")) {
+            CS.Logger.LogError("scene preload prefab path must end with .prefab");
+            return;
+        }
+        this._preloadPrefab.push(path);
+    }
+
+    /**
+     * 添加预加载资源类型
+     * @param path
+     * @param resType
+     */
+    public addPreloadResource(path: string, resType: System.Type) {
+        if(string.IsNullOrEmpty(path)){
+            return;
+        }
+        if (this._preloadResources.has(path)) {
+            CS.Logger.Log("repeat add preload resource,path:" + path);
+            return;
+        }
+        this._preloadResources.set(path, resType);
+    }
 
     /**
      * get config

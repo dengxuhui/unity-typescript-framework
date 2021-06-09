@@ -5,13 +5,17 @@ import {EUIType} from "./EUIType";
 import {IUIBaseCtrlCtor} from "../base/UIBaseCtrl";
 import {IUIBaseModelCtor} from "../base/UIBaseModel";
 import {IUIBaseViewCtor} from "../base/UIBaseView";
+import {UIHomeConfig} from "../../../game/ui/uiHome/UIHomeConfig";
+import {UIBattleConfig} from "../../../game/ui/uiBattle/UIBattleConfig";
+import {UILoadingConfig} from "../../../game/ui/uiLoading/UILoadingConfig";
 
 /**
  * 所有模块
  */
 let UIModule = {
-    UIHome: require("../../../game/ui/uiHome/UIHomeConfig"),
-    UIBattle: require("../../../game/ui/uiBattle/UIBattleConfig"),
+    UIHome: UIHomeConfig,
+    UIBattle: UIBattleConfig,
+    UILoading: UILoadingConfig,
 };
 
 /**
@@ -41,11 +45,11 @@ export class UIConfigInfo {
     /**
      * prefab路径集合
      */
-    prefabPath:string;
+    prefabPath: string;
     /**
      * 预加载prefabs路径
      */
-    components:Array<string>;
+    components: Array<string>;
     /**
      * ui类型
      */
@@ -57,10 +61,10 @@ for (let moduleName in UIModule) {
     let module = UIModule[moduleName];
     for (let cfgName in module) {
         let config: UIConfigInfo = module[cfgName];
-        if (UIConfigs[config.name] != null) {
+        if (UIConfigs.has(config.name)) {
             CS.Logger.LogError("Already exist ::" + cfgName);
         }
-        UIConfigs[config.name] = config;
+        UIConfigs.set(config.name, config);
     }
 }
 
