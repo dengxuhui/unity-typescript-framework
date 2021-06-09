@@ -62,6 +62,7 @@ export default class UIManager extends EventDispatcher implements ISingleton {
      */
     public initialize(): void {
         UILayers.set();
+        this._loadHandlerMap = new Map<UIWindowNames, Handler>();
         this._windowMap = new Map<UIWindowNames, UIWindow>();
         this._openingDialogs = new Map<UIWindowNames, UIWindow>();
         this._layerMap = new Map<EUILayer, UILayer>();

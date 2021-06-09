@@ -1302,6 +1302,7 @@ var UIManager = /** @class */ (function (_super) {
     UIManager.prototype.initialize = function () {
         var _this = this;
         _config_UILayers__WEBPACK_IMPORTED_MODULE_2__["UILayers"].set();
+        this._loadHandlerMap = new Map();
         this._windowMap = new Map();
         this._openingDialogs = new Map();
         this._layerMap = new Map();
