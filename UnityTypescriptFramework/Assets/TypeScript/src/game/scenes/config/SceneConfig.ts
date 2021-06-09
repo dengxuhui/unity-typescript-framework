@@ -1,5 +1,6 @@
 import {UIWindowNames} from "../../../framework/ui/config/UIWindowNames";
 import {BaseScene} from "../../../framework/scene/base/BaseScene";
+import {HomeScene} from "../home/HomeScene";
 
 /**
  * 场景配置
@@ -44,7 +45,7 @@ let loading: SceneConfig = {
 let home: SceneConfig = {
     Level: 3,
     Name: "HomeScene",
-    Class: null,
+    Class: HomeScene,
     Loading: UIWindowNames.UILoading,
 };
 
