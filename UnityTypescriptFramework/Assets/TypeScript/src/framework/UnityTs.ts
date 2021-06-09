@@ -4,6 +4,7 @@ import {Timer} from "./utils/timer/Timer";
 import {GameObjectPool} from './resource/GameObjectPool';
 import UIManager from "./ui/UIManager";
 import {SceneManager} from "./scene/SceneManager";
+import {ModuleCenter} from "./module/ModuleCenter";
 
 class Utils {
     /*id*/
@@ -52,6 +53,11 @@ class Utils {
     }
 }
 
+/**
+ * 全局初始化入口
+ * @author by dengxuhui 
+ * @create time 2021/6/9 11:38
+**/
 export default class UnityTs {
     /* 工具类*/
     static utils: typeof Utils = Utils;
@@ -61,5 +67,6 @@ export default class UnityTs {
         GameObjectPool.Instance.initialize();
         UIManager.Instance.initialize();
         SceneManager.Instance.initialize();
+        ModuleCenter.Instance.initialize();
     }
 }

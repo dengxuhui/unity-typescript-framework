@@ -131,15 +131,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./framework/scene/SceneManager */ "./src/framework/scene/SceneManager.ts");
 /* harmony import */ var _game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game/scenes/config/SceneConfig */ "./src/game/scenes/config/SceneConfig.ts");
+/* harmony import */ var _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./framework/module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
+/* harmony import */ var _game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./game/module/common/CommonModule */ "./src/game/module/common/CommonModule.ts");
 
 
 
 
+
+
+/**
+ * 游戏入口
+ * @author by dengxuhui
+ * @create time 2021/6/9 11:39
+**/
 var GameMain = /** @class */ (function () {
     function GameMain() {
+        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("JavaScript start running!!");
         //初始化框架
         _framework_UnityTs__WEBPACK_IMPORTED_MODULE_0__["default"].init();
-        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.Log("js start up newer!!");
+        _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__["CommonModule"]);
         _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__["SceneManager"].Instance.switchScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].HomeScene);
     }
     return GameMain;
@@ -162,7 +172,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./resource/GameObjectPool */ "./src/framework/resource/GameObjectPool.ts");
 /* harmony import */ var _ui_UIManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/UIManager */ "./src/framework/ui/UIManager.ts");
 /* harmony import */ var _scene_SceneManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./scene/SceneManager */ "./src/framework/scene/SceneManager.ts");
+/* harmony import */ var _module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
 /* 全局类入口*/
+
 
 
 
@@ -214,6 +226,11 @@ var Utils = /** @class */ (function () {
     Utils._extReg = /\.(\w+)\??/g;
     return Utils;
 }());
+/**
+ * 全局初始化入口
+ * @author by dengxuhui
+ * @create time 2021/6/9 11:38
+**/
 var UnityTs = /** @class */ (function () {
     function UnityTs() {
     }
@@ -222,12 +239,169 @@ var UnityTs = /** @class */ (function () {
         _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_1__["GameObjectPool"].Instance.initialize();
         _ui_UIManager__WEBPACK_IMPORTED_MODULE_2__["default"].Instance.initialize();
         _scene_SceneManager__WEBPACK_IMPORTED_MODULE_3__["SceneManager"].Instance.initialize();
+        _module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.initialize();
     };
     /* 工具类*/
     UnityTs.utils = Utils;
     return UnityTs;
 }());
 /* harmony default export */ __webpack_exports__["default"] = (UnityTs);
+
+
+/***/ }),
+
+/***/ "./src/framework/module/BaseModule.ts":
+/*!********************************************!*\
+  !*** ./src/framework/module/BaseModule.ts ***!
+  \********************************************/
+/*! exports provided: BaseModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseModule", function() { return BaseModule; });
+/* harmony import */ var _utils_EventDispatcher__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/EventDispatcher */ "./src/framework/utils/EventDispatcher.ts");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_1__);
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+/**
+ * 模块基类
+ * @author by dengxuhui
+ * @create time 2021/6/9 11:38
+**/
+var BaseModule = /** @class */ (function (_super) {
+    __extends(BaseModule, _super);
+    function BaseModule() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /**
+         * 是否可更新
+         */
+        _this._updatable = true;
+        return _this;
+    }
+    BaseModule.prototype.onAdd = function () {
+        this.onAddListener();
+    };
+    BaseModule.prototype.onRemove = function () {
+        this.onRemoveListener();
+    };
+    BaseModule.prototype.onAddListener = function () {
+    };
+    BaseModule.prototype.onRemoveListener = function () {
+    };
+    BaseModule.prototype.setUpdatable = function (value) {
+    };
+    /**
+     * 获取是否可更新
+     */
+    BaseModule.prototype.getUpdatable = function () {
+        return this._updatable;
+    };
+    BaseModule.prototype.onUpdate = function () {
+        csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("please override BaseModule::update function");
+    };
+    return BaseModule;
+}(_utils_EventDispatcher__WEBPACK_IMPORTED_MODULE_0__["default"]));
+
+
+
+/***/ }),
+
+/***/ "./src/framework/module/ModuleCenter.ts":
+/*!**********************************************!*\
+  !*** ./src/framework/module/ModuleCenter.ts ***!
+  \**********************************************/
+/*! exports provided: ModuleCenter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ModuleCenter", function() { return ModuleCenter; });
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
+
+
+/**
+ * 模块中心
+ * @author by dengxuhui
+ * @create time 2021/6/9 11:39
+**/
+var ModuleCenter = /** @class */ (function () {
+    function ModuleCenter() {
+    }
+    /**
+     * 初始化
+     */
+    ModuleCenter.prototype.initialize = function () {
+        this._moduleMap = new Map();
+        _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__["Timer"].timer.frameLoop(1, this, this._update, null, true);
+    };
+    /**
+     * 添加模块
+     * @param moduleClass
+     */
+    ModuleCenter.prototype.add = function (moduleClass) {
+        if (this._moduleMap.has(moduleClass)) {
+            csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("Cannot add modules repeatedly,module name:" + moduleClass.name);
+            return;
+        }
+        var inst = new moduleClass();
+        this._moduleMap.set(moduleClass, inst);
+        inst.onAdd();
+        return inst;
+    };
+    /**
+     * 移除模块
+     * @param moduleClass
+     */
+    ModuleCenter.prototype.remove = function (moduleClass) {
+        if (!this._moduleMap.has(moduleClass)) {
+            return false;
+        }
+        var module = this._moduleMap.get(moduleClass);
+        module.onRemove();
+        this._moduleMap.delete(moduleClass);
+        return true;
+    };
+    /**
+     * 获取模块实例
+     * @param moduleClass
+     */
+    ModuleCenter.prototype.get = function (moduleClass) {
+        return this._moduleMap.get(moduleClass);
+    };
+    //----------------private------------------
+    /**
+     * 更新
+     * @private
+     */
+    ModuleCenter.prototype._update = function () {
+        this._moduleMap.forEach(function (module, _) {
+            module && module.getUpdatable() && module.onUpdate();
+        });
+    };
+    //实例
+    ModuleCenter.Instance = new ModuleCenter();
+    return ModuleCenter;
+}());
+
 
 
 /***/ }),
@@ -3316,11 +3490,21 @@ var Timer = /** @class */ (function () {
     function Timer() {
     }
     Object.defineProperty(Timer, "timer", {
-        /*
-        * 获取timer唯一实例
-        * */
+        /**
+         * 普通timer
+         */
         get: function () {
             return this._timer;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Timer, "lateTimer", {
+        /**
+         * 后置timer
+         */
+        get: function () {
+            return this._lateTimer;
         },
         enumerable: false,
         configurable: true
@@ -3331,6 +3515,7 @@ var Timer = /** @class */ (function () {
         }
         this._inited = true;
         this._timer = new InnerTimer();
+        this._lateTimer = new InnerTimer();
         // @ts-ignore
         global.__tgjsRegisterTickHandler(uts_timerUpdate);
         // @ts-ignore
@@ -3340,11 +3525,73 @@ var Timer = /** @class */ (function () {
     return Timer;
 }());
 
+/**
+ * cs侧来更新ts的timer
+ */
 function uts_timerUpdate() {
     Timer._timer._update();
+    Timer._lateTimer._update();
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./src/game/module/common/CommonModule.ts":
+/*!************************************************!*\
+  !*** ./src/game/module/common/CommonModule.ts ***!
+  \************************************************/
+/*! exports provided: CommonModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CommonModule", function() { return CommonModule; });
+/* harmony import */ var _framework_module_BaseModule__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/module/BaseModule */ "./src/framework/module/BaseModule.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+/**
+ * 通用逻辑模块
+ * @author by dengxuhui
+ * @create time 2021/6/9 11:37
+**/
+var CommonModule = /** @class */ (function (_super) {
+    __extends(CommonModule, _super);
+    function CommonModule() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CommonModule.prototype.onAdd = function () {
+        _super.prototype.onAdd.call(this);
+    };
+    CommonModule.prototype.onRemove = function () {
+        _super.prototype.onRemove.call(this);
+    };
+    CommonModule.prototype.onUpdate = function () {
+    };
+    CommonModule.prototype.onAddListener = function () {
+        _super.prototype.onAddListener.call(this);
+    };
+    CommonModule.prototype.onRemoveListener = function () {
+        _super.prototype.onRemoveListener.call(this);
+    };
+    return CommonModule;
+}(_framework_module_BaseModule__WEBPACK_IMPORTED_MODULE_0__["BaseModule"]));
+
+
 
 /***/ }),
 

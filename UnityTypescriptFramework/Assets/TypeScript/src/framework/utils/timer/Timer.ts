@@ -348,18 +348,32 @@ class TimerHandler {
 * timer管理器 如果需要新增timer，在这里新建实例，一般一个就够用了。
 * */
 export class Timer {
+    /**
+     * 帧更新前的timer
+     */
     static _timer: InnerTimer;
+    /**
+     * 帧更新后的timer
+     */
+    static _lateTimer: InnerTimer;
     private static _inited: boolean = false;
 
     //私有构造函数
     private constructor() {
     }
 
-    /*
-    * 获取timer唯一实例
-    * */
+    /**
+     * 普通timer
+     */
     public static get timer() {
         return this._timer;
+    }
+
+    /**
+     * 后置timer
+     */
+    public static get lateTimer() {
+        return this._lateTimer;
     }
 
     public static init() {
@@ -368,6 +382,7 @@ export class Timer {
         }
         this._inited = true;
         this._timer = new InnerTimer();
+        this._lateTimer = new InnerTimer();
         // @ts-ignore
         global.__tgjsRegisterTickHandler(uts_timerUpdate);
         // @ts-ignore
@@ -375,6 +390,10 @@ export class Timer {
     }
 }
 
+/**
+ * cs侧来更新ts的timer
+ */
 function uts_timerUpdate() {
     Timer._timer._update();
+    Timer._lateTimer._update();
 }
