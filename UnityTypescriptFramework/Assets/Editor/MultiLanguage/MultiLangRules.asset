@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ce947308742476c924025bd0f34d202, type: 3}
+  m_Name: MultiLangRules
+  m_EditorClassIdentifier: 
+  prefabDirectory: Assets/AssetsPackage/ui/prefabs
+  xlsxDirectory: ConfigData/trunk
+  customCsvs:
+  - Assets/Document/ShowMessage.csv
+  runtimeAssetsDirectory: Assets/AssetsPackage/config/language
+  ignoreXlsxs: []
+  defaultChars:
+  - Font: 0
+    Path: Assets/Art/Font/DefaultAscii.txt
+  - Font: 0
+    Path: Assets/Art/Font/Common_Default.txt
+  supports:
+  - language: 0
+    abbr: CN
+    tmpFont: 0
+  basicSupportIndex: 0
+  translateVersion: 1
+  rawDirectory: Editor/MultiLanguage/Assets/Raw/
+  buildDirectory: Editor/MultiLanguage/Assets/Build/
+  summaryDirectory: Editor/MultiLanguage/Assets/Summary/
+  translatingDirectory: Editor/MultiLanguage/Assets/Translating/
+  fontDirectory: Editor/MultiLanguage/Assets/Font/
