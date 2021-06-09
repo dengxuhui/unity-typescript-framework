@@ -2255,6 +2255,139 @@ var UICanvas = /** @class */ (function (_super) {
 
 /***/ }),
 
+/***/ "./src/framework/ui/component/UIImage.ts":
+/*!***********************************************!*\
+  !*** ./src/framework/ui/component/UIImage.ts ***!
+  \***********************************************/
+/*! exports provided: UIImage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIImage", function() { return UIImage; });
+/* harmony import */ var _UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UIBaseComponent */ "./src/framework/ui/component/UIBaseComponent.ts");
+/* harmony import */ var _util_UIUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/UIUtil */ "./src/framework/ui/util/UIUtil.ts");
+/* harmony import */ var _resource_ResourceManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../resource/ResourceManager */ "./src/framework/resource/ResourceManager.ts");
+/* harmony import */ var _utils_Handler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Handler */ "./src/framework/utils/Handler.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+/**
+ * image组件
+ * @author by dengxuhui
+ * @create time 2021/6/9 16:12
+ **/
+var UIImage = /** @class */ (function (_super) {
+    __extends(UIImage, _super);
+    function UIImage() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /**
+     * 创建时
+     * @param args
+     * @param[0] 图集IAtlasConfig
+     */
+    UIImage.prototype.onCreate = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        _super.prototype.onCreate.call(this);
+        this._atlas = args[0];
+        this._unityImage = _util_UIUtil__WEBPACK_IMPORTED_MODULE_1__["UIUtil"].findImage(this._transform);
+        this._spriteName = this._unityImage.sprite.name;
+        this._innerActive = true;
+    };
+    UIImage.prototype.onDestroy = function () {
+        this._atlas = null;
+        this._unityImage = null;
+        this._spriteName = null;
+        _super.prototype.onDestroy.call(this);
+    };
+    UIImage.prototype.setActive = function (active) {
+        _super.prototype.setActive.call(this, active);
+        this._innerActive = active;
+    };
+    /**
+     * 设置填充
+     * @param fillAmount
+     */
+    UIImage.prototype.setFillAmount = function (fillAmount) {
+        this._unityImage.fillAmount = fillAmount;
+    };
+    /**
+     * 缓动填充
+     * @param fillAmount
+     * @param duration
+     */
+    UIImage.prototype.doFillAmount = function (fillAmount, duration) {
+        this._unityImage.DOFillAmount(fillAmount, duration);
+    };
+    /**
+     * 设置图片
+     * @param spriteName 图片名
+     * @param hideAtLoad 加载中是否隐藏
+     * @param atlas 图集配置
+     */
+    UIImage.prototype.setSprite = function (spriteName, hideAtLoad, atlas) {
+        var _this = this;
+        if (hideAtLoad === void 0) { hideAtLoad = true; }
+        if (this._spriteName == spriteName) {
+            return;
+        }
+        this._spriteName = spriteName;
+        if (this._unityImage == null) {
+            return;
+        }
+        if (this._innerActive && hideAtLoad) {
+            this._unityImage.gameObject.SetActive(false);
+        }
+        var useAtlas = atlas || this._atlas;
+        _resource_ResourceManager__WEBPACK_IMPORTED_MODULE_2__["ResourceManager"].Instance.loadImageAsync(spriteName, useAtlas, _utils_Handler__WEBPACK_IMPORTED_MODULE_3__["default"].create(this, function (n, sprite) {
+            if (_this._unityImage == null || sprite == null) {
+                return;
+            }
+            if (_this._spriteName != n) {
+                return;
+            }
+            _this._unityImage.sprite = sprite;
+            if (_this._innerActive)
+                _this._unityImage.gameObject.SetActive(true);
+        }, [spriteName]));
+    };
+    Object.defineProperty(UIImage.prototype, "spriteName", {
+        /**
+         * 获取当前图片名
+         */
+        get: function () {
+            return this._spriteName;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return UIImage;
+}(_UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__["UIBaseComponent"]));
+
+
+
+/***/ }),
+
 /***/ "./src/framework/ui/component/UILayer.ts":
 /*!***********************************************!*\
   !*** ./src/framework/ui/component/UILayer.ts ***!
@@ -4815,6 +4948,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UILoadingView", function() { return UILoadingView; });
 /* harmony import */ var _framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../framework/ui/base/UIBaseView */ "./src/framework/ui/base/UIBaseView.ts");
 /* harmony import */ var _framework_ui_component_UIText__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../framework/ui/component/UIText */ "./src/framework/ui/component/UIText.ts");
+/* harmony import */ var _framework_ui_component_UIImage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../framework/ui/component/UIImage */ "./src/framework/ui/component/UIImage.ts");
+/* harmony import */ var _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../framework/utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4832,6 +4967,8 @@ var __extends = (undefined && undefined.__extends) || (function () {
 })();
 
 
+
+
 /**
  * 通用loading界面
  */
@@ -4843,7 +4980,30 @@ var UILoadingView = /** @class */ (function (_super) {
     UILoadingView.prototype.onCreate = function () {
         _super.prototype.onCreate.call(this);
         this._txtLoading = this.addComponent(_framework_ui_component_UIText__WEBPACK_IMPORTED_MODULE_1__["UIText"], "content/m_desc");
-        // this._imgLoadingSlider = this.addComponent<UIImage>("");
+        this._imgProgress = this.addComponent(_framework_ui_component_UIImage__WEBPACK_IMPORTED_MODULE_2__["UIImage"], "content/progress_cur");
+    };
+    UILoadingView.prototype.onDestroy = function () {
+        this._txtLoading = null;
+        this._imgProgress = null;
+        _super.prototype.onDestroy.call(this);
+    };
+    UILoadingView.prototype.onEnable = function () {
+        var arg = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            arg[_i] = arguments[_i];
+        }
+        _super.prototype.onEnable.apply(this, arg);
+        this._updateProgress();
+        _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_3__["Timer"].timer.frameLoop(1, this, this._updateProgress);
+    };
+    UILoadingView.prototype.onDisable = function () {
+        _framework_utils_timer_Timer__WEBPACK_IMPORTED_MODULE_3__["Timer"].timer.clearAll(this);
+        _super.prototype.onDisable.call(this);
+    };
+    UILoadingView.prototype._updateProgress = function () {
+        var cur = this.model._value;
+        this._imgProgress.setFillAmount(cur);
+        this._txtLoading.text = "\u52A0\u8F7D\u4E2D " + Math.round(cur * 100) + "%";
     };
     return UILoadingView;
 }(_framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__["UIBaseView"]));
