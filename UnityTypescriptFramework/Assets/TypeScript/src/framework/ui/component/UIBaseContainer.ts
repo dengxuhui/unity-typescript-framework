@@ -8,7 +8,7 @@ import {CS} from "csharp";
 
 export class UIBaseContainer extends UIBaseComponent {
     /**
-     * 所有组件
+     * 所有组件 一个路径下上会存在多个不同组件。
      */
     private _components: Map<string, Map<IUIBaseComponentCtor, IUIComponent>>;
     /**
@@ -49,12 +49,12 @@ export class UIBaseContainer extends UIBaseComponent {
     }
 
     /**
-     * 遍历所有组件
+     * 遍历所有组件：component_class参数不传，遍历某个Container下指定组件传入对应类型
      * @param callback
      * @param component_class
      */
     walk(callback: Handler, component_class?: IUIBaseComponentCtor) {
-        this._components.forEach((component_map: Map<IUIBaseComponentCtor, IUIComponent>, name: string) => {
+        this._components.forEach((component_map: Map<IUIBaseComponentCtor, IUIComponent>) => {
             if (component_map != null) {
                 component_map.forEach((component: IUIComponent, cmp_class: IUIBaseComponentCtor) => {
                     if (component_class == null) {
