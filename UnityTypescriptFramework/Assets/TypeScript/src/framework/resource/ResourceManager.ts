@@ -1,17 +1,19 @@
 import {ISingleton} from "../interface/ISingleton";
-import {AssetBundles, CS, System} from "csharp";
+import {AssetBundles, CS, System, UnityEngine} from "csharp";
 import Handler from "../utils/Handler";
 import {Timer} from "../utils/timer/Timer";
 import {string} from "../utils/StringUtil";
+import {$typeof} from "puerts";
+import {IAtlasConfig} from "./config/AtlasConfig";
 
 export class ResourceManager implements ISingleton {
     public static Instance: ResourceManager = new ResourceManager();
-    /**
-     * cs侧资源接口
-     */
+    //cs侧资源接口
     private _api: AssetBundles.AssetBundleManager;
     private _requestAssetsHandler: Map<AssetBundles.BaseAssetAsyncLoader, Handler>;
     private _requestABHandler: Map<AssetBundles.BaseAssetBundleAsyncLoader, Handler>;
+    //sprite类型
+    private _spriteType: System.Type;
 
     private constructor() {
     }
@@ -38,8 +40,8 @@ export class ResourceManager implements ISingleton {
         }
     }
 
-
     public initialize(): void {
+        this._spriteType = $typeof(UnityEngine.Sprite);
         this._api = AssetBundles.AssetBundleManager.Instance;
         this._requestAssetsHandler = new Map<AssetBundles.BaseAssetAsyncLoader, Handler>();
         this._requestABHandler = new Map<AssetBundles.BaseAssetBundleAsyncLoader, Handler>();
@@ -76,8 +78,8 @@ export class ResourceManager implements ISingleton {
         this._requestABHandler.set(request, callBack);
         return true;
     }
-    
-    public cleanup(){
+
+    public cleanup() {
         this._api.ClearAssetsCache();
         this._api.UnloadAllUnusedResidentAssetBundles();
     }
@@ -95,5 +97,32 @@ export class ResourceManager implements ISingleton {
                 }
             }, null, true);
         });
+    }
+
+    //-------------其他类型加载--------------------------
+
+    /**
+     * 协程方式加载图片
+     * @param spriteName
+     * @param atlas
+     * @constructor
+     */
+    public async loadImageAwait(spriteName: string, atlas: IAtlasConfig) {
+        let path = atlas.atlasPath + spriteName;
+        let request = await this._api.LoadAssetAsync(path, this._spriteType);
+        let sprite = request.asset;
+        request.Dispose();
+        return sprite;
+    }
+
+    /**
+     * 异步加载图片
+     * @param spriteName
+     * @param atlas
+     * @param callback
+     */
+    public loadImageAsync(spriteName: string, atlas: IAtlasConfig, callback: Handler) {
+        let path = atlas.atlasPath + spriteName;
+        this.loadAssetAsync(path, this._spriteType, callback);
     }
 }

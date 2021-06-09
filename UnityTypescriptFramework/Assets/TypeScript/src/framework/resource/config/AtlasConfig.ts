@@ -1,13 +1,19 @@
 let comm: IAtlasConfig = {
     name: "comm",
-    atlasPath: "ui/atlas/comm",
+    atlasPath: "ui/atlas/comm/",
+};
+
+let base: IAtlasConfig = {
+    name: "base",
+    atlasPath: "ui/atlas/base/",
 };
 
 /**
  * 图集配置
  */
 let AtlasConfig = {
-    Comm: comm
+    Comm: comm,
+    Base: base,
 };
 
 /**

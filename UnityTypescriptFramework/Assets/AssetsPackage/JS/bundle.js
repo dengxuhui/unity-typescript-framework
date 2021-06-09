@@ -226,7 +226,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ui_UIManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ui/UIManager */ "./src/framework/ui/UIManager.ts");
 /* harmony import */ var _scene_SceneManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./scene/SceneManager */ "./src/framework/scene/SceneManager.ts");
 /* harmony import */ var _module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
+/* harmony import */ var _resource_ResourceManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./resource/ResourceManager */ "./src/framework/resource/ResourceManager.ts");
 /* 全局类入口*/
+
 
 
 
@@ -289,6 +291,7 @@ var UnityTs = /** @class */ (function () {
     }
     UnityTs.init = function () {
         _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_0__["Timer"].init();
+        _resource_ResourceManager__WEBPACK_IMPORTED_MODULE_5__["ResourceManager"].Instance.initialize();
         _resource_GameObjectPool__WEBPACK_IMPORTED_MODULE_1__["GameObjectPool"].Instance.initialize();
         _ui_UIManager__WEBPACK_IMPORTED_MODULE_2__["default"].Instance.initialize();
         _scene_SceneManager__WEBPACK_IMPORTED_MODULE_3__["SceneManager"].Instance.initialize();
@@ -677,6 +680,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_timer_Timer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/timer/Timer */ "./src/framework/utils/timer/Timer.ts");
 /* harmony import */ var _utils_StringUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! puerts */ "puerts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_3__);
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -716,6 +721,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 
+
 var ResourceManager = /** @class */ (function () {
     function ResourceManager() {
     }
@@ -741,6 +747,7 @@ var ResourceManager = /** @class */ (function () {
         }
     };
     ResourceManager.prototype.initialize = function () {
+        this._spriteType = Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].Sprite);
         this._api = csharp__WEBPACK_IMPORTED_MODULE_0__["AssetBundles"].AssetBundleManager.Instance;
         this._requestAssetsHandler = new Map();
         this._requestABHandler = new Map();
@@ -797,6 +804,40 @@ var ResourceManager = /** @class */ (function () {
                     })];
             });
         });
+    };
+    //-------------其他类型加载--------------------------
+    /**
+     * 协程方式加载图片
+     * @param spriteName
+     * @param atlas
+     * @constructor
+     */
+    ResourceManager.prototype.loadImageAwait = function (spriteName, atlas) {
+        return __awaiter(this, void 0, void 0, function () {
+            var path, request, sprite;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        path = atlas.atlasPath + spriteName;
+                        return [4 /*yield*/, this._api.LoadAssetAsync(path, this._spriteType)];
+                    case 1:
+                        request = _a.sent();
+                        sprite = request.asset;
+                        request.Dispose();
+                        return [2 /*return*/, sprite];
+                }
+            });
+        });
+    };
+    /**
+     * 异步加载图片
+     * @param spriteName
+     * @param atlas
+     * @param callback
+     */
+    ResourceManager.prototype.loadImageAsync = function (spriteName, atlas, callback) {
+        var path = atlas.atlasPath + spriteName;
+        this.loadAssetAsync(path, this._spriteType, callback);
     };
     ResourceManager.Instance = new ResourceManager();
     return ResourceManager;

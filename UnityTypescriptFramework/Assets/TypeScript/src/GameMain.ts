@@ -29,6 +29,9 @@ class GameMain {
         ModuleCenter.Instance.add(UserDataModule);
         ModuleCenter.Instance.add(CommonModule);
         SceneManager.Instance.switchScene(SceneConfigs.HomeScene);
+
+        // let res = await ResourceManager.Instance.CoLoadImageAsync("box_a.png", AtlasConfig.Base);
+        // CS.Logger.Log("res:" + typeof (res));
     }
 }
 

@@ -9,6 +9,6 @@ export class UILoadingView extends UIBaseView {
     private _txtLoading: UIText;
     onCreate(): void {
         super.onCreate();
-        this._txtLoading = this.addComponent(UIText, "content/m_desc");
+        this._txtLoading = this.addComponent(UIText, "content/m_desc") as UIText;
     }
 }

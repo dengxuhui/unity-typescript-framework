@@ -5,6 +5,7 @@ import {GameObjectPool} from './resource/GameObjectPool';
 import UIManager from "./ui/UIManager";
 import {SceneManager} from "./scene/SceneManager";
 import {ModuleCenter} from "./module/ModuleCenter";
+import {ResourceManager} from "./resource/ResourceManager";
 
 class Utils {
     /*id*/
@@ -64,6 +65,7 @@ export default class UnityTs {
 
     static init() {
         Timer.init();
+        ResourceManager.Instance.initialize();
         GameObjectPool.Instance.initialize();
         UIManager.Instance.initialize();
         SceneManager.Instance.initialize();
