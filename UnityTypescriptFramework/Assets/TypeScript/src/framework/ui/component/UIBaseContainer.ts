@@ -77,9 +77,9 @@ export class UIBaseContainer extends UIBaseComponent {
      * @param relativePath
      * @param params
      */
-    addComponent<T extends IUIComponent>(component_class: IUIBaseComponentCtor, relativePath: string, ...params: any[]): T {
+    addComponent<T extends IUIComponent>(component_class: IUIBaseComponentCtor, relativePath: string, params?: any[]): T {
         let component_inst: IUIComponent = new component_class(this._transform, relativePath);
-        component_inst.onCreate(params);
+        component_inst.onCreate.apply(component_inst, params);
         this.recordComponent(relativePath, component_class, component_inst);
         this._length++;
         return component_inst as T;

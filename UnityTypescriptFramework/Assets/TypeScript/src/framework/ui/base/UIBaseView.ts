@@ -29,7 +29,7 @@ export class UIBaseView extends UIBaseContainer {
 
     onCreate(): void {
         super.onCreate();
-        this._canvas = this.addComponent(UICanvas, "", 0, this);
+        this._canvas = this.addComponent(UICanvas, "", [0, this]);
         this._rectTransform.offsetMax = UnityEngine.Vector2.zero;
         this._rectTransform.offsetMin = UnityEngine.Vector2.zero;
         this._rectTransform.localScale = UnityEngine.Vector3.zero;

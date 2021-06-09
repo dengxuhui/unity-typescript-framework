@@ -1757,7 +1757,7 @@ var UIBaseView = /** @class */ (function (_super) {
     }
     UIBaseView.prototype.onCreate = function () {
         _super.prototype.onCreate.call(this);
-        this._canvas = this.addComponent(_component_UICanvas__WEBPACK_IMPORTED_MODULE_1__["UICanvas"], "", 0, this);
+        this._canvas = this.addComponent(_component_UICanvas__WEBPACK_IMPORTED_MODULE_1__["UICanvas"], "", [0, this]);
         this._rectTransform.offsetMax = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector2.zero;
         this._rectTransform.offsetMin = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector2.zero;
         this._rectTransform.localScale = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector3.zero;
@@ -2044,13 +2044,9 @@ var UIBaseContainer = /** @class */ (function (_super) {
      * @param relativePath
      * @param params
      */
-    UIBaseContainer.prototype.addComponent = function (component_class, relativePath) {
-        var params = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            params[_i - 2] = arguments[_i];
-        }
+    UIBaseContainer.prototype.addComponent = function (component_class, relativePath, params) {
         var component_inst = new component_class(this._transform, relativePath);
-        component_inst.onCreate(params);
+        component_inst.onCreate.apply(component_inst, params);
         this.recordComponent(relativePath, component_class, component_inst);
         this._length++;
         return component_inst;

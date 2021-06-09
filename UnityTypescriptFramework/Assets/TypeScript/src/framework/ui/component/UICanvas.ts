@@ -23,7 +23,7 @@ export class UICanvas extends UIBaseComponent {
     onCreate(...args: any[]): void {
         super.onCreate();
         let relative_order = args[0] as number;
-        let view = args[1] as UIBaseView;
+        let view = args[1] as UIBaseView; 
         if (relative_order == null || view == null) {
             CS.Logger.LogError("UICanvas::arguments error,require relative order and view arg");
             return;
