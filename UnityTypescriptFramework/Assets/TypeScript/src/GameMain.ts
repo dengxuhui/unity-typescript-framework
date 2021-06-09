@@ -5,6 +5,9 @@ import {SceneConfigs} from "./game/scenes/config/SceneConfig";
 import {ModuleCenter} from "./framework/module/ModuleCenter";
 import {CommonModule} from "./game/module/common/CommonModule";
 import {UserDataModule} from "./game/module/userData/UserDataModule";
+import {LanguageEvents} from "./game/language/LanguageEvents";
+import {LanguageManager} from "./game/language/LanguageManager";
+import {LanguageDataTool} from "./game/language/LanguageDataTool";
 
 /**
  * 游戏入口
@@ -28,10 +31,9 @@ class GameMain {
     async StartGame() {
         ModuleCenter.Instance.add(UserDataModule);
         ModuleCenter.Instance.add(CommonModule);
+        //更新语言内容
+        await LanguageManager.Instance.updateAwait(LanguageDataTool.getUserLanguage());
         SceneManager.Instance.switchScene(SceneConfigs.HomeScene);
-
-        // let res = await ResourceManager.Instance.CoLoadImageAsync("box_a.png", AtlasConfig.Base);
-        // CS.Logger.Log("res:" + typeof (res));
     }
 }
 

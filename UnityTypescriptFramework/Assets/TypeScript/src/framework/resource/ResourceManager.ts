@@ -65,6 +65,18 @@ export class ResourceManager implements ISingleton {
     }
 
     /**
+     * 协程方式加载资源
+     * @param path
+     * @param res_type
+     */
+    public async loadAssetAwait(path: string, res_type: System.Type) {
+        let request = await this._api.LoadAssetAsync(path, res_type);
+        let asset = request.asset;
+        request.Dispose();
+        return asset;
+    }
+
+    /**
      * 异步加载AB包
      * @param path
      * @param callBack

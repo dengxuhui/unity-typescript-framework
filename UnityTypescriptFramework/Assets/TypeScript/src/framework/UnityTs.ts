@@ -6,6 +6,7 @@ import UIManager from "./ui/UIManager";
 import {SceneManager} from "./scene/SceneManager";
 import {ModuleCenter} from "./module/ModuleCenter";
 import {ResourceManager} from "./resource/ResourceManager";
+import {LanguageManager} from "../game/language/LanguageManager";
 
 class Utils {
     /*id*/
@@ -70,5 +71,6 @@ export default class UnityTs {
         UIManager.Instance.initialize();
         SceneManager.Instance.initialize();
         ModuleCenter.Instance.initialize();
+        LanguageManager.Instance.initialize();
     }
 }

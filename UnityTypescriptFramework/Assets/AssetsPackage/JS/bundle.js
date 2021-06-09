@@ -134,6 +134,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./framework/module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
 /* harmony import */ var _game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./game/module/common/CommonModule */ "./src/game/module/common/CommonModule.ts");
 /* harmony import */ var _game_module_userData_UserDataModule__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./game/module/userData/UserDataModule */ "./src/game/module/userData/UserDataModule.ts");
+/* harmony import */ var _game_language_LanguageManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./game/language/LanguageManager */ "./src/game/language/LanguageManager.ts");
+/* harmony import */ var _game_language_LanguageDataTool__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./game/language/LanguageDataTool */ "./src/game/language/LanguageDataTool.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -177,6 +179,8 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 
+
+
 /**
  * 游戏入口
  * @author by dengxuhui
@@ -198,10 +202,18 @@ var GameMain = /** @class */ (function () {
     GameMain.prototype.StartGame = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_userData_UserDataModule__WEBPACK_IMPORTED_MODULE_6__["UserDataModule"]);
-                _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__["CommonModule"]);
-                _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__["SceneManager"].Instance.switchScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].HomeScene);
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_userData_UserDataModule__WEBPACK_IMPORTED_MODULE_6__["UserDataModule"]);
+                        _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__["CommonModule"]);
+                        //更新语言内容
+                        return [4 /*yield*/, _game_language_LanguageManager__WEBPACK_IMPORTED_MODULE_7__["LanguageManager"].Instance.updateAwait(_game_language_LanguageDataTool__WEBPACK_IMPORTED_MODULE_8__["LanguageDataTool"].getUserLanguage())];
+                    case 1:
+                        //更新语言内容
+                        _a.sent();
+                        _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__["SceneManager"].Instance.switchScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].HomeScene);
+                        return [2 /*return*/];
+                }
             });
         });
     };
@@ -227,7 +239,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scene_SceneManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./scene/SceneManager */ "./src/framework/scene/SceneManager.ts");
 /* harmony import */ var _module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
 /* harmony import */ var _resource_ResourceManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./resource/ResourceManager */ "./src/framework/resource/ResourceManager.ts");
+/* harmony import */ var _game_language_LanguageManager__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../game/language/LanguageManager */ "./src/game/language/LanguageManager.ts");
 /* 全局类入口*/
+
 
 
 
@@ -296,6 +310,7 @@ var UnityTs = /** @class */ (function () {
         _ui_UIManager__WEBPACK_IMPORTED_MODULE_2__["default"].Instance.initialize();
         _scene_SceneManager__WEBPACK_IMPORTED_MODULE_3__["SceneManager"].Instance.initialize();
         _module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.initialize();
+        _game_language_LanguageManager__WEBPACK_IMPORTED_MODULE_6__["LanguageManager"].Instance.initialize();
     };
     /* 工具类*/
     UnityTs.utils = Utils;
@@ -767,6 +782,26 @@ var ResourceManager = /** @class */ (function () {
         var request = this._api.LoadAssetAsync(path, res_type);
         this._requestAssetsHandler.set(request, callback);
         return true;
+    };
+    /**
+     * 协程方式加载资源
+     * @param path
+     * @param res_type
+     */
+    ResourceManager.prototype.loadAssetAwait = function (path, res_type) {
+        return __awaiter(this, void 0, void 0, function () {
+            var request, asset;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this._api.LoadAssetAsync(path, res_type)];
+                    case 1:
+                        request = _a.sent();
+                        asset = request.asset;
+                        request.Dispose();
+                        return [2 /*return*/, asset];
+                }
+            });
+        });
     };
     /**
      * 异步加载AB包
@@ -3996,6 +4031,349 @@ function uts_timerUpdate() {
 
 /***/ }),
 
+/***/ "./src/game/language/LanguageDataTool.ts":
+/*!***********************************************!*\
+  !*** ./src/game/language/LanguageDataTool.ts ***!
+  \***********************************************/
+/*! exports provided: LanguageDataTool */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LanguageDataTool", function() { return LanguageDataTool; });
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config_LanguageConfig__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config/LanguageConfig */ "./src/game/language/config/LanguageConfig.ts");
+/* harmony import */ var _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../framework/module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
+/* harmony import */ var _module_common_CommonModule__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../module/common/CommonModule */ "./src/game/module/common/CommonModule.ts");
+/* harmony import */ var _module_common_event_CommonModuleEvents__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../module/common/event/CommonModuleEvents */ "./src/game/module/common/event/CommonModuleEvents.ts");
+
+
+
+
+
+/**
+ * 语言工具
+ * @author by dengxuhui
+ * @create time 2021/6/9 11:39
+ **/
+var LanguageDataTool = /** @class */ (function () {
+    function LanguageDataTool() {
+    }
+    /**
+     * 获取玩家语言设置
+     */
+    LanguageDataTool.getUserLanguage = function () {
+        var name = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].PlayerPrefs.GetString(this.UserLanguageSaveKey, this.UnknownLanguage);
+        var language = _config_LanguageConfig__WEBPACK_IMPORTED_MODULE_1__["LanguageConfig"][name];
+        if (language == null) {
+            var sysLanguage = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].Application.systemLanguage;
+            if (sysLanguage == csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].SystemLanguage.Chinese) {
+                sysLanguage = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].SystemLanguage.ChineseSimplified;
+            }
+            for (var x in _config_LanguageConfig__WEBPACK_IMPORTED_MODULE_1__["LanguageConfig"]) {
+                var config = _config_LanguageConfig__WEBPACK_IMPORTED_MODULE_1__["LanguageConfig"][x];
+                if (config.id == sysLanguage) {
+                    language = config;
+                    break;
+                }
+            }
+            if (language == null) {
+                language = _config_LanguageConfig__WEBPACK_IMPORTED_MODULE_1__["LanguageConfig"].English;
+            }
+            csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].PlayerPrefs.SetString(this.UserLanguageSaveKey, language.name);
+        }
+        return language;
+    };
+    /**
+     * 设置用于语言，目前是基于单机本地的做法来做的，所以直接存储到Unity PlayerPrefs中
+     * @param language
+     */
+    LanguageDataTool.setUserLanguage = function (language) {
+        if (language == null) {
+            return;
+        }
+        var curName = csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].PlayerPrefs.GetString(this.UserLanguageSaveKey, this.UnknownLanguage);
+        if (curName == language.name) {
+            return;
+        }
+        csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].PlayerPrefs.SetString(this.UserLanguageSaveKey, language.name);
+        _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_2__["ModuleCenter"].Instance.get(_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_3__["CommonModule"]).event(_module_common_event_CommonModuleEvents__WEBPACK_IMPORTED_MODULE_4__["CommonModuleEvents"].ON_USER_LANGUAGE_CHANGE);
+    };
+    //玩家语言设置key
+    LanguageDataTool.UserLanguageSaveKey = "Game_Language";
+    LanguageDataTool.UnknownLanguage = "Unknown";
+    return LanguageDataTool;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/game/language/LanguageEvents.ts":
+/*!*********************************************!*\
+  !*** ./src/game/language/LanguageEvents.ts ***!
+  \*********************************************/
+/*! exports provided: LanguageEvents */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LanguageEvents", function() { return LanguageEvents; });
+var LanguageEvents = {
+    //多语言更新完成
+    ON_LANGUAGE_UPDATE_COMPLETE: "ON_LANGUAGE_UPDATE_COMPLETE",
+};
+
+
+
+/***/ }),
+
+/***/ "./src/game/language/LanguageManager.ts":
+/*!**********************************************!*\
+  !*** ./src/game/language/LanguageManager.ts ***!
+  \**********************************************/
+/*! exports provided: LanguageManager */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LanguageManager", function() { return LanguageManager; });
+/* harmony import */ var _framework_utils_StringUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../framework/utils/StringUtil */ "./src/framework/utils/StringUtil.ts");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _framework_resource_ResourceManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../framework/resource/ResourceManager */ "./src/framework/resource/ResourceManager.ts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! puerts */ "puerts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _framework_utils_EventDispatcher__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../framework/utils/EventDispatcher */ "./src/framework/utils/EventDispatcher.ts");
+/* harmony import */ var _LanguageEvents__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./LanguageEvents */ "./src/game/language/LanguageEvents.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+
+
+
+
+
+/**
+ * 多语言组件
+ */
+var LanguageManager = /** @class */ (function (_super) {
+    __extends(LanguageManager, _super);
+    function LanguageManager() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    LanguageManager.prototype.initialize = function () {
+        this._contentMap = new Map();
+        this._updating = false;
+        this._languageConfig = null;
+    };
+    /**
+     * 通过配置档字段获取字符串
+     * @param key
+     */
+    LanguageManager.prototype.getStringByConfig = function (key) {
+        var newKey = "AllConfLanguage_mKeyValue_" + key;
+        return this.getStringByFullKey(newKey);
+    };
+    /**
+     * 通过自定义id获取字符串
+     * @param key
+     */
+    LanguageManager.prototype.getStringByShowID = function (key) {
+        var newKey = "ShowMessage_mMessage_" + key;
+        return this.getStringByFullKey(newKey);
+    };
+    /**
+     * 通过全量key获取字符串
+     * @param key
+     */
+    LanguageManager.prototype.getStringByFullKey = function (key) {
+        var value = this._contentMap.get(key);
+        if (_framework_utils_StringUtil__WEBPACK_IMPORTED_MODULE_0__["string"].IsNullOrEmpty(value)) {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("LanguageManager::\u83B7\u53D6\u5B57\u7B26\u4E32\u9519\u8BEF,key->" + key);
+            return _framework_utils_StringUtil__WEBPACK_IMPORTED_MODULE_0__["string"].empty;
+        }
+        else {
+            return value;
+        }
+    };
+    /**
+     * 协程更新
+     * @param config
+     */
+    LanguageManager.prototype.updateAwait = function (config) {
+        return __awaiter(this, void 0, void 0, function () {
+            var path, asset;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this._updating = true;
+                        this._languageConfig = config;
+                        path = "config/language/AllLanguage" + config.fileSuffix + ".csv";
+                        return [4 /*yield*/, _framework_resource_ResourceManager__WEBPACK_IMPORTED_MODULE_2__["ResourceManager"].Instance.loadAssetAwait(path, Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].TextAsset))];
+                    case 1:
+                        asset = _a.sent();
+                        this._parseCSV(asset);
+                        this._updating = false;
+                        this.event(_LanguageEvents__WEBPACK_IMPORTED_MODULE_5__["LanguageEvents"].ON_LANGUAGE_UPDATE_COMPLETE);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * 解析字符串
+     * @param asset
+     * @private
+     */
+    LanguageManager.prototype._parseCSV = function (asset) {
+        if (asset == null) {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("update language fail,text asset is null");
+            return;
+        }
+        this._contentMap.clear();
+        var array = asset.text.split("\n\r");
+        var len = array.length;
+        for (var i = 0; i < len; i++) {
+            var kv = array[i].split("\t");
+            if (kv.length != 2) {
+                csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("language asset parse error,len not equal 2,kv:" + array[i]);
+                continue;
+            }
+            this._contentMap.set(kv[0], kv[1]);
+        }
+    };
+    LanguageManager.Instance = new LanguageManager();
+    return LanguageManager;
+}(_framework_utils_EventDispatcher__WEBPACK_IMPORTED_MODULE_4__["default"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/language/config/LanguageConfig.ts":
+/*!****************************************************!*\
+  !*** ./src/game/language/config/LanguageConfig.ts ***!
+  \****************************************************/
+/*! exports provided: Language, LanguageConfig */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Language", function() { return Language; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LanguageConfig", function() { return LanguageConfig; });
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+
+/**
+ * 语言信息
+ */
+var Language = /** @class */ (function () {
+    function Language() {
+    }
+    return Language;
+}());
+
+/**
+ * 简体中文
+ */
+var chineseSimplified = {
+    id: csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].SystemLanguage.ChineseSimplified,
+    name: "ChineseSimplified",
+    fileSuffix: "CN",
+    showName: "简体中文",
+};
+/**
+ * 繁体中文
+ */
+var chineseTraditional = {
+    id: csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].SystemLanguage.ChineseTraditional,
+    name: "ChineseTraditional",
+    fileSuffix: "CNTraditional",
+    showName: "繁體中文",
+};
+/**
+ * 英语
+ */
+var english = {
+    id: csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].SystemLanguage.English,
+    name: "English",
+    fileSuffix: "EN",
+    showName: "English",
+};
+/**
+ * 日语
+ */
+var japanese = {
+    id: csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].SystemLanguage.Japanese,
+    name: "Japanese",
+    fileSuffix: "Japan",
+    showName: "日本語",
+};
+/**
+ * 多语言配置
+ */
+var LanguageConfig = {
+    Japanese: japanese,
+    English: english,
+    ChineseSimplified: chineseSimplified,
+    ChineseTraditional: chineseTraditional
+};
+
+
+
+/***/ }),
+
 /***/ "./src/game/module/common/CommonModule.ts":
 /*!************************************************!*\
   !*** ./src/game/module/common/CommonModule.ts ***!
@@ -4049,6 +4427,32 @@ var CommonModule = /** @class */ (function (_super) {
     };
     return CommonModule;
 }(_framework_module_BaseModule__WEBPACK_IMPORTED_MODULE_0__["BaseModule"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/module/common/event/CommonModuleEvents.ts":
+/*!************************************************************!*\
+  !*** ./src/game/module/common/event/CommonModuleEvents.ts ***!
+  \************************************************************/
+/*! exports provided: CommonModuleEvents */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CommonModuleEvents", function() { return CommonModuleEvents; });
+/**
+ * 通用模块事件定义
+ * @author by dengxuhui
+ * @create time 2021/6/9 11:38
+**/
+var CommonModuleEvents = {
+    /**
+     * 玩家语言设置变更
+     */
+    ON_USER_LANGUAGE_CHANGE: "ON_USER_LANGUAGE_CHANGE",
+};
 
 
 

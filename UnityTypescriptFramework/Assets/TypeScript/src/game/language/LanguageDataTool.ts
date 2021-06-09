@@ -6,9 +6,9 @@ import {CommonModuleEvents} from "../module/common/event/CommonModuleEvents";
 
 /**
  * 语言工具
- * @author by dengxuhui 
+ * @author by dengxuhui
  * @create time 2021/6/9 11:39
-**/
+ **/
 export class LanguageDataTool {
     //玩家语言设置key
     static UserLanguageSaveKey: string = "Game_Language";
@@ -17,7 +17,7 @@ export class LanguageDataTool {
     /**
      * 获取玩家语言设置
      */
-    public static getUserLanguage() {
+    public static getUserLanguage(): Language {
         let name = UnityEngine.PlayerPrefs.GetString(this.UserLanguageSaveKey, this.UnknownLanguage);
         let language: Language = LanguageConfig[name];
         if (language == null) {
