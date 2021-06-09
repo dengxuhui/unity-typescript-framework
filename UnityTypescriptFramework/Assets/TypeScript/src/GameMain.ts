@@ -4,6 +4,7 @@ import {SceneManager} from "./framework/scene/SceneManager";
 import {SceneConfigs} from "./game/scenes/config/SceneConfig";
 import {ModuleCenter} from "./framework/module/ModuleCenter";
 import {CommonModule} from "./game/module/common/CommonModule";
+import {UserDataModule} from "./game/module/userData/UserDataModule";
 
 /**
  * 游戏入口
@@ -25,6 +26,7 @@ class GameMain {
      * @constructor
      */
     async StartGame() {
+        ModuleCenter.Instance.add(UserDataModule);
         ModuleCenter.Instance.add(CommonModule);
         SceneManager.Instance.switchScene(SceneConfigs.HomeScene);
     }

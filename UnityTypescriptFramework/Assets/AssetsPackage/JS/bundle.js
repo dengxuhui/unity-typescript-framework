@@ -133,6 +133,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game/scenes/config/SceneConfig */ "./src/game/scenes/config/SceneConfig.ts");
 /* harmony import */ var _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./framework/module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
 /* harmony import */ var _game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./game/module/common/CommonModule */ "./src/game/module/common/CommonModule.ts");
+/* harmony import */ var _game_module_userData_UserDataModule__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./game/module/userData/UserDataModule */ "./src/game/module/userData/UserDataModule.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -175,6 +176,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 
+
 /**
  * 游戏入口
  * @author by dengxuhui
@@ -196,6 +198,7 @@ var GameMain = /** @class */ (function () {
     GameMain.prototype.StartGame = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_userData_UserDataModule__WEBPACK_IMPORTED_MODULE_6__["UserDataModule"]);
                 _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_4__["ModuleCenter"].Instance.add(_game_module_common_CommonModule__WEBPACK_IMPORTED_MODULE_5__["CommonModule"]);
                 _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__["SceneManager"].Instance.switchScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].HomeScene);
                 return [2 /*return*/];
@@ -3853,6 +3856,75 @@ var HomeModule = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return HomeModule;
+}(_framework_module_BaseModule__WEBPACK_IMPORTED_MODULE_0__["BaseModule"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/module/userData/UserDataModule.ts":
+/*!****************************************************!*\
+  !*** ./src/game/module/userData/UserDataModule.ts ***!
+  \****************************************************/
+/*! exports provided: UserDataModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserDataModule", function() { return UserDataModule; });
+/* harmony import */ var _framework_module_BaseModule__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../framework/module/BaseModule */ "./src/framework/module/BaseModule.ts");
+/* harmony import */ var _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../framework/module/ModuleCenter */ "./src/framework/module/ModuleCenter.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+/**
+ * 玩家数据模块
+ * @author by dengxuhui
+ * @create time 2021/6/9 13:58
+ **/
+var UserDataModule = /** @class */ (function (_super) {
+    __extends(UserDataModule, _super);
+    function UserDataModule() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Object.defineProperty(UserDataModule, "Instance", {
+        /**
+         * 获取实例
+         * @constructor
+         */
+        get: function () {
+            return _framework_module_ModuleCenter__WEBPACK_IMPORTED_MODULE_1__["ModuleCenter"].Instance.get(UserDataModule);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    UserDataModule.prototype.onAdd = function () {
+        _super.prototype.onAdd.call(this);
+    };
+    UserDataModule.prototype.onRemove = function () {
+        _super.prototype.onRemove.call(this);
+    };
+    UserDataModule.prototype.onAddListener = function () {
+        _super.prototype.onAddListener.call(this);
+    };
+    UserDataModule.prototype.onRemoveListener = function () {
+        _super.prototype.onRemoveListener.call(this);
+    };
+    return UserDataModule;
 }(_framework_module_BaseModule__WEBPACK_IMPORTED_MODULE_0__["BaseModule"]));
 
 
