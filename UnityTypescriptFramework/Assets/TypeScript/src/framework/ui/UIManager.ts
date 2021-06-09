@@ -76,7 +76,7 @@ export default class UIManager extends EventDispatcher implements ISingleton {
             let go = new UnityEngine.GameObject(layer_info.name);
             let trans = go.transform;
             trans.SetParent(this._transform);
-            let newLayer = new UILayer(this, layer_info.name);
+            let newLayer = new UILayer(this._transform, layer_info.name);
             newLayer.onCreate(layer_info);
             this._layerMap.set(layer_info.type, newLayer);
         }, null, false));

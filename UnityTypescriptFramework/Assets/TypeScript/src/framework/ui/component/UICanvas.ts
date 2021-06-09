@@ -15,13 +15,19 @@ import {UIBaseView} from "../base/UIBaseView";
  -- 5、UI逻辑代码禁止手动直接设置Unity侧Cavans组件的orderInLayer，全部使用本脚本接口调整层级，避免层级混乱
  */
 export class UICanvas extends UIBaseComponent {
+    private _view: UIBaseView;
     private _canvas: UnityEngine.Canvas;
     private _graphicRaycaster: UnityEngine.UI.GraphicRaycaster;
     private _relativeOrder: number;
 
     onCreate(...args: any[]): void {
         super.onCreate();
-        let relative_order = args[0];
+        let relative_order = args[0] as number;
+        let view = args[1] as UIBaseView;
+        if (relative_order == null || view == null) {
+            CS.Logger.LogError("UICanvas::arguments error,require relative order and view arg");
+            return;
+        }
         let canvas: UnityEngine.Canvas;
         canvas = UIUtil.findComponent(this._transform, $typeof(UnityEngine.Canvas));
         if (canvas == null) {
@@ -37,6 +43,7 @@ export class UICanvas extends UIBaseComponent {
         }
 
         this._relativeOrder = relative_order;
+        this._view = view;
     }
 
     onDestroy(): void {

@@ -1,21 +1,16 @@
 /**
  * ui基类
  */
-import {CS, UnityEngine} from "csharp";
-import {UILayer} from "./UILayer";
+import {UnityEngine} from "csharp";
 import {UIUtil} from "../util/UIUtil";
 import {$typeof} from "puerts";
 import {IUIComponent} from "../../interface/IUIComponent";
 
 export class UIBaseComponent implements IUIComponent {
     /**
-     * 窗口view层脚本
+     * 持有者:间接持有或直接持有【子节点或孙子节点】
      */
-    protected _view: UIBaseComponent;
-    /**
-     * 持有者 TODO优化类型限定
-     */
-    protected _holder: any;
+    protected _holder: UnityEngine.Transform;
     /**
      * transform对应的gameObject
      */
@@ -37,19 +32,18 @@ export class UIBaseComponent implements IUIComponent {
      */
     protected _active: boolean;
     /**
-     * 多重参数
-     * path,index,gameObject
+     * 相对路径
      */
-    protected _var_arg: any;
+    protected _relativePath: string;
 
     /**
      * 添加组件
      * @param holder
-     * @param var_arg
+     * @param relativePath 相对holder的路径
      */
-    constructor(holder: any, var_arg: any) {
+    constructor(holder: UnityEngine.Transform, relativePath: string) {
         this._holder = holder;
-        this._var_arg = var_arg;
+        this._relativePath = relativePath;
     }
 
     destroy(): void {
@@ -60,41 +54,12 @@ export class UIBaseComponent implements IUIComponent {
         this._holder = null;
         this._gameObject = null;
         this._name = null;
-        this._view = null;
         this._transform = null;
     }
 
     onCreate(): void {
-        if (this instanceof UILayer) {
-            this._view = null;
-        } else {
-            let now_holder = this._holder;
-            while (now_holder != null) {
-                if (now_holder instanceof UILayer) {
-                    this._view = this;
-                    break
-                } else if (now_holder._view != null) {
-                    this._view = now_holder._view;
-                    break
-                }
-                now_holder = now_holder._holder;
-            }
-        }
-        if (this._var_arg != null) {
-            if (typeof this._var_arg === "string") {
-                this._transform = UIUtil.findTrans(this._holder._transform, this._var_arg);
-                this._gameObject = this._transform.gameObject;
-            } else if (typeof this._var_arg === "number") {
-                this._transform = UIUtil.getChild(this._holder._transform, this._var_arg);
-                this._gameObject = this._transform.gameObject;
-            } else if (this._var_arg instanceof UnityEngine.GameObject) {
-                this._gameObject = this._var_arg;
-                this._transform = this._gameObject.transform;
-            } else {
-                CS.Logger.LogError("OnCreate:error params list!");
-            }
-        }
-        this._var_arg = null;
+        this._transform = UIUtil.findTrans(this._holder, this._relativePath);
+        this._gameObject = this._transform.gameObject;
         this._name = this._gameObject.name;
         this._rectTransform = UIUtil.findComponent(this._transform, $typeof(UnityEngine.RectTransform));
     }
@@ -139,23 +104,30 @@ export class UIBaseComponent implements IUIComponent {
     }
 
     /**
+     * 相对路径
+     */
+    public getRelativePath(): string {
+        return this._relativePath;
+    }
+
+    /**
      * 获取transform节点
      */
-    public get transform():UnityEngine.Transform{
+    public get transform(): UnityEngine.Transform {
         return this._transform;
     }
 
     /**
      * 获取holder
      */
-    public get holder():any{
+    public get holder(): UnityEngine.Transform {
         return this._holder;
     }
 
     /**
      * 获取游戏对象
      */
-    public get gameObject():UnityEngine.GameObject{
+    public get gameObject(): UnityEngine.GameObject {
         return this._gameObject;
     }
 }
@@ -164,5 +136,5 @@ export class UIBaseComponent implements IUIComponent {
  * 类型限定
  */
 export interface IUIBaseComponentCtor {
-    new(holder: any, var_arg: any): IUIComponent;
+    new(holder: UnityEngine.Transform, relativePath: string): IUIComponent;
 }

@@ -2,7 +2,6 @@ import {UIBaseContainer} from "../component/UIBaseContainer";
 import EventDispatcher from "../../utils/EventDispatcher";
 import UIBaseModel from "./UIBaseModel";
 import UIBaseCtrl from "./UIBaseCtrl";
-import {UIBaseComponent} from "../component/UIBaseComponent";
 import {UICanvas} from "../component/UICanvas";
 import {UILayer} from "../component/UILayer";
 import {UnityEngine} from "csharp";
@@ -16,9 +15,12 @@ export class UIBaseView extends UIBaseContainer {
     private _model: UIBaseModel;
     private _ctrl: UIBaseCtrl;
     private _baseOrder: number;
+    //layer引用
+    private _layer: UILayer;
 
-    constructor(holder: UIBaseComponent, var_arg: any, eventDispatcher: EventDispatcher, model: UIBaseModel, ctrl: UIBaseCtrl) {
-        super(holder, var_arg);
+    constructor(layer: UILayer, relativePath: string, eventDispatcher: EventDispatcher, model: UIBaseModel, ctrl: UIBaseCtrl) {
+        super(layer.transform, relativePath);
+        this._layer = layer;
         this._baseOrder = 0;
         this._model = model;
         this._ctrl = ctrl;
@@ -27,7 +29,7 @@ export class UIBaseView extends UIBaseContainer {
 
     onCreate(): void {
         super.onCreate();
-        this._canvas = this.addComponent(UICanvas, "", 0);
+        this._canvas = this.addComponent(UICanvas, "", 0, this);
         this._rectTransform.offsetMax = UnityEngine.Vector2.zero;
         this._rectTransform.offsetMin = UnityEngine.Vector2.zero;
         this._rectTransform.localScale = UnityEngine.Vector3.zero;
@@ -43,7 +45,7 @@ export class UIBaseView extends UIBaseContainer {
     }
 
     onEnable(...arg: any[]): void {
-        this._baseOrder = (this._holder as UILayer).popWindowOrder();
+        this._baseOrder = this._layer.popWindowOrder();
         super.onEnable();
         this.onAddListener();
     }
@@ -51,7 +53,7 @@ export class UIBaseView extends UIBaseContainer {
     onDisable(): void {
         this.onRemoveListener();
         super.onDisable();
-        (this._holder as UILayer).pushWindowOrder();
+        this._layer.pushWindowOrder();
     }
 
     onAddListener(): void {
@@ -88,5 +90,5 @@ export class UIBaseView extends UIBaseContainer {
  * 类类型限定
  */
 export interface IUIBaseViewCtor {
-    new(holder: UIBaseComponent, var_arg: any, eventDispatcher: EventDispatcher, model: UIBaseModel, ctrl: UIBaseCtrl): UIBaseView;
+    new(layer: UILayer, relativePath: string, eventDispatcher: EventDispatcher, model: UIBaseModel, ctrl: UIBaseCtrl): UIBaseView;
 }

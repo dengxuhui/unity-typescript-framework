@@ -1316,7 +1316,7 @@ var UIManager = /** @class */ (function (_super) {
             var go = new csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].GameObject(layer_info.name);
             var trans = go.transform;
             trans.SetParent(_this._transform);
-            var newLayer = new _component_UILayer__WEBPACK_IMPORTED_MODULE_4__["UILayer"](_this, layer_info.name);
+            var newLayer = new _component_UILayer__WEBPACK_IMPORTED_MODULE_4__["UILayer"](_this._transform, layer_info.name);
             newLayer.onCreate(layer_info);
             _this._layerMap.set(layer_info.type, newLayer);
         }, null, false));
@@ -1745,8 +1745,9 @@ var __extends = (undefined && undefined.__extends) || (function () {
  */
 var UIBaseView = /** @class */ (function (_super) {
     __extends(UIBaseView, _super);
-    function UIBaseView(holder, var_arg, eventDispatcher, model, ctrl) {
-        var _this = _super.call(this, holder, var_arg) || this;
+    function UIBaseView(layer, relativePath, eventDispatcher, model, ctrl) {
+        var _this = _super.call(this, layer.transform, relativePath) || this;
+        _this._layer = layer;
         _this._baseOrder = 0;
         _this._model = model;
         _this._ctrl = ctrl;
@@ -1755,7 +1756,7 @@ var UIBaseView = /** @class */ (function (_super) {
     }
     UIBaseView.prototype.onCreate = function () {
         _super.prototype.onCreate.call(this);
-        this._canvas = this.addComponent(_component_UICanvas__WEBPACK_IMPORTED_MODULE_1__["UICanvas"], "", 0);
+        this._canvas = this.addComponent(_component_UICanvas__WEBPACK_IMPORTED_MODULE_1__["UICanvas"], "", 0, this);
         this._rectTransform.offsetMax = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector2.zero;
         this._rectTransform.offsetMin = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector2.zero;
         this._rectTransform.localScale = csharp__WEBPACK_IMPORTED_MODULE_2__["UnityEngine"].Vector3.zero;
@@ -1773,14 +1774,14 @@ var UIBaseView = /** @class */ (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             arg[_i] = arguments[_i];
         }
-        this._baseOrder = this._holder.popWindowOrder();
+        this._baseOrder = this._layer.popWindowOrder();
         _super.prototype.onEnable.call(this);
         this.onAddListener();
     };
     UIBaseView.prototype.onDisable = function () {
         this.onRemoveListener();
         _super.prototype.onDisable.call(this);
-        this._holder.pushWindowOrder();
+        this._layer.pushWindowOrder();
     };
     UIBaseView.prototype.onAddListener = function () {
     };
@@ -1835,14 +1836,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIBaseComponent", function() { return UIBaseComponent; });
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
 /* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _UILayer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UILayer */ "./src/framework/ui/component/UILayer.ts");
-/* harmony import */ var _util_UIUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/UIUtil */ "./src/framework/ui/util/UIUtil.ts");
-/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! puerts */ "puerts");
-/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _util_UIUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/UIUtil */ "./src/framework/ui/util/UIUtil.ts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! puerts */ "puerts");
+/* harmony import */ var puerts__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(puerts__WEBPACK_IMPORTED_MODULE_2__);
 /**
  * ui基类
  */
-
 
 
 
@@ -1850,11 +1849,11 @@ var UIBaseComponent = /** @class */ (function () {
     /**
      * 添加组件
      * @param holder
-     * @param var_arg
+     * @param relativePath 相对holder的路径
      */
-    function UIBaseComponent(holder, var_arg) {
+    function UIBaseComponent(holder, relativePath) {
         this._holder = holder;
-        this._var_arg = var_arg;
+        this._relativePath = relativePath;
     }
     UIBaseComponent.prototype.destroy = function () {
         this.onDestroy();
@@ -1863,47 +1862,13 @@ var UIBaseComponent = /** @class */ (function () {
         this._holder = null;
         this._gameObject = null;
         this._name = null;
-        this._view = null;
         this._transform = null;
     };
     UIBaseComponent.prototype.onCreate = function () {
-        if (this instanceof _UILayer__WEBPACK_IMPORTED_MODULE_1__["UILayer"]) {
-            this._view = null;
-        }
-        else {
-            var now_holder = this._holder;
-            while (now_holder != null) {
-                if (now_holder instanceof _UILayer__WEBPACK_IMPORTED_MODULE_1__["UILayer"]) {
-                    this._view = this;
-                    break;
-                }
-                else if (now_holder._view != null) {
-                    this._view = now_holder._view;
-                    break;
-                }
-                now_holder = now_holder._holder;
-            }
-        }
-        if (this._var_arg != null) {
-            if (typeof this._var_arg === "string") {
-                this._transform = _util_UIUtil__WEBPACK_IMPORTED_MODULE_2__["UIUtil"].findTrans(this._holder._transform, this._var_arg);
-                this._gameObject = this._transform.gameObject;
-            }
-            else if (typeof this._var_arg === "number") {
-                this._transform = _util_UIUtil__WEBPACK_IMPORTED_MODULE_2__["UIUtil"].getChild(this._holder._transform, this._var_arg);
-                this._gameObject = this._transform.gameObject;
-            }
-            else if (this._var_arg instanceof csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].GameObject) {
-                this._gameObject = this._var_arg;
-                this._transform = this._gameObject.transform;
-            }
-            else {
-                csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.LogError("OnCreate:error params list!");
-            }
-        }
-        this._var_arg = null;
+        this._transform = _util_UIUtil__WEBPACK_IMPORTED_MODULE_1__["UIUtil"].findTrans(this._holder, this._relativePath);
+        this._gameObject = this._transform.gameObject;
         this._name = this._gameObject.name;
-        this._rectTransform = _util_UIUtil__WEBPACK_IMPORTED_MODULE_2__["UIUtil"].findComponent(this._transform, Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].RectTransform));
+        this._rectTransform = _util_UIUtil__WEBPACK_IMPORTED_MODULE_1__["UIUtil"].findComponent(this._transform, Object(puerts__WEBPACK_IMPORTED_MODULE_2__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_0__["UnityEngine"].RectTransform));
     };
     UIBaseComponent.prototype.onDisable = function () {
     };
@@ -1939,6 +1904,12 @@ var UIBaseComponent = /** @class */ (function () {
      */
     UIBaseComponent.prototype.getName = function () {
         return this._name;
+    };
+    /**
+     * 相对路径
+     */
+    UIBaseComponent.prototype.getRelativePath = function () {
+        return this._relativePath;
     };
     Object.defineProperty(UIBaseComponent.prototype, "transform", {
         /**
@@ -2023,37 +1994,37 @@ var UIBaseContainer = /** @class */ (function (_super) {
         this._length = 0;
     };
     UIBaseContainer.prototype.onDestroy = function () {
-        var _this = this;
-        this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
-            if (component.holder == _this) {
-                component.destroy();
-            }
-        }, null, false));
+        var handler = _utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
+            component.destroy();
+        }, null, false);
+        this.walk(handler);
+        handler.recover();
         this._components = null;
         _super.prototype.onDestroy.call(this);
     };
     UIBaseContainer.prototype.onEnable = function () {
         _super.prototype.onEnable.call(this);
-        this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
+        var handler = _utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
             component.onEnable();
-        }, null, false));
+        }, null, false);
+        this.walk(handler);
+        handler.recover();
     };
     UIBaseContainer.prototype.onDisable = function () {
-        var _this = this;
         _super.prototype.onDisable.call(this);
-        this.walk(_utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
-            if (component.holder == _this) {
-                component.onDisable();
-            }
-        }, null, false));
+        var handler = _utils_Handler__WEBPACK_IMPORTED_MODULE_1__["default"].create(this, function (component) {
+            component.onDisable();
+        }, null, false);
+        this.walk(handler);
+        handler.recover();
     };
     /**
-     * 遍历所有组件
+     * 遍历所有组件：component_class参数不传，遍历某个Container下指定组件传入对应类型
      * @param callback
      * @param component_class
      */
     UIBaseContainer.prototype.walk = function (callback, component_class) {
-        this._components.forEach(function (component_map, name) {
+        this._components.forEach(function (component_map) {
             if (component_map != null) {
                 component_map.forEach(function (component, cmp_class) {
                     if (component_class == null) {
@@ -2069,39 +2040,35 @@ var UIBaseContainer = /** @class */ (function (_super) {
     /**
      * 添加组件
      * @param component_class
-     * @param var_arg
+     * @param relativePath
      * @param params
      */
-    UIBaseContainer.prototype.addComponent = function (component_class, var_arg) {
+    UIBaseContainer.prototype.addComponent = function (component_class, relativePath) {
         var params = [];
         for (var _i = 2; _i < arguments.length; _i++) {
             params[_i - 2] = arguments[_i];
         }
-        var component_inst = new component_class(this, var_arg);
+        var component_inst = new component_class(this._transform, relativePath);
         component_inst.onCreate(params);
-        var name = component_inst.getName();
-        this.recordComponent(name, component_class, component_inst);
+        this.recordComponent(relativePath, component_class, component_inst);
         this._length++;
         return component_inst;
     };
     /**
      * 获取单个组件，如果没有传入类类型，返回这个名字的第一个组件
-     * @param name
+     * @param relativePath
      * @param component_class
      */
-    UIBaseContainer.prototype.getComponent = function (name, component_class) {
-        var components = this._components[name];
-        if (components == null) {
+    UIBaseContainer.prototype.getComponent = function (relativePath, component_class) {
+        if (relativePath == null || component_class == null) {
+            csharp__WEBPACK_IMPORTED_MODULE_2__["CS"].Logger.LogError(this.constructor.name + "::getComponent function args error");
             return null;
         }
-        if (component_class == null) {
-            components.forEach(function (v) {
-                return v;
-            });
+        if (!this._components.has(relativePath)) {
+            return null;
         }
-        else {
-            return components.get(component_class);
-        }
+        var cMap = this._components.get(relativePath);
+        return cMap.get(component_class);
     };
     /**
      * 获取所有类型组件
@@ -2116,15 +2083,15 @@ var UIBaseContainer = /** @class */ (function (_super) {
     };
     /**
      * 移除组件
-     * @param name
-     * @param component_class
+     * @param relativePath 相对路径
+     * @param component_class 类型
      */
-    UIBaseContainer.prototype.removeComponent = function (name, component_class) {
-        var component = this.getComponent(name, component_class);
+    UIBaseContainer.prototype.removeComponent = function (relativePath, component_class) {
+        var component = this.getComponent(relativePath, component_class);
         if (component != null) {
+            this._components.get(relativePath).delete(component_class);
             component.destroy();
             this._length--;
-            this._components[name][component_class] = null;
         }
         return component;
     };
@@ -2136,24 +2103,31 @@ var UIBaseContainer = /** @class */ (function (_super) {
         var components = this.getComponents(component_class);
         for (var i = 0; i < components.length; i++) {
             var component = components[i];
-            var cmp_name = component.getName();
+            this._components.get(component.getRelativePath()).delete(component_class);
             component.destroy();
-            this._components[cmp_name][component_class] = null;
             this._length--;
         }
         return components;
     };
     /**
      * 记录组件
-     * @param name
+     * @param relativePath
      * @param component_class
      * @param component
      */
-    UIBaseContainer.prototype.recordComponent = function (name, component_class, component) {
-        if (this._components[name][component_class] != null) {
-            csharp__WEBPACK_IMPORTED_MODULE_2__["CS"].Logger.LogError("Already exist component_class:" + component_class.name);
+    UIBaseContainer.prototype.recordComponent = function (relativePath, component_class, component) {
+        var componentsMap = this._components.get(relativePath);
+        if (componentsMap == null) {
+            componentsMap = new Map();
+            componentsMap.set(component_class, component);
+            this._components.set(relativePath, componentsMap);
+            return;
         }
-        this._components[name][component_class] = component;
+        if (componentsMap.has(component_class)) {
+            csharp__WEBPACK_IMPORTED_MODULE_2__["CS"].Logger.LogError("can not repeat add component,name:\u3010" + component_class.name + "\u3011 ,relativePath:\u3010" + relativePath + "\u3011");
+            return;
+        }
+        componentsMap.set(component_class, component);
     };
     return UIBaseContainer;
 }(_UIBaseComponent__WEBPACK_IMPORTED_MODULE_0__["UIBaseComponent"]));
@@ -2221,6 +2195,11 @@ var UICanvas = /** @class */ (function (_super) {
         }
         _super.prototype.onCreate.call(this);
         var relative_order = args[0];
+        var view = args[1];
+        if (relative_order == null || view == null) {
+            csharp__WEBPACK_IMPORTED_MODULE_1__["CS"].Logger.LogError("UICanvas::arguments error,require relative order and view arg");
+            return;
+        }
         var canvas;
         canvas = _util_UIUtil__WEBPACK_IMPORTED_MODULE_2__["UIUtil"].findComponent(this._transform, Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].Canvas));
         if (canvas == null) {
@@ -2234,6 +2213,7 @@ var UICanvas = /** @class */ (function (_super) {
             this._graphicRaycaster = this._gameObject.AddComponent(Object(puerts__WEBPACK_IMPORTED_MODULE_3__["$typeof"])(csharp__WEBPACK_IMPORTED_MODULE_1__["UnityEngine"].UI.GraphicRaycaster));
         }
         this._relativeOrder = relative_order;
+        this._view = view;
     };
     UICanvas.prototype.onDestroy = function () {
         this._canvas = null;
