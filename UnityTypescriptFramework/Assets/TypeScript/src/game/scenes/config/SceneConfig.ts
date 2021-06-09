@@ -33,7 +33,7 @@ let launch: SceneConfig = {
  * 加载场景
  */
 let loading: SceneConfig = {
-    Level: 0,
+    Level: 1,
     Name: "LoadingScene",
     Class: null,
     Loading: UIWindowNames.UILoading,
@@ -43,7 +43,7 @@ let loading: SceneConfig = {
  * 主界场景
  */
 let home: SceneConfig = {
-    Level: 3,
+    Level: 2,
     Name: "HomeScene",
     Class: HomeScene,
     Loading: UIWindowNames.UILoading,
@@ -53,7 +53,7 @@ let home: SceneConfig = {
  * 战斗场景
  */
 let battle: SceneConfig = {
-    Level: 4,
+    Level: 3,
     Name: "BattleScene",
     Class: null,
     Loading: UIWindowNames.UILoading,

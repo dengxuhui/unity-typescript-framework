@@ -4074,7 +4074,7 @@ var launch = {
  * 加载场景
  */
 var loading = {
-    Level: 0,
+    Level: 1,
     Name: "LoadingScene",
     Class: null,
     Loading: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UILoading,
@@ -4083,7 +4083,7 @@ var loading = {
  * 主界场景
  */
 var home = {
-    Level: 3,
+    Level: 2,
     Name: "HomeScene",
     Class: _home_HomeScene__WEBPACK_IMPORTED_MODULE_1__["HomeScene"],
     Loading: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UILoading,
@@ -4092,7 +4092,7 @@ var home = {
  * 战斗场景
  */
 var battle = {
-    Level: 4,
+    Level: 3,
     Name: "BattleScene",
     Class: null,
     Loading: _framework_ui_config_UIWindowNames__WEBPACK_IMPORTED_MODULE_0__["UIWindowNames"].UILoading,
