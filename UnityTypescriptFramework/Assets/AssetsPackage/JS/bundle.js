@@ -3183,6 +3183,8 @@ __webpack_require__.r(__webpack_exports__);
 * @author by dengxuhui
 * @create time 2021/6/1
 **/
+//空字符串
+var empty = "";
 var string = {
     /**
      * 字符串是否是null或者空字符串
@@ -3190,7 +3192,13 @@ var string = {
      * @constructor
      */
     IsNullOrEmpty: function (s) {
-        return s == null || s == "";
+        return s == null || s == empty;
+    },
+    /**
+     * 空字符串
+     */
+    get empty() {
+        return empty;
     }
 };
 
@@ -4575,7 +4583,7 @@ var UILoading = {
     model: _uiLoading_UILoadingModel__WEBPACK_IMPORTED_MODULE_2__["UILoadingModel"],
     ctrl: _uiLoading_UILoadingCtrl__WEBPACK_IMPORTED_MODULE_3__["UILoadingCtrl"],
     view: _uiLoading_UILoadingView__WEBPACK_IMPORTED_MODULE_4__["UILoadingView"],
-    prefabPath: "",
+    prefabPath: "ui/prefabs/view/loading/ui_loading.prefab",
     components: [],
     type: _framework_ui_config_EUIType__WEBPACK_IMPORTED_MODULE_5__["EUIType"].View
 };
@@ -4735,6 +4743,10 @@ var UILoadingView = /** @class */ (function (_super) {
     function UILoadingView() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    // private _txtLoading:uite
+    UILoadingView.prototype.onCreate = function () {
+        _super.prototype.onCreate.call(this);
+    };
     return UILoadingView;
 }(_framework_ui_base_UIBaseView__WEBPACK_IMPORTED_MODULE_0__["UIBaseView"]));
 

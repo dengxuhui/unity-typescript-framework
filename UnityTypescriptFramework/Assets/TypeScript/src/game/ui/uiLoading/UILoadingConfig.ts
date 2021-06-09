@@ -21,7 +21,7 @@ let UILoading: UIConfigInfo = {
     model: UILoadingModel,
     ctrl: UILoadingCtrl,
     view: UILoadingView,
-    prefabPath: "",
+    prefabPath: "ui/prefabs/view/loading/ui_loading.prefab",
     components: [],
     type: EUIType.View
 };

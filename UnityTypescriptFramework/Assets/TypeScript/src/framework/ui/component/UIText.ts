@@ -1,39 +1,38 @@
 import {UIBaseComponent} from "./UIBaseComponent";
-import {TMPro} from "csharp";
+import {UnityEngine} from "csharp";
 import {UIUtil} from "../util/UIUtil";
 
 /**
- * ts侧Unity TMP_Text实现
+ * ui文本
  * @author by dengxuhui
- * @create time 2021/6/9 16:04
+ * @create time 2021/6/9 15:56
  **/
-export class UITMPText extends UIBaseComponent {
-    //unity侧tmp引用
-    private _unityText: TMPro.TMP_Text;
+export class UIText extends UIBaseComponent {
+    //unity侧文本引用
+    private _unityText: UnityEngine.UI.Text;
     //当前内容
     private _content: string;
 
     onCreate(): void {
         super.onCreate();
-        this._unityText = UIUtil.findTmpText(this._transform);
+        this._unityText = UIUtil.findText(this._transform);
         this._content = this._unityText.text;
     }
 
     onDestroy(): void {
         this._unityText = null;
-        this._content = null;
         super.onDestroy();
     }
 
     /**
-     * 获取当前内容
+     * 获取文本内容
      */
     public get text(): string {
         return this._content;
     }
 
     /**
-     * 设置当前文本
+     * 设置文本
      * @param content
      */
     public set text(content: string) {

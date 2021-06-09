@@ -65,6 +65,7 @@ public class PuertsConfig
                 typeof(Application),
                 typeof(TextAsset),
                 typeof(TMP_Text),
+                typeof(Text),
                 typeof(MonoSingleton<AssetBundleManager>),
                 typeof(PlayerPrefs),
 
