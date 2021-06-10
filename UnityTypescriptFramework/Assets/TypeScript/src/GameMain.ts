@@ -5,7 +5,6 @@ import {SceneConfigs} from "./game/scenes/config/SceneConfig";
 import {ModuleCenter} from "./framework/module/ModuleCenter";
 import {CommonModule} from "./game/module/common/CommonModule";
 import {UserDataModule} from "./game/module/userData/UserDataModule";
-import {LanguageEvents} from "./game/language/LanguageEvents";
 import {LanguageManager} from "./game/language/LanguageManager";
 import {LanguageDataTool} from "./game/language/LanguageDataTool";
 

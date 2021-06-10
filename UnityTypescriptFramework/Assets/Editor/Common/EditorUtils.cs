@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public class EditorUtils
+public static class EditorUtils
 {
     public static void ExplorerFolder(string folder)
     {
-        folder = string.Format("\"{0}\"", folder);
+        folder = $"\"{folder}\"";
         switch (Application.platform)
         {
             case RuntimePlatform.WindowsEditor:
@@ -14,7 +14,7 @@ public class EditorUtils
                 System.Diagnostics.Process.Start("open", folder);
                 break;
             default:
-                Debug.LogError(string.Format("Not support open folder on '{0}' platform.", Application.platform.ToString()));
+                Debug.LogError($"Not support open folder on '{Application.platform.ToString()}' platform.");
                 break;
         }
     }

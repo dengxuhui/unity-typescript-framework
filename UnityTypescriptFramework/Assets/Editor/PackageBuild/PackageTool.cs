@@ -1,11 +1,11 @@
-﻿using UnityEditor;
-using UnityEngine;
-using System.IO;
-using GameChannel;
-using AssetBundles;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using AssetBundles;
+using GameChannel;
+using UnityEditor;
+using UnityEngine;
 
 /// <summary>
 /// added by wsh @ 2018.01.03
@@ -31,7 +31,7 @@ public class PackageTool : EditorWindow
     [MenuItem("Tools/Package", false, 0)]
     static void Init()
     {
-        EditorWindow.GetWindow(typeof(PackageTool));
+        GetWindow(typeof(PackageTool));
     }
 
     void OnEnable()
@@ -334,7 +334,7 @@ public class PackageTool : EditorWindow
             }
             if (GUILayout.Button("Open Current Output", GUILayout.Width(200)))
             {
-                var folder = Path.Combine(System.Environment.CurrentDirectory, BuildPlayer.XCodeOutputPath);
+                var folder = Path.Combine(Environment.CurrentDirectory, BuildPlayer.XCodeOutputPath);
                 EditorUtils.ExplorerFolder(folder);
             }
         }
@@ -346,7 +346,7 @@ public class PackageTool : EditorWindow
             }
             if (GUILayout.Button("Open Output Folder", GUILayout.Width(200)))
             {
-                var folder = Path.Combine(System.Environment.CurrentDirectory, BuildPlayer.XCodeOutputPath);
+                var folder = Path.Combine(Environment.CurrentDirectory, BuildPlayer.XCodeOutputPath);
                 EditorUtils.ExplorerFolder(folder);
             }
         }
@@ -751,7 +751,7 @@ public class PackageTool : EditorWindow
         if (scenesDir.Exists)
         {
             // 把对应场景添加到 EditorBuildSettings 中，并设置是否激活该场景Scene
-            EditorBuildSettings.scenes = new UnityEditor.EditorBuildSettingsScene[] {
+            EditorBuildSettings.scenes = new EditorBuildSettingsScene[] {
                 new EditorBuildSettingsScene("Assets/Scenes/LaunchScene.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/LoadingScene.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/LoginScene.unity", true),
