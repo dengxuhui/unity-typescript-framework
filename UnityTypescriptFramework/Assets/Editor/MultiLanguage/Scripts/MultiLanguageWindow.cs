@@ -1,6 +1,7 @@
 ﻿using MultiLanguage.Scripts.func;
 using UnityEditor;
 using UnityEngine;
+
 // ReSharper disable All
 
 namespace MultiLanguage.Scripts
@@ -51,10 +52,11 @@ namespace MultiLanguage.Scripts
         /// <summary>
         /// 打开入口
         /// </summary>
-        [MenuItem("Window/MultiLanguage", false, 0)]
+        [MenuItem("Tools/MultiLanguage", false, 0)]
         static void Init()
         {
-            GetWindow(typeof(MultiLanguageWindow));
+            var window = GetWindow(typeof(MultiLanguageWindow));
+            window.titleContent = new GUIContent("MultiLanguage");
         }
 
         #region ui逻辑
@@ -62,7 +64,7 @@ namespace MultiLanguage.Scripts
         private void SelectTranslateFile()
         {
             _translateFeedbackPath = EditorUtility.OpenFilePanelWithFilters("选择翻译反馈总表（.csv文件）", null,
-                new string[] {"csv","csv"});
+                new string[] {"csv", "csv"});
             EditorPrefs.SetString(MultiLanguageConfig.TranslateFolderPrefsKey, _translateFeedbackPath);
         }
 
