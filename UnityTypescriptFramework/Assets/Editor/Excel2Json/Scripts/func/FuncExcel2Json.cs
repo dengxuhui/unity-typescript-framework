@@ -5,7 +5,7 @@ using Excel;
 using UnityEditor;
 using UnityEngine;
 
-namespace Excel2Json.func
+namespace Excel2Json
 {
     /// <summary>
     /// 导出工具
@@ -22,8 +22,9 @@ namespace Excel2Json.func
                 EditorUtility.DisplayDialog("error", $"path error ,not exist=>{path}", "OK");
                 return;
             }
-            Dictionary<string,DataSet> dataSetDic = new Dictionary<string, DataSet>();
-            if (File.Exists(path) && Path.GetExtension(path) == ".xlsx")
+
+            Dictionary<string, DataSet> dataSetDic = new Dictionary<string, DataSet>();
+            if (File.Exists(path) && Excel2JsonConfig.SupportExtensions.IndexOf(Path.GetExtension(path)) >= 0)
             {
                 CollectXlsx(path);
             }
@@ -31,7 +32,7 @@ namespace Excel2Json.func
 
         private static void CollectXlsx(string path)
         {
-            using (var stream = File.Open(path,FileMode.Open,FileAccess.Read))
+            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
             {
                 var excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
                 if (!string.IsNullOrEmpty(excelReader.ExceptionMessage))
@@ -42,6 +43,15 @@ namespace Excel2Json.func
 
                 var dataSet = excelReader.AsDataSet();
                 var tableCount = dataSet.Tables.Count;
+                for (var i = 0; i < tableCount; i++)
+                {
+                    var table = dataSet.Tables[i];
+                    //可以被导出的table名
+                    if (table.TableName.StartsWith("#") && table.TableName.EndsWith("#"))
+                    {
+                        
+                    }
+                }
             }
         }
     }

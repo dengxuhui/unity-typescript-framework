@@ -1,5 +1,5 @@
 using System.IO;
-using Excel2Json.func;
+using Excel2Json;
 using UnityEditor;
 using UnityEngine;
 

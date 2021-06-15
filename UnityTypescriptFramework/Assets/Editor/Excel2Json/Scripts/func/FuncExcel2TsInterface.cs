@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Excel2Json.func
+namespace Excel2Json
 {
     /// <summary>
     /// excel转typescript 接口
