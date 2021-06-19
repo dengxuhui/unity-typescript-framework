@@ -32,54 +32,26 @@ namespace Excel2Json
     {
         private static readonly string displayTitle = "excel2json";
 
-        /// <summary>
-        /// 基础类型。基础类型只会存在这么多，更复杂的结构也无非是将这些基础类型进行组合
-        /// </summary>
-        private static readonly Dictionary<string, Type> BaseTypeDic = new Dictionary<string, Type>()
-        {
-            {
-                "string", typeof(string)
-            },
-            {
-                "string_array", typeof(string[])
-            },
-            {
-                "int_array", typeof(int[])
-            },
-            {
-                "int", typeof(int)
-            },
-            {
-                "float", typeof(float)
-            },
-            {
-                "float_array", typeof(float[])
-            },
-            {
-                //多语言类型，与多语言工具搭配使用
-                "lang", typeof(string)
-            }
-        };
-
-        private static readonly Dictionary<string, Action<object, HandleData, Dictionary<string, object>>> _handleDic;
+        private static readonly Dictionary<string, Action<object, BaseHandleData, Dictionary<string, object>>>
+            _handleDic;
 
         //静态构造方式初始化Action
         static FuncExcel2Json()
         {
             //处理int值
             var handle_int =
-                new Action<object, HandleData, Dictionary<string, object>>(
+                new Action<object, BaseHandleData, Dictionary<string, object>>(
                     (rawData, handleData, addDic) =>
                     {
-                        addDic.Add(handleData.name, rawData is DBNull ? 0 : Convert.ToInt32(rawData));
+                        addDic.Add(handleData.attrName, rawData is DBNull ? 0 : Convert.ToInt32(rawData));
                     });
             //处理int数组
             var handle_int_array =
-                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                new Action<object, BaseHandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
                 {
                     if (rawData is DBNull)
                     {
-                        addDic.Add(handleData.name, new int[0]);
+                        addDic.Add(handleData.attrName, new int[0]);
                         return;
                     }
 
@@ -95,31 +67,31 @@ namespace Excel2Json
                         {
                             intArray[i] = 0;
                             Debug.LogError(
-                                $"try convert to int32 error,file name{handleData.fileName},field name:{handleData.name}");
+                                $"try convert to int32 error,file name{handleData.fileNameWithoutEX},field name:{handleData.attrName}");
                         }
                     }
 
-                    addDic.Add(handleData.name, intArray);
+                    addDic.Add(handleData.attrName, intArray);
                 });
             //处理float
-            var handle_float = new Action<object, HandleData, Dictionary<string, object>>(
+            var handle_float = new Action<object, BaseHandleData, Dictionary<string, object>>(
                 (rawData, handleData, addDic) =>
                 {
                     if (rawData is DBNull)
                     {
-                        addDic.Add(handleData.name, 0.0f);
+                        addDic.Add(handleData.attrName, 0.0f);
                         return;
                     }
 
-                    addDic.Add(handleData.name, Convert.ToSingle(rawData));
+                    addDic.Add(handleData.attrName, Convert.ToSingle(rawData));
                 });
             //处理浮点数数组
             var handle_float_array =
-                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                new Action<object, BaseHandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
                 {
                     if (rawData is DBNull)
                     {
-                        addDic.Add(handleData.name, new float[0]);
+                        addDic.Add(handleData.attrName, new float[0]);
                         return;
                     }
 
@@ -135,51 +107,55 @@ namespace Excel2Json
                         {
                             floatArray[i] = 0.0f;
                             Debug.LogError(
-                                $"try convert to float error,file name{handleData.fileName},field name:{handleData.name}");
+                                $"try convert to float error,file name{handleData.fileNameWithoutEX},field name:{handleData.attrName}");
                         }
                     }
 
-                    addDic.Add(handleData.name, floatArray);
+                    addDic.Add(handleData.attrName, floatArray);
                 });
             //处理字符串
             var handle_string =
-                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                new Action<object, BaseHandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
                 {
                     if (rawData is DBNull)
                     {
-                        addDic.Add(handleData.name, string.Empty);
+                        addDic.Add(handleData.attrName, string.Empty);
                         return;
                     }
 
-                    addDic.Add(handleData.name, Convert.ToString(rawData));
+                    addDic.Add(handleData.attrName, Convert.ToString(rawData));
                 });
             //处理字符串数组
             var handle_string_array =
-                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                new Action<object, BaseHandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
                 {
                     if (rawData is DBNull)
                     {
-                        addDic.Add(handleData.name, new string[0]);
+                        addDic.Add(handleData.attrName, new string[0]);
                         return;
                     }
 
                     var dataArray = Convert.ToString(rawData).Split('|');
-                    addDic.Add(handleData.name, dataArray);
+                    addDic.Add(handleData.attrName, dataArray);
                 });
             //处理多语言类型
             var handle_lang =
-                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                new Action<object, BaseHandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
                 {
                     if (rawData is DBNull)
                     {
-                        addDic.Add(handleData.name, string.Empty);
+                        addDic.Add(handleData.attrName, string.Empty);
                         return;
                     }
 
-                    addDic.Add(handleData.name, handleData.langKey);
+                    //简便处理，直接从addDic中获取id字段，没有显示为error
+                    addDic.TryGetValue("id", out var id);
+                    id = id is string ? Convert.ToString(id) : "_error";
+                    var save = $"{handleData.fileNameWithoutEX}_{handleData.attrName}_{id}";
+                    addDic.Add(handleData.attrName, save);
                 });
             //处理函数初始化
-            _handleDic = new Dictionary<string, Action<object, HandleData, Dictionary<string, object>>>
+            _handleDic = new Dictionary<string, Action<object, BaseHandleData, Dictionary<string, object>>>
             {
                 {"int", handle_int}, {"int_array", handle_int_array}, {"float", handle_float},
                 {"float_array", handle_float_array}, {"string", handle_string}, {"string_array", handle_string_array},
@@ -279,7 +255,9 @@ namespace Excel2Json
 
             //先找到id列
             int idColIndex = -1;
-            var validColDic = new Dictionary<int, FieldInfo>();
+            var baseHandleMap = new Dictionary<string, BaseHandleData>();
+
+            var xlsxFileName = Path.GetFileNameWithoutExtension(fullPath);
             for (var i = 0; i < colCnt; i++)
             {
                 string colName = rows[1][i].ToString();
@@ -293,25 +271,47 @@ namespace Excel2Json
                 {
                     colName = colName.Substring(1);
                     var kv = colName.Split(':');
-                    BaseTypeDic.TryGetValue(kv[1], out var ot);
-                    if (ot == null)
+                    if (kv.Length != 2)
                     {
-                        var msg = $"table can define type not support ,type string is=>{kv[1]},fullPath=>{fullPath}";
+                        continue;
+                    }
+
+                    //简单类型
+                    if (_handleDic.ContainsKey(kv[1]))
+                    {
+                        if (baseHandleMap.ContainsKey(kv[0]))
+                        {
+                            var error =
+                                $"export2json error ,fount repeat colName=>{colName} at xlsx file=>{xlsxFileName}";
+                            EditorUtility.DisplayDialog(displayTitle,
+                                error,
+                                "OK");
+                            Debug.LogWarning(error);
+                            continue;
+                        }
+
+                        baseHandleMap.Add(kv[0], new BaseHandleData
+                        {
+                            action = _handleDic[kv[1]],
+                            attrName = kv[0],
+                            colIndex = i,
+                            fileNameWithoutEX = xlsxFileName
+                        });
+                    }
+                    else
+                    {
+                        var msg = $"export2json error,not found the handle func=>{colName},file=>{xlsxFileName}";
                         EditorUtility.DisplayDialog(displayTitle,
                             msg,
                             "OK");
                         Debug.LogWarning(msg);
-                        return;
                     }
-
-                    validColDic.Add(i, new FieldInfo {fieldName = kv[0], type = ot});
                 }
             }
 
-            //TODO 如果后续需要支持Array类型的Json导出，没有找到id就按Array导出
             if (idColIndex < 0)
             {
-                var msg = $"table can not found the id column which is #id:string,fullPath=>{fullPath}";
+                var msg = $"sheet can not found the id column which is #id:string,fullPath=>{fullPath}";
                 EditorUtility.DisplayDialog(displayTitle,
                     msg,
                     "OK");
@@ -319,83 +319,56 @@ namespace Excel2Json
                 return;
             }
 
-            var data = new Dictionary<string, object>();
-
+            //表数据
+            var sheetDataDic = new Dictionary<string, object>();
             //按行导出
             for (var i = 2; i < rowCnt; i++)
             {
-                var rowDic = new Dictionary<string, object>();
-                var id = rows[i][idColIndex].ToString();
-                foreach (var kv in validColDic)
+                var idObj = rows[i][idColIndex];
+                //空行
+                if (idObj is DBNull)
                 {
-                    var colIndex = kv.Key;
-                    var fieldInfo = kv.Value;
-                    var exportType = fieldInfo.type;
-                    var rawData = rows[i][colIndex];
-                    if (rawData is DBNull)
-                    {
-                        rowDic.Add(fieldInfo.fieldName, GetDefaultValue(fieldInfo.type));
-                    }
-                    else
-                    {
-                        if (exportType == typeof(string))
-                        {
-                            rowDic.Add(fieldInfo.fieldName, Convert.ToString(rawData));
-                        }
-                        else if (exportType == typeof(string[]))
-                        {
-                            var dataArray = Convert.ToString(rawData).Split('|');
-                            rowDic.Add(fieldInfo.fieldName, dataArray);
-                        }
-                        else if (exportType == typeof(int))
-                        {
-                            rowDic.Add(fieldInfo.fieldName, Convert.ToInt32(rawData));
-                        }
-                        else if (exportType == typeof(int[]))
-                        {
-                            var dataArray = Convert.ToString(rawData).Split('|');
-                            var intArray = new int[dataArray.Length];
-                            for (var i1 = 0; i1 < dataArray.Length; i1++)
-                            {
-                                intArray[i1] = Convert.ToInt32(dataArray[i1]);
-                            }
-
-                            rowDic.Add(fieldInfo.fieldName, intArray);
-                        }
-                        else if (exportType == typeof(float))
-                        {
-                            rowDic.Add(fieldInfo.fieldName, Convert.ToSingle(rawData));
-                        }
-                        else if (exportType == typeof(float[]))
-                        {
-                            var dataArray = Convert.ToString(rawData).Split('|');
-                            var floatArray = new float[dataArray.Length];
-                            for (var i1 = 0; i1 < dataArray.Length; i1++)
-                            {
-                                floatArray[i1] = Convert.ToSingle(dataArray[i1]);
-                            }
-
-                            rowDic.Add(fieldInfo.fieldName, floatArray);
-                        }
-                    }
+                    continue;
                 }
 
-                data.Add(id, rowDic);
+                var id = Convert.ToString(idObj);
+                if (sheetDataDic.ContainsKey(id))
+                {
+                    var error = $"export2json error, exist repeat id in file=>{xlsxFileName},id=>{id}";
+                    EditorUtility.DisplayDialog(displayTitle,
+                        error,
+                        "OK");
+                    Debug.LogWarning(error);
+                    continue;
+                }
+
+                //行数据
+                var rowDataDic = new Dictionary<string, object>();
+                foreach (var kv in baseHandleMap)
+                {
+                    var handleData = kv.Value;
+                    var colIndex = handleData.colIndex;
+                    var rawData = rows[i][colIndex];
+                    var handle = kv.Value;
+                    handle.action.Invoke(rawData, handleData, rowDataDic);
+                }
+
+                sheetDataDic.Add(id, rowDataDic);
             }
 
-            if (data.Count > 0)
+            if (sheetDataDic.Count > 0)
             {
                 //保存
                 var setting = new JsonSerializerSettings
                 {
                     Formatting = Formatting.Indented
                 };
-                var jsonStr = JsonConvert.SerializeObject(data);
-                var fileName = Path.GetFileNameWithoutExtension(fullPath) + ".json";
+                var jsonStr = JsonConvert.SerializeObject(sheetDataDic);
+                var jsonFileName = Path.GetFileNameWithoutExtension(fullPath) + ".json";
                 var outputDir = Excel2JsonAssetsManager.GetRules().outputPath;
                 outputDir = FileTool.GetFullPath(outputDir, RelativeType.Assets);
                 FileTool.TryMakeDir(outputDir);
-                var savePath = Path.Combine(outputDir, fileName);
+                var savePath = Path.Combine(outputDir, jsonFileName);
                 using (var file = new FileStream(savePath, FileMode.Create, FileAccess.Write))
                 {
                     using (TextWriter writer = new StreamWriter(file, Encoding.UTF8))
@@ -405,60 +378,36 @@ namespace Excel2Json
                 }
             }
         }
-
-        private static object GetDefaultValue(Type type)
-        {
-            if (type == typeof(int))
-            {
-                return 0;
-            }
-            else if (type == typeof(int[]))
-            {
-                return new int[0];
-            }
-            else if (type == typeof(float))
-            {
-                return 0.0f;
-            }
-            else if (type == typeof(float[]))
-            {
-                return new float[0];
-            }
-            else if (type == typeof(string))
-            {
-                return string.Empty;
-            }
-            else if (type == typeof(string[]))
-            {
-                return new string[0];
-            }
-
-            Debug.LogError("can not find default type=>" + type.Name);
-            return null;
-        }
     }
 
     /// <summary>
-    /// 处理数据
+    /// 简单类型数据处理类型
     /// </summary>
-    internal struct HandleData
+    internal struct BaseHandleData
     {
+        //列
+        public int colIndex;
+
         //字段名
-        public string name;
+        public string attrName;
 
-        //当字段是lang类型时赋值
-        public string langKey;
-
-        //文件名，主要用于报错时打印信息使用
-        public string fileName;
+        //文件名没有后缀
+        public string fileNameWithoutEX;
 
         //数据处理函数
-        public Action<object, HandleData, Dictionary<string, object>> action;
+        public Action<object, BaseHandleData, Dictionary<string, object>> action;
     }
 
-    internal struct FieldInfo
-    {
-        public string fieldName;
-        public Type type;
-    }
+    // /// <summary>
+    // /// 复杂处理类型
+    // /// </summary>
+    // internal struct StructHandleData
+    // {
+    //     public List<BaseHandleData> handleDataList;
+    // }
+    //
+    // internal struct StructListHandleData
+    // {
+    //     public List<StructHandleData> structList;
+    // }
 }
