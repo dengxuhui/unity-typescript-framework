@@ -8,6 +8,7 @@ using Excel2Json.tool;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Excel2Json
 {
@@ -197,44 +198,51 @@ namespace Excel2Json
                     var fieldInfo = kv.Value;
                     var exportType = fieldInfo.type;
                     var rawData = rows[i][colIndex];
-                    if (exportType == typeof(string))
+                    if (rawData is DBNull)
                     {
-                        rowDic.Add(fieldInfo.fieldName, Convert.ToString(rawData));
+                        rowDic.Add(fieldInfo.fieldName, GetDefaultValue(fieldInfo.type));
                     }
-                    else if (exportType == typeof(string[]))
+                    else
                     {
-                        var dataArray = Convert.ToString(rawData).Split('|');
-                        rowDic.Add(fieldInfo.fieldName, dataArray);
-                    }
-                    else if (exportType == typeof(int))
-                    {
-                        rowDic.Add(fieldInfo.fieldName, Convert.ToInt32(rawData));
-                    }
-                    else if (exportType == typeof(int[]))
-                    {
-                        var dataArray = Convert.ToString(rawData).Split('|');
-                        var intArray = new int[dataArray.Length];
-                        for (var i1 = 0; i1 < dataArray.Length; i1++)
+                        if (exportType == typeof(string))
                         {
-                            intArray[i1] = Convert.ToInt32(dataArray[i1]);
+                            rowDic.Add(fieldInfo.fieldName, Convert.ToString(rawData));
                         }
-
-                        rowDic.Add(fieldInfo.fieldName, intArray);
-                    }
-                    else if (exportType == typeof(float))
-                    {
-                        rowDic.Add(fieldInfo.fieldName, Convert.ToSingle(rawData));
-                    }
-                    else if (exportType == typeof(float[]))
-                    {
-                        var dataArray = Convert.ToString(rawData).Split('|');
-                        var floatArray = new float[dataArray.Length];
-                        for (var i1 = 0; i1 < dataArray.Length; i1++)
+                        else if (exportType == typeof(string[]))
                         {
-                            floatArray[i1] = Convert.ToSingle(dataArray[i1]);
+                            var dataArray = Convert.ToString(rawData).Split('|');
+                            rowDic.Add(fieldInfo.fieldName, dataArray);
                         }
+                        else if (exportType == typeof(int))
+                        {
+                            rowDic.Add(fieldInfo.fieldName, Convert.ToInt32(rawData));
+                        }
+                        else if (exportType == typeof(int[]))
+                        {
+                            var dataArray = Convert.ToString(rawData).Split('|');
+                            var intArray = new int[dataArray.Length];
+                            for (var i1 = 0; i1 < dataArray.Length; i1++)
+                            {
+                                intArray[i1] = Convert.ToInt32(dataArray[i1]);
+                            }
 
-                        rowDic.Add(fieldInfo.fieldName, floatArray);
+                            rowDic.Add(fieldInfo.fieldName, intArray);
+                        }
+                        else if (exportType == typeof(float))
+                        {
+                            rowDic.Add(fieldInfo.fieldName, Convert.ToSingle(rawData));
+                        }
+                        else if (exportType == typeof(float[]))
+                        {
+                            var dataArray = Convert.ToString(rawData).Split('|');
+                            var floatArray = new float[dataArray.Length];
+                            for (var i1 = 0; i1 < dataArray.Length; i1++)
+                            {
+                                floatArray[i1] = Convert.ToSingle(dataArray[i1]);
+                            }
+
+                            rowDic.Add(fieldInfo.fieldName, floatArray);
+                        }
                     }
                 }
 
@@ -262,6 +270,37 @@ namespace Excel2Json
                     }
                 }
             }
+        }
+
+        private static object GetDefaultValue(Type exportType)
+        {
+            if (exportType == typeof(int))
+            {
+                return 0;
+            }
+            else if (exportType == typeof(int[]))
+            {
+                return new int[0];
+            }
+            else if (exportType == typeof(float))
+            {
+                return 0.0f;
+            }
+            else if (exportType == typeof(float[]))
+            {
+                return new float[0];
+            }
+            else if (exportType == typeof(string))
+            {
+                return string.Empty;
+            }
+            else if (exportType == typeof(string[]))
+            {
+                return new string[0];
+            }
+
+            Debug.LogError("can not find default type=>" + exportType.Name);
+            return null;
         }
     }
 
