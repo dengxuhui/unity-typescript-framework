@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
+// ReSharper disable InconsistentNaming
+
 namespace Excel2Json
 {
     /// <summary>
@@ -58,6 +60,132 @@ namespace Excel2Json
                 "lang", typeof(string)
             }
         };
+
+        private static readonly Dictionary<string, Action<object, HandleData, Dictionary<string, object>>> _handleDic;
+
+        //静态构造方式初始化Action
+        static FuncExcel2Json()
+        {
+            //处理int值
+            var handle_int =
+                new Action<object, HandleData, Dictionary<string, object>>(
+                    (rawData, handleData, addDic) =>
+                    {
+                        addDic.Add(handleData.name, rawData is DBNull ? 0 : Convert.ToInt32(rawData));
+                    });
+            //处理int数组
+            var handle_int_array =
+                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                {
+                    if (rawData is DBNull)
+                    {
+                        addDic.Add(handleData.name, new int[0]);
+                        return;
+                    }
+
+                    var dataArray = Convert.ToString(rawData).Split('|');
+                    var intArray = new int[dataArray.Length];
+                    for (var i = 0; i < dataArray.Length; i++)
+                    {
+                        try
+                        {
+                            intArray[i] = Convert.ToInt32(dataArray[i]);
+                        }
+                        catch (Exception e)
+                        {
+                            intArray[i] = 0;
+                            Debug.LogError(
+                                $"try convert to int32 error,file name{handleData.fileName},field name:{handleData.name}");
+                        }
+                    }
+
+                    addDic.Add(handleData.name, intArray);
+                });
+            //处理float
+            var handle_float = new Action<object, HandleData, Dictionary<string, object>>(
+                (rawData, handleData, addDic) =>
+                {
+                    if (rawData is DBNull)
+                    {
+                        addDic.Add(handleData.name, 0.0f);
+                        return;
+                    }
+
+                    addDic.Add(handleData.name, Convert.ToSingle(rawData));
+                });
+            //处理浮点数数组
+            var handle_float_array =
+                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                {
+                    if (rawData is DBNull)
+                    {
+                        addDic.Add(handleData.name, new float[0]);
+                        return;
+                    }
+
+                    var dataArray = Convert.ToString(rawData).Split('|');
+                    var floatArray = new float[dataArray.Length];
+                    for (var i = 0; i < dataArray.Length; i++)
+                    {
+                        try
+                        {
+                            floatArray[i] = Convert.ToSingle(dataArray[i]);
+                        }
+                        catch (Exception e)
+                        {
+                            floatArray[i] = 0.0f;
+                            Debug.LogError(
+                                $"try convert to float error,file name{handleData.fileName},field name:{handleData.name}");
+                        }
+                    }
+
+                    addDic.Add(handleData.name, floatArray);
+                });
+            //处理字符串
+            var handle_string =
+                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                {
+                    if (rawData is DBNull)
+                    {
+                        addDic.Add(handleData.name, string.Empty);
+                        return;
+                    }
+
+                    addDic.Add(handleData.name, Convert.ToString(rawData));
+                });
+            //处理字符串数组
+            var handle_string_array =
+                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                {
+                    if (rawData is DBNull)
+                    {
+                        addDic.Add(handleData.name, new string[0]);
+                        return;
+                    }
+
+                    var dataArray = Convert.ToString(rawData).Split('|');
+                    addDic.Add(handleData.name, dataArray);
+                });
+            //处理多语言类型
+            var handle_lang =
+                new Action<object, HandleData, Dictionary<string, object>>((rawData, handleData, addDic) =>
+                {
+                    if (rawData is DBNull)
+                    {
+                        addDic.Add(handleData.name, string.Empty);
+                        return;
+                    }
+
+                    addDic.Add(handleData.name, handleData.langKey);
+                });
+            //处理函数初始化
+            _handleDic = new Dictionary<string, Action<object, HandleData, Dictionary<string, object>>>
+            {
+                {"int", handle_int}, {"int_array", handle_int_array}, {"float", handle_float},
+                {"float_array", handle_float_array}, {"string", handle_string}, {"string_array", handle_string_array},
+                {"lang", handle_lang}
+            };
+        }
 
         /// <summary>
         /// 全路径导出，可按照文件路径或者目录路径导出
@@ -278,38 +406,55 @@ namespace Excel2Json
             }
         }
 
-        private static object GetDefaultValue(Type exportType)
+        private static object GetDefaultValue(Type type)
         {
-            if (exportType == typeof(int))
+            if (type == typeof(int))
             {
                 return 0;
             }
-            else if (exportType == typeof(int[]))
+            else if (type == typeof(int[]))
             {
                 return new int[0];
             }
-            else if (exportType == typeof(float))
+            else if (type == typeof(float))
             {
                 return 0.0f;
             }
-            else if (exportType == typeof(float[]))
+            else if (type == typeof(float[]))
             {
                 return new float[0];
             }
-            else if (exportType == typeof(string))
+            else if (type == typeof(string))
             {
                 return string.Empty;
             }
-            else if (exportType == typeof(string[]))
+            else if (type == typeof(string[]))
             {
                 return new string[0];
             }
 
-            Debug.LogError("can not find default type=>" + exportType.Name);
+            Debug.LogError("can not find default type=>" + type.Name);
             return null;
         }
     }
 
+    /// <summary>
+    /// 处理数据
+    /// </summary>
+    internal struct HandleData
+    {
+        //字段名
+        public string name;
+
+        //当字段是lang类型时赋值
+        public string langKey;
+
+        //文件名，主要用于报错时打印信息使用
+        public string fileName;
+
+        //数据处理函数
+        public Action<object, HandleData, Dictionary<string, object>> action;
+    }
 
     internal struct FieldInfo
     {
