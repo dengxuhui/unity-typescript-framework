@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ef81d799e34396aae697001c1d499b, type: 3}
   m_Name: Excel2JsonRules
   m_EditorClassIdentifier: 
-  outputPath: 
+  outputPath: AssetsPackage/config/json/

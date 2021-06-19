@@ -3,5 +3,5 @@ test("array length test",()=>{
     let array = [1];
     array[10] = 2;
     let count = array.length;
-    expect(array.length).toBe(10);
+    expect(count).toBe(11);
 });

@@ -26,29 +26,31 @@ namespace Excel2Json
     {
         private static readonly string displayTitle = "excel2json";
 
-        /**
-         * 单路径导出
-         */
-        public static void Export(string path, bool exportInterface)
+        /// <summary>
+        /// 全路径导出，可按照文件路径或者目录路径导出
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <param name="exportInterface"></param>
+        public static void Export(string fullPath, bool exportInterface)
         {
-            if (string.IsNullOrEmpty(path) || (!File.Exists(path) && !Directory.Exists(path)))
+            if (string.IsNullOrEmpty(fullPath) || (!File.Exists(fullPath) && !Directory.Exists(fullPath)))
             {
-                EditorUtility.DisplayDialog("error", $"path error ,not exist=>{path}", "OK");
+                EditorUtility.DisplayDialog("error", $"fullPath error ,not exist=>{fullPath}", "OK");
                 return;
             }
 
-            var progressInfo = "collect path:{0}";
+            var progressInfo = "collect fullPath:{0}";
             EditorUtility.DisplayProgressBar(displayTitle, "开始转换..", 0.1f);
             //以文件方式导出
-            if (File.Exists(path) && Path.GetExtension(path) == ".xlsx")
+            if (File.Exists(fullPath) && Path.GetExtension(fullPath) == ".xlsx")
             {
-                EditorUtility.DisplayProgressBar(displayTitle, string.Format(progressInfo, path), 0.5f);
-                CollectXlsx(path, exportInterface);
+                EditorUtility.DisplayProgressBar(displayTitle, string.Format(progressInfo, fullPath), 0.5f);
+                CollectXlsx(fullPath, exportInterface);
             }
             //以目录方式导出
-            else if (Directory.Exists(path))
+            else if (Directory.Exists(fullPath))
             {
-                var xlsxFileArray = Directory.GetFiles(path, "*.xlsx", SearchOption.AllDirectories);
+                var xlsxFileArray = Directory.GetFiles(fullPath, "*.xlsx", SearchOption.AllDirectories);
                 var totalCount = xlsxFileArray.Length;
                 for (var i = 0; i < xlsxFileArray.Length; i++)
                 {
@@ -65,16 +67,16 @@ namespace Excel2Json
         /// <summary>
         /// 收集excel文件
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="fullPath"></param>
         /// <param name="exportInterface"></param>
-        private static void CollectXlsx(string path, bool exportInterface)
+        private static void CollectXlsx(string fullPath, bool exportInterface)
         {
-            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(fullPath, FileMode.Open, FileAccess.Read))
             {
                 var excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
                 if (!string.IsNullOrEmpty(excelReader.ExceptionMessage))
                 {
-                    Debug.LogError($"excel read fail,path=>{path}");
+                    Debug.LogError($"excel read fail,fullPath=>{fullPath}");
                     return;
                 }
 
@@ -86,7 +88,7 @@ namespace Excel2Json
                     //可以被导出的table名
                     if (table.TableName.StartsWith("#") && table.TableName.EndsWith("#"))
                     {
-                        CollectTable(path, table, exportInterface);
+                        CollectTable(fullPath, table, exportInterface);
                         break;
                     }
                 }
@@ -102,14 +104,12 @@ namespace Excel2Json
         private static void CollectTable(string path, DataTable table, bool exportInterface)
         {
             //第一行为注释行，第二行为数据格式行
-            var rules = Excel2JsonAssetsManager.GetRules();
-            var outputPath = rules.outputPath;
             int colCnt = table.Columns.Count;
             int rowCnt = table.Rows.Count;
             var rows = table.Rows;
             if (rowCnt <= 2)
             {
-                var msg = $"table row count less than 2,path=>{path}";
+                var msg = $"table row count less than 2,fullPath=>{path}";
                 EditorUtility.DisplayDialog(displayTitle, msg,
                     "OK");
                 Debug.LogWarning(msg);
@@ -128,16 +128,16 @@ namespace Excel2Json
                 }
             }
 
+            //TODO 如果后续需要支持Array类型的Json导出，没有找到id就按Array导出
             if (idColIndex < 0)
             {
-                var msg = $"table can not found the id column which is #id:string,path=>{path}";
+                var msg = $"table can not found the id column which is #id:string,fullPath=>{path}";
                 EditorUtility.DisplayDialog(displayTitle,
                     msg,
                     "OK");
                 Debug.LogWarning(msg);
                 return;
             }
-            
             //按行导出
             
         }
