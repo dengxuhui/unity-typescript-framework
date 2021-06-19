@@ -8,7 +8,6 @@ using Excel2Json.tool;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Excel2Json
 {
@@ -50,6 +49,10 @@ namespace Excel2Json
             },
             {
                 "float_array", typeof(float[])
+            },
+            {
+                //多语言类型，与多语言工具搭配使用
+                "lang", typeof(string)
             }
         };
 
