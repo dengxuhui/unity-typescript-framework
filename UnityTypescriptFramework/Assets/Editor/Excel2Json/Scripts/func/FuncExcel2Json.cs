@@ -30,7 +30,10 @@ namespace Excel2Json
     {
         private static readonly string displayTitle = "excel2json";
 
-        private static readonly Dictionary<string, Type> Types = new Dictionary<string, Type>()
+        /// <summary>
+        /// 基础类型。基础类型只会存在这么多，更复杂的结构也无非是将这些基础类型进行组合
+        /// </summary>
+        private static readonly Dictionary<string, Type> BaseTypeDic = new Dictionary<string, Type>()
         {
             {
                 "string", typeof(string)
@@ -162,7 +165,7 @@ namespace Excel2Json
                 {
                     colName = colName.Substring(1);
                     var kv = colName.Split(':');
-                    Types.TryGetValue(kv[1], out var ot);
+                    BaseTypeDic.TryGetValue(kv[1], out var ot);
                     if (ot == null)
                     {
                         var msg = $"table can define type not support ,type string is=>{kv[1]},fullPath=>{fullPath}";
