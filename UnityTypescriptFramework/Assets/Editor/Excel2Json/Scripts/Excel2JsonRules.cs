@@ -8,7 +8,8 @@ namespace Excel2Json
     /// </summary>
     public class Excel2JsonRules : ScriptableObject
     {
-        [Tooltip("输出路径")] public string outputPath = "";
+        [Tooltip("输出json路径")] public string outputJsonPath = "";
+        [Tooltip("输出接口路径")] public string outputInterfaceDir = "";
     }
 
     [CustomEditor(typeof(Excel2JsonRules))]

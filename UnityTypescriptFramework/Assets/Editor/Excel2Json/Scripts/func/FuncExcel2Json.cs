@@ -35,6 +35,9 @@ namespace Excel2Json
         private static readonly Dictionary<string, Action<object, BaseHandleData, Dictionary<string, object>>>
             _handleDic;
 
+        //excel类型转换
+        private static readonly Dictionary<string, string> _excelType2TsTypeDic;
+
         //静态构造方式初始化Action
         static FuncExcel2Json()
         {
@@ -67,7 +70,7 @@ namespace Excel2Json
                         {
                             intArray[i] = 0;
                             Debug.LogError(
-                                $"try convert to int32 error,file name{handleData.fileNameWithoutEX},field name:{handleData.attrName}");
+                                $"{e.Message},convert int32 error, file name{handleData.fileNameWithoutEX},field name:{handleData.attrName}");
                         }
                     }
 
@@ -107,7 +110,7 @@ namespace Excel2Json
                         {
                             floatArray[i] = 0.0f;
                             Debug.LogError(
-                                $"try convert to float error,file name{handleData.fileNameWithoutEX},field name:{handleData.attrName}");
+                                $"{e.Message},file name{handleData.fileNameWithoutEX},field name:{handleData.attrName}");
                         }
                     }
 
@@ -160,6 +163,13 @@ namespace Excel2Json
                 {"int", handle_int}, {"int_array", handle_int_array}, {"float", handle_float},
                 {"float_array", handle_float_array}, {"string", handle_string}, {"string_array", handle_string_array},
                 {"lang", handle_lang}
+            };
+            //excel类型与ts接口之间类型转换
+            _excelType2TsTypeDic = new Dictionary<string, string>
+            {
+                {"int", "number"}, {"int_array", "Array<number>"}, {"float", "number"},
+                {"float_array", "Array<number>"}, {"string", "string"}, {"string_array", "Array<string>"},
+                {"lang", "string"}
             };
         }
 
@@ -256,7 +266,7 @@ namespace Excel2Json
             //先找到id列
             int idColIndex = -1;
             var baseHandleMap = new Dictionary<string, BaseHandleData>();
-
+            var interfaceMap = new Dictionary<string, string>();
             var xlsxFileName = Path.GetFileNameWithoutExtension(fullPath);
             for (var i = 0; i < colCnt; i++)
             {
@@ -297,6 +307,19 @@ namespace Excel2Json
                             colIndex = i,
                             fileNameWithoutEX = xlsxFileName
                         });
+
+                        if (exportInterface)
+                        {
+                            _excelType2TsTypeDic.TryGetValue(kv[1], out var tsType);
+                            if (!string.IsNullOrEmpty(tsType))
+                            {
+                                interfaceMap.Add(kv[0], tsType);
+                            }
+                            else
+                            {
+                                Debug.LogError($"export2json interface can not found =>{kv[1]} to ts type");
+                            }
+                        }
                     }
                     else
                     {
@@ -365,7 +388,7 @@ namespace Excel2Json
                 };
                 var jsonStr = JsonConvert.SerializeObject(sheetDataDic);
                 var jsonFileName = Path.GetFileNameWithoutExtension(fullPath) + ".json";
-                var outputDir = Excel2JsonAssetsManager.GetRules().outputPath;
+                var outputDir = Excel2JsonAssetsManager.GetRules().outputJsonPath;
                 outputDir = FileTool.GetFullPath(outputDir, RelativeType.Assets);
                 FileTool.TryMakeDir(outputDir);
                 var savePath = Path.Combine(outputDir, jsonFileName);
@@ -374,6 +397,37 @@ namespace Excel2Json
                     using (TextWriter writer = new StreamWriter(file, Encoding.UTF8))
                     {
                         writer.Write(jsonStr);
+                        
+                        
+                        writer.Flush();
+                        writer.Close();
+                        writer.Dispose();
+                    }
+                }
+            }
+
+            if (exportInterface && interfaceMap.Count > 0)
+            {
+                var fileNameWithoutEx = Path.GetFileNameWithoutExtension(fullPath);
+                var tsFileName = fileNameWithoutEx + ".ts";
+                var outputDir = Excel2JsonAssetsManager.GetRules().outputInterfaceDir;
+                outputDir = FileTool.GetFullPath(outputDir);
+                FileTool.TryMakeDir(outputDir);
+                var savePath = Path.Combine(outputDir, tsFileName);
+                using (var file = new FileStream(savePath,FileMode.Create,FileAccess.Write))
+                {
+                    using (TextWriter writer = new StreamWriter(file, Encoding.UTF8))
+                    {
+                        writer.WriteLine($"export interface {fileNameWithoutEx}" + "{");
+                        foreach (var kv in interfaceMap)
+                        {
+                            writer.WriteLine($"\t{kv.Key}:{kv.Value};");
+                        }
+                        writer.WriteLine("}");
+                        
+                        writer.Flush();
+                        writer.Close();
+                        writer.Dispose();
                     }
                 }
             }

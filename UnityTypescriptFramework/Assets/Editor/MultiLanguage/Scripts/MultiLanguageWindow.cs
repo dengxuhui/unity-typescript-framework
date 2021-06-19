@@ -19,8 +19,6 @@ namespace MultiLanguage.Scripts
         //更新翻译
         private bool _funcTranslateReplace = false;
 
-        //拷贝资源
-        private bool _funcCopyAssets = false;
         //-------------------
 
         #region 翻译导入相关
