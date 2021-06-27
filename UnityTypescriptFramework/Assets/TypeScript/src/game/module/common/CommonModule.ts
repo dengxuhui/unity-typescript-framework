@@ -1,4 +1,6 @@
 import {BaseModule} from "../../../framework/module/BaseModule";
+import {ConfigManager} from "../../../framework/config/ConfigManager";
+import {Residents} from "../../../../output/interface/Residents";
 
 /**
  * 通用逻辑模块
@@ -8,6 +10,7 @@ import {BaseModule} from "../../../framework/module/BaseModule";
 export class CommonModule extends BaseModule {
     onAdd(): void {
         super.onAdd();
+        ConfigManager.register<Residents>();
     }
     
     onRemove(): void {
