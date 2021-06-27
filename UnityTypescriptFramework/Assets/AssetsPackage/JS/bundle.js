@@ -136,6 +136,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_module_userData_UserDataModule__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./game/module/userData/UserDataModule */ "./src/game/module/userData/UserDataModule.ts");
 /* harmony import */ var _game_language_LanguageManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./game/language/LanguageManager */ "./src/game/language/LanguageManager.ts");
 /* harmony import */ var _game_language_LanguageDataTool__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./game/language/LanguageDataTool */ "./src/game/language/LanguageDataTool.ts");
+/* harmony import */ var _game_test_GameTest__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./game/test/GameTest */ "./src/game/test/GameTest.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -181,6 +182,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 
+
 /**
  * 游戏入口
  * @author by dengxuhui
@@ -212,6 +214,8 @@ var GameMain = /** @class */ (function () {
                         //更新语言内容
                         _a.sent();
                         _framework_scene_SceneManager__WEBPACK_IMPORTED_MODULE_2__["SceneManager"].Instance.switchScene(_game_scenes_config_SceneConfig__WEBPACK_IMPORTED_MODULE_3__["SceneConfigs"].HomeScene);
+                        //运行测试代码
+                        _game_test_GameTest__WEBPACK_IMPORTED_MODULE_9__["GameTest"].Run();
                         return [2 /*return*/];
                 }
             });
@@ -4802,6 +4806,65 @@ var HomeScene = /** @class */ (function (_super) {
     };
     return HomeScene;
 }(_framework_scene_base_BaseScene__WEBPACK_IMPORTED_MODULE_0__["BaseScene"]));
+
+
+
+/***/ }),
+
+/***/ "./src/game/test/GameTest.ts":
+/*!***********************************!*\
+  !*** ./src/game/test/GameTest.ts ***!
+  \***********************************/
+/*! exports provided: GameTest */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameTest", function() { return GameTest; });
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! csharp */ "csharp");
+/* harmony import */ var csharp__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(csharp__WEBPACK_IMPORTED_MODULE_0__);
+
+var GameTest = /** @class */ (function () {
+    function GameTest() {
+    }
+    /**
+     * 运行ts-cs用例，单纯的ts测试写到.test.ts里面
+     * @constructor
+     */
+    GameTest.Run = function () {
+        var tester = new GameTest();
+        tester.binarySearchTest();
+    };
+    /**
+     * 二分查找测试
+     */
+    GameTest.prototype.binarySearchTest = function () {
+        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("--------------binary search test start--------------");
+        var sourceData = [1, 15, 23, 30, 213, 324, 4456, 4578, 31435, 343445, 2123354, 3574853784, 2318627163];
+        var indexOf = function (sortedArray, findValue) {
+            if (sortedArray.length <= 0)
+                return -1;
+            var low = 0;
+            var high = sortedArray.length - 1;
+            while (low <= high) {
+                var mid = low + Math.ceil((high - low) / 2);
+                if (findValue < sortedArray[mid])
+                    high = mid - 1;
+                else if (findValue > sortedArray[mid])
+                    low = mid + 1;
+                else
+                    return mid;
+            }
+            return -1;
+        };
+        var tValue = 31435;
+        var findIndex = indexOf(sourceData, tValue);
+        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log(sourceData.join(","));
+        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("find value=>" + tValue + ",find index=>" + findIndex);
+        csharp__WEBPACK_IMPORTED_MODULE_0__["CS"].Logger.Log("--------------binary search test over--------------");
+    };
+    return GameTest;
+}());
 
 
 

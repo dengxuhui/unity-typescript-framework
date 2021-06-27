@@ -1,7 +1,7 @@
-import {ResourceManager} from "../src/framework/resource/ResourceManager";
 import {$typeof} from "puerts";
 import Handler from "../src/framework/utils/Handler";
 import {UnityEngine} from "csharp";
+import {ResourceManager} from "../src/framework/resource/ResourceManager";
 
 test("load json",()=>{
     ResourceManager.Instance.initialize();

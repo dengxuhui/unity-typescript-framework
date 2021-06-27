@@ -7,6 +7,7 @@ import {CommonModule} from "./game/module/common/CommonModule";
 import {UserDataModule} from "./game/module/userData/UserDataModule";
 import {LanguageManager} from "./game/language/LanguageManager";
 import {LanguageDataTool} from "./game/language/LanguageDataTool";
+import {GameTest} from "./game/test/GameTest";
 
 /**
  * 游戏入口
@@ -33,6 +34,9 @@ class GameMain {
         //更新语言内容
         await LanguageManager.Instance.updateAwait(LanguageDataTool.getUserLanguage());
         SceneManager.Instance.switchScene(SceneConfigs.HomeScene);
+        
+        //运行测试代码
+        GameTest.Run();
     }
 }
 
