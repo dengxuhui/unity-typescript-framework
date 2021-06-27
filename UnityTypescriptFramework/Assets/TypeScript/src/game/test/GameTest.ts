@@ -6,7 +6,7 @@ export class GameTest {
      * @constructor
      */
     static Run(){
-        let tester = new GameTest()
+        let tester = new GameTest();
         tester.binarySearchTest();
     }
 
