@@ -1,7 +1,7 @@
 /**
  * 配置管理器
  */
-import {IConfig} from "../interface/IConfig";
+import {IConfig} from "../../../output/interface/IConfig";
 
 export class ConfigManager {
     private static _configMap: Map<IConfig, any>;

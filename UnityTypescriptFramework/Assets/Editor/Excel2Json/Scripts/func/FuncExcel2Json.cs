@@ -397,8 +397,8 @@ namespace Excel2Json
                     using (TextWriter writer = new StreamWriter(file, Encoding.UTF8))
                     {
                         writer.Write(jsonStr);
-                        
-                        
+
+
                         writer.Flush();
                         writer.Close();
                         writer.Dispose();
@@ -414,17 +414,21 @@ namespace Excel2Json
                 outputDir = FileTool.GetFullPath(outputDir);
                 FileTool.TryMakeDir(outputDir);
                 var savePath = Path.Combine(outputDir, tsFileName);
-                using (var file = new FileStream(savePath,FileMode.Create,FileAccess.Write))
+                using (var file = new FileStream(savePath, FileMode.Create, FileAccess.Write))
                 {
                     using (TextWriter writer = new StreamWriter(file, Encoding.UTF8))
                     {
-                        writer.WriteLine($"export interface {fileNameWithoutEx}" + "{");
+                        writer.WriteLine("import {IConfig} from './IConfig';");
+                        writer.WriteLine("//generate by Excel2Json tools,do not modify directly");
+                        writer.WriteLine("\t");
+                        writer.WriteLine($"export interface {fileNameWithoutEx} extends IConfig" + "{");
                         foreach (var kv in interfaceMap)
                         {
                             writer.WriteLine($"\t{kv.Key}:{kv.Value};");
                         }
+
                         writer.WriteLine("}");
-                        
+
                         writer.Flush();
                         writer.Close();
                         writer.Dispose();
