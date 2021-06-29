@@ -1,4 +1,5 @@
 import {CS} from "csharp";
+import {Value} from "inkjs/engine/Value";
 
 export class GameTest {
     /**
@@ -7,7 +8,8 @@ export class GameTest {
      */
     static Run(){
         let tester = new GameTest();
-        tester.binarySearchTest();
+        // tester.binarySearchTest();
+        tester.doubleStack();
     }
 
     /**
@@ -33,5 +35,38 @@ export class GameTest {
         CS.Logger.Log(sourceData.join(","));
         CS.Logger.Log(`find value=>${tValue},find index=>${findIndex}`);
         CS.Logger.Log("--------------binary search test over--------------");
+    }
+
+    /**
+     * 双栈实现字符串解析计算算术表达式
+     */
+    private doubleStack():number{
+        //基本思路是遇到反括号，出栈计算表达式的值，但是有很大局限，主要是针对字符串解析上的问题，括号必须首位衔接，运算式都必须用括号包围
+        let testStr = "((10+10)-(20*5))";//-80
+        let stackOps = new Array<string>();
+        let stackVals = new Array<number>();
+        for(let i = 0;i < testStr.length;i++){
+            let s:string = testStr[i];
+            if(s === "("){
+            }else if(s === "+" || s === "-" || s === "*" || s === "/"){
+                stackOps.push(s);
+            }else if(s === ")"){
+                let op = stackOps.pop();
+                let v = stackVals.pop();
+                if(op === "+"){
+                    v = stackVals.pop() + v;
+                }else if(op === "-"){
+                    v = stackVals.pop() - v;
+                }else if(op === "*"){
+                    v = stackVals.pop() * v;
+                }else if(op === "/"){
+                    v = stackVals.pop() / v;
+                }
+                stackVals.push(v)
+            }else{
+                stackVals.push(parseFloat(s));
+            }
+        }
+        return stackVals.pop();
     }
 }
